@@ -1,5 +1,13 @@
 <genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
     <structs>
+        <struct name="OpCode Set Structure" type="0x1" vers="0x1" size="0x30">
+            <offset num_bits="64" value="0x18">
+                <field max_bit="31" min_bit="0" num_bits="32" mo="O" access="RO" ptr_to="OpCode Set UUID Table">
+                    <name>OpCode Set UUID PTR</name>
+                </field>
+            </offset>
+        </struct>
+
         <struct name="Fake Struct for testing" type="0x1" vers="0x1" size="0x30">
             <offset num_bits="64" value="0x18">
                 <field max_bit="31" min_bit="0" num_bits="32" mo="O" access="RO" ptr_to="Component Error ELog Entry">
@@ -22,6 +30,40 @@
                     <name>Error-specific [11-4]</name>
                 </field>
             </offset>
+        </table>
+
+
+        <table name="OpCode Set UUID Table" size="0x1a0" ptr="OpCode Set UUID PTR">
+            <offset num_bits="128" value="0x0">
+                <field max_bit="63" min_bit="0" num_bits="64" mo="M" access="RO">
+                    <name>Supported P2P Vendor-Defined Set</name>
+                </field>
+                <field max_bit="127" min_bit="64" num_bits="64" mo="M" access="RW">
+                    <name>Enabled P2P Vendor-Defined Set</name>
+                </field>
+            </offset>
+            <array elements="8" offset="0x10">
+                <element bytes="0x10" offset="0x10">
+                    <offset num_bits="128" value="0x10">
+                        <field max_bit="63" min_bit="0" num_bits="64" mo="O" access="RO">
+                            <name>Supported VDO OpCode Set 1</name>
+                        </field>
+                        <field max_bit="127" min_bit="64" num_bits="64" mo="O" access="RO">
+                            <name>Enabled VDO OpCode Set 1</name>
+                        </field>
+                    </offset>
+                </element>
+                <element bytes="0x10" offset="0x80">
+                    <offset num_bits="128" value="0x80">
+                        <field max_bit="63" min_bit="0" num_bits="64" mo="O" access="RO">
+                            <name>Supported VDO OpCode Set 8</name>
+                        </field>
+                        <field max_bit="127" min_bit="64" num_bits="64" mo="O" access="RO">
+                            <name>Enabled VDO OpCode Set 8</name>
+                        </field>
+                    </offset>
+                </element>
+            </array>
         </table>
 
     </structs>

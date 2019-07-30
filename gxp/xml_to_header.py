@@ -287,11 +287,9 @@ def main(cmd_args: dict):
         if os.path.exists(path):
             os.remove(path)
 
-    print('---------------------')
-    print('Header "%s" has been generated!' % dest)
+    logging.info('%s\nHeader "%s" has been generated!' % ('-' * 20, dest))
     if not is_no_c_file:
-        print('C file "%s" has been generated!' % c_dest)
-    print('---------------------')
+        logging.info('C file "%s" has been generated!' % c_dest)
 
     return 0
 
@@ -306,16 +304,17 @@ if __name__ == '__main__':
                             'Note, .c generated from output name. '\
                             'E.g. output=header.h -> header.c will be created.',
                         required=True)
-    parser.add_argument('--header-template',
-                        default='./templates/header.template',
-                        help='Header string to go into .h file.')
-
-    parser.add_argument('--c-template',
-                    default='./templates/c.template',
-                    help='C file template path.')
 
     parser.add_argument('--no-c', action='store_true',
                         help="Disable creation of .c file.")
+
+    parser.add_argument('--header-template',
+                        default='./templates/header.template',
+                        help='(optional) Header string to go into .h file.')
+
+    parser.add_argument('--c-template',
+                    default='./templates/c.template',
+                    help='(optional) C file template path.')
 
     parser.add_argument('--verbose', '-v',
                     type=int,

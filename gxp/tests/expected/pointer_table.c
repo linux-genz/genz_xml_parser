@@ -36,12 +36,17 @@
 #include <linux/kernel.h>
 #include "pointer_table.h"
 
+struct genz_control_structure_ptr opcode_set_structure_ptrs[] = {
+    { GENZ_CONTROL_POINTER_TABLE, GENZ_4_BYTE_POINTER, 0x18, GENZ_OPCODE_SET_UUID_TABLE },
+};
+
 struct genz_control_structure_ptr fake_struct_for_testing_ptrs[] = {
     { GENZ_CONTROL_POINTER_TABLE, GENZ_4_BYTE_POINTER, 0x18, GENZ_COMPONENT_ERROR_ELOG_ENTRY },
 };
 
 
 struct genz_control_ptr_info genz_control_structure_type_to_ptrs[] = {
+    { opcode_set_uuid_ptr, sizeof(opcode_set_uuid_ptr)/sizeof(opcode_set_uuid_ptr[0]), sizeof(struct genz_opcode_set_uuid_ptr), "opcode_set_uuid_ptr" },
     { component_error_elog_entry_ptr, sizeof(component_error_elog_entry_ptr)/sizeof(component_error_elog_entry_ptr[0]), sizeof(struct genz_component_error_elog_entry_ptr), "component_error_elog_entry_ptr" },
 };
 
