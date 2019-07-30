@@ -225,16 +225,15 @@ class CGenerator:
 
     def _handle_ptr_tables(self, pointer) -> bool:
         """
-    //If points to a thing that is a Table and it has an array that is THE ONLY thing in the table.
-    // then it is an array pointer.
-    GENZ_CONTROL_POINTER_ARRAY = 3, /* Table of structures, e.g. C-Access R-Key table. */
+        "GENZ_CONTROL_POINTER_ARRAY" - "ptr_to" points to a thing that is a Table
+        and it has an array that is THE ONLY thing in the table.
 
-    //look in the table and it just the offsets. Something talk to JIM who doesn't know.
-    //And if it DOES NOT has a "Variable" type <array>.
-    GENZ_CONTROL_POINTER_TABLE = 4,
+        "GENZ_CONTROL_POINTER_TABLE" - points to a table and it just the offsets
+        or offsets with arrays that are not "Variable" type. (e.g 'elements' attr
+        of the array is not "Variable").
 
-    //Looking at table ptr_to points to, it has some offsets and then an array
-    GENZ_CONTROL_POINTER_TABLE_WITH_HEADER = 5, /* Header followed by table of structures, e.g. ELog Table */
+        "GENZ_CONTROL_POINTER_TABLE_WITH_HEADER" - points to a table that has offsets
+        with the array of type "Variable".
         """
         logging.debug('%s -> _handle_ptr_tables:\n pointer "%s" arrived.' % \
                 (os.path.basename(__file__), pointer.name))
@@ -257,8 +256,8 @@ class CGenerator:
             if len(struct.origin) == 1:
                 ptr_flag_to_set = ptr_flags['array']
 
-        #probably a GENZ_CONTROL_POINTER_TABLE
         if len(offsets) > 0:
+            #GENZ_CONTROL_POINTER_TABLE if not a "Variable" array
             if not self._has_variable_array(arrays):
                 ptr_flag_to_set = ptr_flags['table']
             else:

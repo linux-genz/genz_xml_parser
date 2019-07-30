@@ -41,13 +41,13 @@
  *
  * Generator Script Meta:
  *     Version      : v0.2
- *     Generated On : 29, Jul 2019
+ *     Generated On : 30, Jul 2019
  *
  *
  * **************************************************************
  *
- * Struct        -----------------------------------  2
- * Struct entries(declared inside structs and enums)  25
+ * Struct        -----------------------------------  4
+ * Struct entries(declared inside structs and enums)  33
  * Unions        -----------------------------------  0
  * Enums         -----------------------------------  0
  */
@@ -100,8 +100,10 @@ struct genz_control_ptr_info {
 
 enum genz_control_structure_type {
     GENZ_GENERIC_STRUCTURE = -1,
-    GENZ_FAKE_STRUCT_FOR_TESTING = 0,
-    GENZ_COMPONENT_ERROR_ELOG_ENTRY = 1000
+    GENZ_OPCODE_SET_STRUCTURE = 0,
+    GENZ_FAKE_STRUCT_FOR_TESTING = 1,
+    GENZ_COMPONENT_ERROR_ELOG_ENTRY = 1000,
+    GENZ_OPCODE_SET_UUID_TABLE = 1001
 };
 
 struct genz_control_structure_ptr {
@@ -115,6 +117,15 @@ extern struct genz_control_ptr_info genz_ctrl_struct_type_to_ptrs[];
 
 extern size_t genz_ctrl_struct_type_to_ptrs_nelems;
 
+struct genz_opcode_set_uuid_table_array {
+    uint64_t supported_vdo_opcode_set_1 : 64;
+    uint64_t enabled_vdo_opcode_set_1   : 64;
+};
+
+struct genz_opcode_set_structure {
+    uuid_t opcode_set_uuid_ptr;
+};
+
 struct genz_fake_struct_for_testing {
     uint64_t component_error_elog_entry_ptr : 32;
 };
@@ -125,11 +136,20 @@ struct genz_component_error_elog_entry {
     uint64_t error_specific_11_4 : 64;
 };
 
+struct genz_opcode_set_uuid_table {
+    uint64_t supported_p2p_vendor_defined_set                             : 64;
+    uint64_t enabled_p2p_vendor_defined_set                               : 64;
+    struct genz_opcode_set_uuid_table_array opcode_set_uuid_table_array[];
+};
+
 
 union genz_control_structure {
     struct genz_control_ptr_info control_ptr_info_ptr;
     struct genz_control_structure_ptr control_structure_ptr_ptr;
+    struct genz_opcode_set_uuid_table_array opcode_set_uuid_table_array_ptr;
+    struct genz_opcode_set_structure opcode_set_structure_ptr;
     struct genz_fake_struct_for_testing fake_struct_for_testing_ptr;
     struct genz_component_error_elog_entry component_error_elog_entry_ptr;
+    struct genz_opcode_set_uuid_table opcode_set_uuid_table_ptr;
 };
 #endif

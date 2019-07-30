@@ -36,13 +36,13 @@
 #include <linux/kernel.h>
 #include "pointer_table_header.h"
 
-struct genz_control_structure_ptr opcode_set_structure_ptrs[] = {
-    { GENZ_CONTROL_POINTER_TABLE_WITH_HEADER, GENZ_4_BYTE_POINTER, 0x18, GENZ_OPCODE_SET_UUID_TABLE },
+struct genz_control_structure_ptr fake_struct_for_table_header_testing_ptrs[] = {
+    { GENZ_CONTROL_POINTER_TABLE_WITH_HEADER, GENZ_4_BYTE_POINTER, 0x18, GENZ_FAKE_HEADER_TABLE },
 };
 
 
 struct genz_control_ptr_info genz_control_structure_type_to_ptrs[] = {
-    { opcode_set_uuid_ptr, sizeof(opcode_set_uuid_ptr)/sizeof(opcode_set_uuid_ptr[0]), sizeof(struct genz_opcode_set_uuid_ptr), "opcode_set_uuid_ptr" },
+    { fake_header_table_ptr, sizeof(fake_header_table_ptr)/sizeof(fake_header_table_ptr[0]), sizeof(struct genz_fake_header_table_ptr), "fake_header_table_ptr" },
 };
 
 EXPORT_SYMBOL(genz_control_structure_type_to_ptrs);
