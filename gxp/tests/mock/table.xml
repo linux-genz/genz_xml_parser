@@ -1,0 +1,36 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <table name="Event Record" size="0x14">
+            <offset num_bits="32" value="0x0">
+                <field max_bit="0" min_bit="0" num_bits="1" mo="M" access="RW">
+                    <name>A</name>
+                    <value val="0b">
+                        <name>Available</name>
+                    </value>
+                    <value val="1b">
+                        <name>Unavailable</name>
+                    </value>
+                </field>
+                <field max_bit="2" min_bit="1" num_bits="2" mo="M" access="RW">
+                    <name>Vers</name>
+                </field>
+            </offset>
+            <offset num_bits="32" value="0x4">
+                <field max_bit="11" min_bit="0" num_bits="12" mo="M" access="RW">
+                    <name>SCID</name>
+                </field>
+            </offset>
+            <offset num_bits="32" value="0x8">
+                <field max_bit="11" min_bit="0" num_bits="12" mo="O" access="RW">
+                    <name>RC CID</name>
+                </field>
+                <field max_bit="27" min_bit="12" num_bits="16" mo="O" access="RW">
+                    <name>RC SID</name>
+                </field>
+                <field max_bit="31" min_bit="28" num_bits="4" access="RsvdP">
+                    <name>R3</name>
+                </field>
+            </offset>
+        </table>
+    </structs>
+</genz>

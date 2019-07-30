@@ -1,0 +1,36 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <struct name="Component TR Structure" type="0xe" vers="0x1" size="0x20">
+            <offset num_bits="64" value="0x0">
+                <field max_bit="11" min_bit="0" num_bits="12" value="0xe" mo="M" access="RO">
+                    <name>Type</name>
+                </field>
+                <field max_bit="15" min_bit="12" num_bits="4" value="0x1" mo="M" access="RO">
+                    <name>Vers</name>
+                </field>
+            </offset>
+            <offset num_bits="64" value="0x8">
+                <field max_bit="31" min_bit="0" num_bits="32" mo="M" access="RO" ptr_to="Component TR Table">
+                    <name>TR Table PTR</name>
+                </field>
+            </offset>
+        </struct>
+
+        <table name="Component TR Table" size="VARIABLE" min_size="0x0" ptr="TR Table PTR">
+            <array elements="VARIABLE" offset="0x0">
+                <element bytes="0x30" offset="0x0">
+                    <offset num_bits="64" value="0x0">
+                        <field max_bit="31" min_bit="0" num_bits="32" mo="M" access="RO" base_bit="20">
+                            <name>TR ZMMU<sub>0</sub>PTR [51:20]</name>
+                        </field>
+                        <field max_bit="63" min_bit="32" num_bits="32" mo="M" access="RO" base_bit="20">
+                            <name>TR RTR<sub>0</sub>PTR [51:20]
+                            </name>
+                        </field>
+                    </offset>
+                </element>
+            </array>
+        </table>
+
+    </structs>
+</genz>

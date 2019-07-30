@@ -1,0 +1,59 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <struct name="Vendor-Defined Structure" type="0xa" vers="0x1" size="VARIABLE" min_size="0x10">
+            <offset num_bits="32" value="0x0">
+                <field max_bit="11" min_bit="0" num_bits="12" value="0xa" mo="M" access="RO">
+                    <name>Type</name>
+                </field>
+                <field max_bit="15" min_bit="12" num_bits="4" value="0x1" mo="M" access="RO">
+                    <name>Vers</name>
+                </field>
+                <field max_bit="31" min_bit="16" num_bits="16" mo="M" access="RO">
+                    <name>Size</name>
+                </field>
+            </offset>
+            <array elements="VARIABLE" offset="0x4">
+                <element bytes="0x4" offset="0x4">
+                    <offset num_bits="32" value="0x4">
+                        <field max_bit="31" min_bit="0" num_bits="32" mo="-">
+                            <name>Vendor-Defined Data<sub>0</sub>
+                            </name>
+                        </field>
+                    </offset>
+                </element>
+            </array>
+        </struct>
+
+        <table name="MVCAT Table" ptr="MVCAT PTR">
+            <array elements="VARIABLE" offset="0x0">
+                <element bytes="0x4" offset="0x0">
+                    <offset num_bits="32" value="0x0">
+                        <field max_bit="31" min_bit="0" num_bits="32">
+                            <name>MVCM<sub>0</sub>
+                            </name>
+                        </field>
+                    </offset>
+                </element>
+            </array>
+        </table>
+
+        <table name="Certificate Table" size="VARIABLE" min_size="0x0" ptr="Certificate Table PTR">
+            <array elements="VARIABLE" offset="0xa410">
+                <element bytes="UNKNOWN" offset="UNKNOWN">
+                    <offset num_bits="0" value="0x0"/>
+                    <offset num_bits="0" value="0x8"/>
+                    <offset num_bits="0" value="0x10"/>
+                    <array elements="VARIABLE" offset="0x18">
+                        <element bytes="0x8" offset="0x18">
+                            <offset num_bits="64" value="0x18">
+                                <field max_bit="63" min_bit="0" num_bits="64" mo="M" access="RW">
+                                    <name>Certificate<sub>0</sub>0</name>
+                                </field>
+                            </offset>
+                        </element>
+                    </array>
+                </element>
+            </array>
+        </table>
+    </structs>
+</genz>

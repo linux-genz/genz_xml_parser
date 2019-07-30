@@ -1,0 +1,153 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <struct name="Interface Statistics Structure" type="0x4" vers="0x1" size="VARIABLE" min_size="0x90">
+            <offset num_bits="64" value="0x80">
+                <field max_bit="63" min_bit="0" num_bits="64" mo="M" access="RO">
+                    <name>Total Received Responses</name>
+                </field>
+            </offset>
+            <offset num_bits="64" value="0x88">
+                <field max_bit="63" min_bit="0" num_bits="64" mo="M" access="RO">
+                    <name>Total Received Response Bytes</name>
+                </field>
+            </offset>
+            <array elements="VARIABLE" offset="UNKNOWN">
+                <element bytes="0x28" offset="UNKNOWN">
+                    <offset num_bits="64" value="UNKNOWN">
+                        <field max_bit="63" min_bit="0" num_bits="64" mo="M" access="RO">
+                            <name>
+Total Transmitted Packets VC
+                                <sub>0</sub>
+                            </name>
+                        </field>
+                    </offset>
+                    <offset num_bits="64" value="UNKNOWN">
+                        <field max_bit="63" min_bit="0" num_bits="64" mo="M" access="RO">
+                            <name>
+Total Transmitted Bytes VC
+                                <sub>0</sub>
+                            </name>
+                        </field>
+                    </offset>
+                    <offset num_bits="64" value="UNKNOWN">
+                        <field max_bit="63" min_bit="0" num_bits="64" mo="M" access="RO">
+                            <name>
+Total Received Packets VC
+                                <sub>0</sub>
+                            </name>
+                        </field>
+                    </offset>
+                    <offset num_bits="64" value="UNKNOWN">
+                        <field max_bit="63" min_bit="0" num_bits="64" mo="M" access="RO">
+                            <name>
+Total Received Bytes VC
+                                <sub>0</sub>
+                            </name>
+                        </field>
+                    </offset>
+                    <offset num_bits="64" value="UNKNOWN">
+                        <field max_bit="63" min_bit="0" num_bits="64" mo="M" access="RO">
+                            <name>
+Occupancy VC
+                                <sub>0</sub>
+                            </name>
+                        </field>
+                    </offset>
+                </element>
+            </array>
+        </struct>
+
+
+        <table name="Type 1 Interleave Table" size="VARIABLE" min_size="0x0" ptr="Interleave Table PTR">
+            <array elements="UNKNOWN" offset="UNKNOWN">
+                <element bytes="VARIABLE" offset="0x0">
+                    <offset num_bits="64" value="0x0">
+                        <field max_bit="0" min_bit="0" num_bits="1" mo="M" access="RW">
+                            <name>V</name>
+                            <value val="0b">
+                                <name>Invalid Entry (not configured)</name>
+                            </value>
+                            <value val="1b">
+                                <name>Valid Entry (configured)</name>
+                            </value>
+                        </field>
+                        <field max_bit="1" min_bit="1" num_bits="1" mo="M" access="RW">
+                            <name>M</name>
+                            <value val="0b">
+                                <name>Multi-module</name>
+                            </value>
+                            <value val="1b">
+                                <name>Intra-module</name>
+                            </value>
+                        </field>
+                        <field max_bit="3" min_bit="2" num_bits="2" mo="M" access="RW">
+                            <name>intlv-gran</name>
+                        </field>
+                        <field max_bit="9" min_bit="4" num_bits="6" mo="M" access="RW">
+                            <name>nb_responder_page</name>
+                        </field>
+                        <field max_bit="11" min_bit="10" num_bits="2" access="RsvdP">
+                            <name>R0</name>
+                        </field>
+                        <field max_bit="14" min_bit="12" num_bits="3" mo="M" access="RW">
+                            <name>nb_intlv_lo_inc</name>
+                        </field>
+                        <field max_bit="15" min_bit="15" num_bits="1" access="RsvdP">
+                            <name>R1</name>
+                        </field>
+                        <field max_bit="31" min_bit="16" num_bits="16" mo="M" access="RW">
+                            <name>max_way</name>
+                        </field>
+                        <field max_bit="63" min_bit="32" num_bits="32" access="Reserved">
+                            <name>R2</name>
+                        </field>
+                    </offset>
+                    <array elements="VARIABLE" offset="0x8">
+                        <element bytes="0x8" offset="0x8">
+                            <offset num_bits="64" value="0x8">
+                                <field max_bit="15" min_bit="0" num_bits="16" mo="M" access="RW">
+                                    <name>
+SID
+                                        <sub>0</sub>
+                                    </name>
+                                </field>
+                                <field max_bit="27" min_bit="16" num_bits="12" mo="M" access="RW">
+                                    <name>
+CID
+                                        <sub>0</sub>
+                                    </name>
+                                </field>
+                                <field max_bit="31" min_bit="28" num_bits="4" access="RsvdP">
+                                    <name>R3</name>
+                                </field>
+                                <field max_bit="47" min_bit="32" num_bits="16" mo="M" access="RW">
+                                    <name>
+SID
+                                        <sub>1</sub>
+                                    </name>
+                                </field>
+                                <field max_bit="59" min_bit="48" num_bits="12" mo="M" access="RW">
+                                    <name>
+CID
+                                        <sub>1</sub>
+                                    </name>
+                                </field>
+                                <field max_bit="63" min_bit="60" num_bits="4" access="RsvdP">
+                                    <name>R3</name>
+                                </field>
+                            </offset>
+                        </element>
+                    </array>
+                </element>
+                <element bytes="0x69248100" offset="UNKNOWN">
+                    <array elements="UNKNOWN" offset="UNKNOWN">
+                        <element bytes="UNKNOWN" offset="UNKNOWN">
+                            <offset num_bits="0" value="YY"/>
+                        </element>
+                    </array>
+                </element>
+            </array>
+        </table>
+
+    </structs>
+</genz>

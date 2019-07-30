@@ -1,0 +1,19 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <table name="Certificate Table" size="VARIABLE" min_size="0x0" ptr="Certificate Table PTR">
+            <array elements="VARIABLE" offset="0xa410">
+                <element bytes="0x4" offset="0x4">
+                    <array elements="VARIABLE" offset="0x18">
+                        <element bytes="0x8" offset="0x18">
+                            <offset num_bits="64" value="0x18">
+                                <field max_bit="63" min_bit="0" num_bits="64" mo="M" access="RW">
+                                    <name>Certificate<sub>0</sub>0</name>
+                                </field>
+                            </offset>
+                        </element>
+                    </array>
+                </element>
+            </array>
+        </table>
+    </structs>
+</genz>

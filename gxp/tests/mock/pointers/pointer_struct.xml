@@ -1,0 +1,96 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <struct name="Core Structure" type="0x0">
+            <offset num_bits="64" value="0x60">
+                <field max_bit="31" min_bit="0" num_bits="32" mo="M" access="RO" ptr_to="Generic Structure">
+                    <name>Control Structure PTR 6</name>
+                </field>
+                <field max_bit="63" min_bit="32" num_bits="32" mo="M" access="RO" ptr_to="Generic Structure">
+                    <name>Control Structure PTR 7</name>
+                </field>
+            </offset>
+            <offset num_bits="64" value="0x70">
+                <field max_bit="31" min_bit="0" num_bits="32" mo="M" access="RO" ptr_to="OpCode Set Structure">
+                    <name>OpCode Set Structure PTR</name>
+                </field>
+            </offset>
+        </struct>
+
+        <struct name="OpCode Set Structure" type="0x1" vers="0x1" size="0x30">
+            <offset num_bits="64" value="0x0">
+                <field max_bit="11" min_bit="0" num_bits="12" value="0x1" mo="M" access="RO">
+                    <name>Type</name>
+                </field>
+            </offset>
+            <offset num_bits="64" value="0x18">
+                <field max_bit="63" min_bit="32" num_bits="32" mo="M" access="RO" ptr_to="OpCode Set Table">
+                    <name>OpCode Set PTR</name>
+                </field>
+                <field max_bit="31" min_bit="0" num_bits="32" mo="O" access="RO" ptr_to="OpCode Set UUID Table">
+                    <name>OpCode Set UUID PTR</name>
+                </field>
+            </offset>
+        </struct>
+
+        <table name="OpCode Set Table" size="0x1c0" ptr="OpCode Set PTR">
+            <offset num_bits="128" value="0x0">
+                <field max_bit="2" min_bit="0" num_bits="3" mo="M" access="RO">
+                    <name>Set ID</name>
+                </field>
+                <field max_bit="15" min_bit="3" num_bits="13" access="RsvdP">
+                    <name>R0</name>
+                </field>
+                <field max_bit="31" min_bit="16" num_bits="16" mo="M">
+                    <name>OpCode Set ID Control 1</name>
+                    <subfield max_bit="0" min_bit="0" num_bits="1" access="RW">
+                        <name>OpCode Set Enable</name>
+                    </subfield>
+                    <subfield max_bit="15" min_bit="1" num_bits="15" access="RsvdP">
+                        <name>RsvdP</name>
+                    </subfield>
+                </field>
+                <field max_bit="63" min_bit="32" num_bits="32" mo="O" access="RO" ptr_to="OpCode Set Table">
+                    <name>Next OpCode Set PTR</name>
+                </field>
+                <field max_bit="127" min_bit="64" num_bits="64" access="Reserved">
+                    <name>R1</name>
+                </field>
+            </offset>
+        </table>
+
+        <table name="OpCode Set UUID Table" size="0x1a0" ptr="OpCode Set UUID PTR">
+            <offset num_bits="128" value="0x0">
+                <field max_bit="63" min_bit="0" num_bits="64" mo="M" access="RO">
+                    <name>Supported P2P Vendor-Defined Set</name>
+                </field>
+                <field max_bit="127" min_bit="64" num_bits="64" mo="M" access="RW">
+                    <name>Enabled P2P Vendor-Defined Set</name>
+                </field>
+            </offset>
+            <array elements="8" offset="0x10">
+                <element bytes="0x10" offset="0x10">
+                    <offset num_bits="128" value="0x10">
+                        <field max_bit="63" min_bit="0" num_bits="64" mo="O" access="RO">
+                            <name>Supported VDO OpCode Set 1</name>
+                        </field>
+                        <field max_bit="127" min_bit="64" num_bits="64" mo="O" access="RO">
+                            <name>Enabled VDO OpCode Set 1</name>
+                        </field>
+                    </offset>
+                </element>
+                <element bytes="0x10" offset="0x80">
+                    <offset num_bits="128" value="0x80">
+                        <field max_bit="63" min_bit="0" num_bits="64" mo="O" access="RO">
+                            <name>Supported VDO OpCode Set 8</name>
+                        </field>
+                        <field max_bit="127" min_bit="64" num_bits="64" mo="O" access="RO">
+                            <name>Enabled VDO OpCode Set 8</name>
+                        </field>
+                    </offset>
+                </element>
+            </array>
+        </table>
+
+
+    </structs>
+</genz>

@@ -1,0 +1,36 @@
+<structs>
+<struct name="Component RKD Structure" type="0x1c">
+    <offset num_bits="64" value="0x0">
+        <field max_bit="11" min_bit="0" num_bits="12" value="0x1c" mo="M" access="RO">
+            <name>Type</name>
+        </field>
+        <field max_bit="15" min_bit="12" num_bits="4" value="0x1" mo="M" access="RO">
+            <name>Vers</name>
+        </field>
+        <field max_bit="31" min_bit="16" num_bits="16" mo="M" access="RO">
+            <name>Size</name>
+        </field>
+        <field max_bit="47" min_bit="32" num_bits="16" mo="M" access="RO">
+            <name>RKD CAP 1</name>
+            <subfield max_bit="2" min_bit="0" num_bits="3" access="RO">
+                <name>RKD Mechanism Table Type</name>
+            </subfield>
+            <subfield max_bit="15" min_bit="3" num_bits="13" access="Reserved">
+                <name>Reserved</name>
+            </subfield>
+        </field>
+        <field max_bit="63" min_bit="48" num_bits="16" mo="M" access="RW">
+            <name>RKD Control 1</name>
+            <subfield max_bit="0" min_bit="0" num_bits="1" access="RW">
+                <name>RKD Validation Enable</name>
+            </subfield>
+            <subfield max_bit="1" min_bit="1" num_bits="1" access="RW">
+                <name>Trusted Thread Enable</name>
+            </subfield>
+            <subfield max_bit="15" min_bit="2" num_bits="14" access="RsvdP">
+                <name>RsvdP</name>
+            </subfield>
+        </field>
+    </offset>
+</struct>
+</structs>

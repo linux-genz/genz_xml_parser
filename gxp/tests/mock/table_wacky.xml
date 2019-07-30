@@ -1,0 +1,109 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <struct name="Component LPD Structure" type="0x19" vers="0x1" size="VARIABLE" min_size="0x50">
+            <array elements="VARIABLE" offset="0x50">
+                <element bytes="0x10" offset="0x50">
+                    <offset num_bits="64" value="0x50">
+                        <field max_bit="15" min_bit="0" num_bits="16" mo="M">
+                            <name>F-CTL<sub>0</sub>
+                            </name>
+                            <subfield max_bit="0" min_bit="0" num_bits="1" access="RW">
+                                <name>HwInit Write Enable</name>
+                            </subfield>
+                            <subfield max_bit="4" min_bit="1" num_bits="4" access="RW">
+                                <name>Request Traffic Class</name>
+                            </subfield>
+                            <subfield max_bit="5" min_bit="5" num_bits="1" access="RW">
+                                <name>Interrupt R-Key Enable</name>
+                                <value val="0b">
+                                    <name>No R-Key Present</name>
+                                </value>
+                                <value val="1b">
+                                    <name>R-Key Present</name>
+                                </value>
+                            </subfield>
+                            <subfield max_bit="6" min_bit="6" num_bits="1" access="RW">
+                                <name>R-Key Non-Interrupt Enable</name>
+                            </subfield>
+                            <subfield max_bit="7" min_bit="7" num_bits="1" access="RW">
+                                <name>PCO Enable</name>
+                            </subfield>
+                            <subfield max_bit="8" min_bit="8" num_bits="1" access="RW">
+                                <name>LPD Field Type 0 Enable</name>
+                            </subfield>
+                            <subfield max_bit="9" min_bit="9" num_bits="1" access="RW">
+                                <name>LPD Field Type 3 Enable</name>
+                            </subfield>
+                            <subfield max_bit="10" min_bit="10" num_bits="1" access="RW">
+                                <name>LPD Field Type 4 Enable</name>
+                            </subfield>
+                            <subfield max_bit="15" min_bit="11" num_bits="5" access="RsvdP">
+                                <name>RsvdP</name>
+                            </subfield>
+                        </field>
+                        <field max_bit="21" min_bit="16" num_bits="6" mo="O" access="RW">
+                            <name>BDF Table Index<sub>0</sub>
+                            </name>
+                        </field>
+                        <field max_bit="23" min_bit="22" num_bits="2" access="RsvdP">
+                            <name>R3</name>
+                        </field>
+                        <field max_bit="31" min_bit="24" num_bits="8" mo="M" access="RO">
+                            <name>LPD DF Number<sub>0</sub>
+                            </name>
+                        </field>
+                        <field max_bit="63" min_bit="32" num_bits="32" mo="M" access="RO" ptr_to="UNKNOWN">
+                            <name>Function PTR<sub>0</sub>
+                            </name>
+                        </field>
+                    </offset>
+                    <offset num_bits="64" value="0x58">
+                        <field max_bit="31" min_bit="0" num_bits="32" mo="O" access="RW">
+                            <name>Function RO R-Key<sub>0</sub>
+                            </name>
+                        </field>
+                        <field max_bit="63" min_bit="32" num_bits="32" mo="O" access="RW">
+                            <name>Function RW R-Key<sub>0</sub>
+                            </name>
+                        </field>
+                    </offset>
+                </element>
+            </array>
+        </struct>
+
+        <table name="SSDT / MSDT Table" ptr="SSDT PTR | MSDT PTR">
+            <array elements="VARIABLE" offset="UNKNOWN">
+                <element bytes="0x69248100" offset="UNKNOWN">
+                    <offset num_bits="0" value="0x0"/>
+                    <array elements="UNKNOWN" offset="UNKNOWN">
+                        <element bytes="UNKNOWN" offset="UNKNOWN">
+                            <field max_bit="UNKNOWN" min_bit="UNKNOWN" num_bits="UNKNOWN">
+                                <name>EI, VCA, HC, V</name>
+                            </field>
+                        </element>
+                        <element bytes="UNKNOWN" offset="UNKNOWN">
+                            <field max_bit="UNKNOWN" min_bit="UNKNOWN" num_bits="UNKNOWN">
+                                <name>EI, VCA, HC, V</name>
+                            </field>
+                        </element>
+                    </array>
+                </element>
+                <element bytes="0x69248100" offset="UNKNOWN">
+                    <array elements="UNKNOWN" offset="UNKNOWN">
+                        <element bytes="UNKNOWN" offset="UNKNOWN">
+                            <field max_bit="UNKNOWN" min_bit="UNKNOWN" num_bits="UNKNOWN">
+                                <name>EI, VCA, HC, V</name>
+                            </field>
+                        </element>
+                        <element bytes="UNKNOWN" offset="UNKNOWN">
+                            <field max_bit="UNKNOWN" min_bit="UNKNOWN" num_bits="UNKNOWN">
+                                <name>EI, VCA, HC, V</name>
+                            </field>
+                        </element>
+                    </array>
+                </element>
+            </array>
+        </table>
+        <table name="SSDT / MSDT Table Entry Row"/>
+    </structs>
+</genz>

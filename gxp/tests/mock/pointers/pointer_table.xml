@@ -1,0 +1,28 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <struct name="Fake Struct for testing" type="0x1" vers="0x1" size="0x30">
+            <offset num_bits="64" value="0x18">
+                <field max_bit="31" min_bit="0" num_bits="32" mo="O" access="RO" ptr_to="Component Error ELog Entry">
+                    <name>Component Error ELog Entry PTR</name>
+                </field>
+            </offset>
+        </struct>
+
+        <table name="Component Error ELog Entry">
+            <offset num_bits="64" value="0x0">
+                <field max_bit="1" min_bit="0" num_bits="2">
+                    <name>Vers</name>
+                </field>
+                <field max_bit="8" min_bit="2" num_bits="7">
+                    <name>Error Code</name>
+                </field>
+            </offset>
+            <offset num_bits="64" value="0x8">
+                <field max_bit="63" min_bit="0" num_bits="64" base_bit="32">
+                    <name>Error-specific [11-4]</name>
+                </field>
+            </offset>
+        </table>
+
+    </structs>
+</genz>

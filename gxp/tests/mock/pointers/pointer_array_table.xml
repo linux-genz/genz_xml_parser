@@ -1,0 +1,106 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <struct name="Component TR Structure" type="0xe" vers="0x1" size="0x20">
+            <offset num_bits="64" value="0x0">
+                <field max_bit="11" min_bit="0" num_bits="12" value="0xe" mo="M" access="RO">
+                    <name>Type</name>
+                </field>
+                <field max_bit="15" min_bit="12" num_bits="4" value="0x1" mo="M" access="RO">
+                    <name>Vers</name>
+                </field>
+            </offset>
+            <offset num_bits="64" value="0x8">
+                <field max_bit="31" min_bit="0" num_bits="32" mo="M" access="RO" ptr_to="Component TR Table">
+                    <name>TR Table PTR</name>
+                </field>
+            </offset>
+        </struct>
+
+        <struct name="OpCode Set Structure" type="0x1" vers="0x1" size="0x30">
+            <offset num_bits="64" value="0x0">
+                <field max_bit="11" min_bit="0" num_bits="12" value="0x1" mo="M" access="RO">
+                    <name>Type</name>
+                </field>
+            </offset>
+            <offset num_bits="64" value="0x18">
+                <field max_bit="31" min_bit="0" num_bits="32" mo="O" access="RO" ptr_to="OpCode Set UUID Table">
+                    <name>OpCode Set UUID PTR</name>
+                </field>
+            </offset>
+        </struct>
+
+        <struct name="Fake Struct for testing" type="0x3" vers="0x1" size="0x30">
+            <offset num_bits="64" value="0x18">
+                <field max_bit="31" min_bit="0" num_bits="32" mo="O" access="RO" ptr_to="Component Error ELog Entry">
+                    <name>Component Error ELog Entry PTR</name>
+                </field>
+            </offset>
+        </struct>
+
+        <table name="Component Error ELog Entry">
+            <offset num_bits="64" value="0x0">
+                <field max_bit="1" min_bit="0" num_bits="2">
+                    <name>Vers</name>
+                </field>
+                <field max_bit="8" min_bit="2" num_bits="7">
+                    <name>Error Code</name>
+                </field>
+            </offset>
+            <offset num_bits="64" value="0x8">
+                <field max_bit="63" min_bit="0" num_bits="64" base_bit="32">
+                    <name>Error-specific [11-4]</name>
+                </field>
+            </offset>
+        </table>
+
+        <table name="OpCode Set UUID Table" size="0x1a0" ptr="OpCode Set UUID PTR">
+            <offset num_bits="128" value="0x0">
+                <field max_bit="63" min_bit="0" num_bits="64" mo="M" access="RO">
+                    <name>Supported P2P Vendor-Defined Set</name>
+                </field>
+                <field max_bit="127" min_bit="64" num_bits="64" mo="M" access="RW">
+                    <name>Enabled P2P Vendor-Defined Set</name>
+                </field>
+            </offset>
+            <array elements="8" offset="0x10">
+                <element bytes="0x10" offset="0x10">
+                    <offset num_bits="128" value="0x10">
+                        <field max_bit="63" min_bit="0" num_bits="64" mo="O" access="RO">
+                            <name>Supported VDO OpCode Set 1</name>
+                        </field>
+                        <field max_bit="127" min_bit="64" num_bits="64" mo="O" access="RO">
+                            <name>Enabled VDO OpCode Set 1</name>
+                        </field>
+                    </offset>
+                </element>
+                <element bytes="0x10" offset="0x80">
+                    <offset num_bits="128" value="0x80">
+                        <field max_bit="63" min_bit="0" num_bits="64" mo="O" access="RO">
+                            <name>Supported VDO OpCode Set 8</name>
+                        </field>
+                        <field max_bit="127" min_bit="64" num_bits="64" mo="O" access="RO">
+                            <name>Enabled VDO OpCode Set 8</name>
+                        </field>
+                    </offset>
+                </element>
+            </array>
+        </table>
+
+        <table name="Component TR Table" size="VARIABLE" min_size="0x0" ptr="TR Table PTR">
+            <array elements="VARIABLE" offset="0x0">
+                <element bytes="0x30" offset="0x0">
+                    <offset num_bits="64" value="0x0">
+                        <field max_bit="31" min_bit="0" num_bits="32" mo="M" access="RO" base_bit="20">
+                            <name>TR ZMMU<sub>0</sub>PTR [51:20]</name>
+                        </field>
+                        <field max_bit="63" min_bit="32" num_bits="32" mo="M" access="RO" base_bit="20">
+                            <name>TR RTR<sub>0</sub>PTR [51:20]
+                            </name>
+                        </field>
+                    </offset>
+                </element>
+            </array>
+        </table>
+
+    </structs>
+</genz>

@@ -1,0 +1,46 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <struct name="Component Event Structure" type="0x18" vers="0x1" size="0x90">
+            <array elements="8" offset="0x50">
+                <element bytes="0x8" offset="0x50">
+                    <offset num_bits="64" value="0x50">
+                        <field max_bit="63" min_bit="0" num_bits="64" mo="M" access="RW">
+                            <name>Event Signal [63:0]</name>
+                            <value val="0x0">
+                                <name>No signal action is taken</name>
+                            </value>
+                            <value val="0x1">
+                                <name>Trigger component-local interrupt 0</name>
+                            </value>
+                            <value val="0x2">
+                                <name>Trigger component-local interrupt 1</name>
+                            </value>
+                            <value val="0x3">
+                                <name>Trigger component-local interrupt 2</name>
+                            </value>
+                        </field>
+                    </offset>
+                </element>
+                <element bytes="0x8" offset="0x88">
+                    <offset num_bits="64" value="0x88">
+                        <field max_bit="63" min_bit="0" num_bits="64" mo="M" access="RW" base_bit="448">
+                            <name>Event Signal [511:448]</name>
+                            <value val="0x0">
+                                <name>No signal action is taken</name>
+                            </value>
+                            <value val="0x1">
+                                <name>Trigger component-local interrupt 0</name>
+                            </value>
+                            <value val="0x2">
+                                <name>Trigger component-local interrupt 1</name>
+                            </value>
+                            <value val="0x3">
+                                <name>Trigger component-local interrupt 2</name>
+                            </value>
+                        </field>
+                    </offset>
+                </element>
+            </array>
+        </struct>
+    </structs>
+</genz>

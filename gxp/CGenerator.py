@@ -1,0 +1,356 @@
+"""
+ If your brain boils in the process of reading this code - its normal, since you
+are dealing with nested XML structure... hang in there.
+
+TODO: real docs here
+"""
+import datetime
+import math
+import os
+import xml.etree.ElementTree
+import jinja2
+import logging
+
+from pdb import set_trace
+
+from gxp.c_generator import parsers
+from gxp.c_generator import fields
+from gxp.c_generator.models import DataTypesModel
+from gxp.c_generator.utils import get_name, is_name_too_long, trim_name
+
+
+class CGenerator:
+    """
+        Loops through the XML fields of a specific format:
+        <structs> -> <struct> -> <offset> -> <field> -> <subfield [optionl]>.
+        Look for example inside this project/mock/ folder.
+    """
+
+    def __init__(self, root: list, parse_on_init=True, tags: dict={}, name=None, **kwargs):
+        self.context = root
+        self.name = name
+
+        self.structs = []
+        self.pointers = []
+        self.enums = []
+        self.unions = []
+        self.struct_arrays = []
+
+        self.DataTypes = kwargs.get('data_types', DataTypesModel)
+
+        self.struct_type_start_index = kwargs.get('struct_type_start_index', 0)
+
+        self.root_tag_name = tags.get('root', 'structs')
+        self.struct_tag_name = tags.get('struct', 'struct')
+
+        root_structs = root.find(self.root_tag_name)
+        if parse_on_init:
+            self.parse_xml(root_structs)
+
+
+    def parse_xml(self, context):
+        """
+        @param context: xml tree. A root to start iterating through subfields of.
+        @param subfields: fields to loop through, where each next element in this
+                        list is a child of the previous.  Default: [ 'offest',
+                        'field', 'subfield']-> 'field' searched in the 'offset'.
+        """
+        xml_structs = context.findall(self.struct_tag_name)
+        self._parse_structs(xml_structs)
+
+
+    def _parse_structs(self, xml_structs):
+        for struct_elem in xml_structs:
+            struct_parser = parsers.StructBuilder(struct_elem)
+            self.structs.append(struct_parser.instance)
+
+            union_builder = parsers.UnionBuilder(struct_elem)
+            if union_builder is not None and union_builder.instance is not None:
+                self.unions.extend(union_builder.instance)
+
+            enum_builder = parsers.EnumBuilder(struct_elem)
+            if enum_builder.instance is not None:
+                self.enums.extend(enum_builder.instance)
+
+            pointer_parser = parsers.PointerBuilder(struct_elem, data_types=self.DataTypes)
+            if pointer_parser.instance is not None:
+                self.pointers.append(pointer_parser.instance)
+                struct_parser.instance.child_pointers.extend(pointer_parser.instance.entries)
+
+            #Parsing a table is almost a recursive process. Each <table> or
+            #<array> entry has almost the same structure as <struct> entry.
+            table_parser = parsers.TableBuilder(struct_elem)
+            if table_parser.instance is not None:
+                for cgen in table_parser.instance:
+                    for t_struct in cgen.structs:
+                        table_entry_name = 'struct %s' % t_struct.name
+                        struct_entry = fields.CStructEntry(
+                                            cgen.structs[0].name.lstrip('genz_') + '[]',
+                                            var_type=table_entry_name)
+
+                        #Adding created Table entry to the current struct_parser
+                        #entries list
+                        if not struct_entry in struct_parser.instance.entries:
+                            struct_parser.instance.append(struct_entry)
+
+                        #loop through table's structs and only add those that are
+                        #not already in the main structs list.
+                        # These are the struct generated from <array> fields.
+                        target = []
+                        target.extend(cgen.structs)
+                        for ms in target:
+                            if ms not in self.struct_arrays:
+                                self.struct_arrays.insert(0, ms)
+
+                        struct_parser.instance.child_arrays.extend(cgen.structs)
+
+                        self._add_to_list(cgen.unions, self.unions)
+                        self._add_to_list(cgen.enums, self.enums)
+                        self._add_to_list(cgen.pointers, self.pointers)
+                        self._add_to_list(cgen.struct_arrays, self.struct_arrays, is_push_front=True)
+
+
+    def refresh_pointers(self):
+        for pointer in self.pointers:
+            print('refresh_pointers -> %s' % pointer.name)
+
+
+    def merge(self, generator):
+        """
+            Merge each entry types (EXCEPT "structs") from other CGenerator object
+        into this one. Ignoring "structs" merging, because it is more often than not
+        doesn't mean what you think it means. For example, in one case "self.structs"
+        are the collection of <struct> entries, in other - its <table>.
+
+        @param generator: a CGenerator kind of object to merge entries from.
+        """
+        self._add_to_list(generator.unions, self.unions)
+        self._add_to_list(generator.enums, self.enums)
+        self._add_to_list(generator.pointers, self.pointers)
+        self._add_to_list(generator.struct_arrays, self.struct_arrays)
+        # self._add_to_list(generator.structs, self.structs)
+
+
+    def _add_to_list(self, what_to_add, list_to_add_to, is_push_front=False):
+        target = []
+        target.extend(what_to_add)
+        for t in target:
+            if t not in list_to_add_to:
+                if not is_push_front:
+                    list_to_add_to.append(t)
+                else:
+                    list_to_add_to.insert(0,t)
+
+
+    def update_pointers(self):
+        ptr_types = self.DataTypes.pointer_types()
+        result = []
+        struct_ptr_enum = self.structs_enum
+        for pointer_array in self.pointers:
+            for pointer in pointer_array.entries:
+                if pointer in result:
+                    continue
+                if pointer.ptr_to is None:
+                    continue
+
+                if pointer.ptr_to.lower() == 'generic structure':
+                    pointer.p_type = struct_ptr_enum.entries[0].name
+                    pointer.p_flag = ptr_types['generic'].name
+                else:
+                    #Handle none generic flag
+                    is_chained = self._handle_ptr_chain(pointer)
+                    if not is_chained:
+                        self._handle_ptr_tables(pointer)
+
+                #Find and set a stuct's ENUM type for the pointer
+                p_type = self.find_struct_enum_by_name(pointer.ptr_to)
+                if p_type is None:  #PARANOIA
+                    logging.warning('Ptr "%s" -- ptr_to --> "%s" found no enum struct!' %\
+                                (pointer.name, pointer.ptr_to))
+                    p_type = struct_ptr_enum.entries[0]
+                pointer.p_type = p_type.name
+
+                if pointer.p_flag is None:
+                    pointer.p_flag = ptr_types['none'].name
+
+                    msg = '%s pointer flag type not set! Defaulting to %s'
+                    logging.warning(msg % (pointer.name, pointer.p_flag))
+
+                if pointer.p_type is None:
+                    pointer.p_type = struct_ptr_enum.entries[0].name
+
+                result.append(pointer)
+        return result
+
+
+    def _handle_ptr_chain(self, pointer):
+        """
+        If its pointing to a Struct, then keep following the pointer to find a enum
+        value from that big table of Struct names which is Second or whatever value
+        in the C array entries. Look up every pointer in the struct it points to.
+        If none points to its own struct - then it is a POINTER_STRUCTURE type.
+
+        Looked for a Struct or Table - look up the structure and look inside it
+        and its pointers, the First pointer is Start.
+
+        Every next point (technically the last one referencing itself) is Chained.
+        """
+        logging.debug('%s -> _handle_ptr_chain:\n pointer "%s" arrived.' % \
+                        (os.path.basename(__file__), pointer.name))
+
+        ptr_types = self.DataTypes.pointer_types()
+        ptr_name = 'genz_%s' % trim_name(pointer.ptr_to)
+        struct = self.find_struct_by_name(ptr_name)
+        if struct is None:
+            return False
+
+        p_flag_to_set = None
+        # if pointer.name == 'next_opcode_set_ptr':
+            # set_trace()
+
+        # struct_pointer_count = len(struct.child_pointers)
+        for struct_ptr in struct.child_pointers:
+            ptr_to_name = 'genz_%s' % trim_name(struct_ptr.ptr_to)
+            if struct.name == ptr_to_name:
+                p_flag_to_set = ptr_types['chain_start'].name
+            if struct_ptr == pointer:
+                p_flag_to_set = ptr_types['chained'].name
+
+        if p_flag_to_set is not None:
+            pointer.p_flag = p_flag_to_set
+
+        logging.debug('%s is a %s\n-----\n' % (pointer.name, p_flag_to_set))
+        return p_flag_to_set is not None
+
+
+    def _handle_ptr_tables(self, pointer) -> bool:
+        """
+    //If points to a thing that is a Table and it has an array that is THE ONLY thing in the table.
+    // then it is an array pointer.
+    GENZ_CONTROL_POINTER_ARRAY = 3, /* Table of structures, e.g. C-Access R-Key table. */
+
+    //look in the table and it just the offsets. Something talk to JIM who doesn't know.
+    //And if it DOES NOT has a "Variable" type <array>.
+    GENZ_CONTROL_POINTER_TABLE = 4,
+
+    //Looking at table ptr_to points to, it has some offsets and then an array
+    GENZ_CONTROL_POINTER_TABLE_WITH_HEADER = 5, /* Header followed by table of structures, e.g. ELog Table */
+        """
+        logging.debug('%s -> _handle_ptr_tables:\n pointer "%s" arrived.' % \
+                (os.path.basename(__file__), pointer.name))
+        ptr_flags = self.DataTypes.pointer_types()
+        ptr_name = 'genz_%s' % trim_name(pointer.ptr_to)
+        struct = self.find_struct_by_name(ptr_name)
+        if struct is None:
+            return False
+
+        if struct.origin is None:
+            return False
+
+        ptr_flag_to_set = None
+
+        arrays = struct.origin.findall('array')
+        offsets = struct.origin.findall('offset')
+        # probably a GENZ_CONTROL_POINTER_ARRAY, as long as the only element is
+        # an <array> and nothing else
+        if arrays is not None and len(arrays) > 0:
+            if len(struct.origin) == 1:
+                ptr_flag_to_set = ptr_flags['array']
+
+        #probably a GENZ_CONTROL_POINTER_TABLE
+        if len(offsets) > 0:
+            if not self._has_variable_array(arrays):
+                ptr_flag_to_set = ptr_flags['table']
+            else:
+                # GENZ_CONTROL_POINTER_TABLE_WITH_HEADER
+                if len(arrays) > 0:
+                    ptr_flag_to_set = ptr_flags['tbl_w_hdr']
+
+        if ptr_flag_to_set is not None:
+            pointer.p_flag = ptr_flag_to_set.name
+
+        return ptr_flag_to_set is not None
+
+
+    def _has_variable_array(self, arrays) -> bool:
+        """
+            Return True if at least one array in the list has "Elements"="Variable".
+        Return False otherwise.
+
+            @param arrays: list of xml field <array>.
+        """
+        for array in arrays:
+            if array.get('elements', '').lower() == 'variable':
+                return True
+        return False
+
+
+    def find_struct_by_name(self, target_name, target_struct=None):
+        if target_struct is None:
+            target_struct = self.structs
+        for struct in target_struct:
+            if struct.name == target_name:
+                return struct
+        return None
+
+
+    def find_struct_enum_by_name(self, target_name):
+        struct_ptr_enum = self.structs_enum
+        target_name = trim_name('genz_%s' % target_name.lower())
+        for enum_entry in struct_ptr_enum.entries:
+            if enum_entry.name.lower() == target_name:
+                return enum_entry
+        return None
+
+
+    @property
+    def structs_enum(self):
+        return self.DataTypes.build_ctrl_struct_type_enum(self.structs, self.struct_type_start_index)
+
+
+    @property
+    def structs_enum(self):
+        """
+            Build and return an Enum of all the struct names as entries.
+        """
+        #Note to self: this is awful! I don't like the "dynamic" building of this,
+        #cause it has to loop through each struct entry every time this property
+        #is called. Madeness. By convenient...
+        return self.DataTypes.build_ctrl_struct_type_enum(self.structs, self.struct_type_start_index)
+
+
+    @property
+    def entries(self):
+        result = []
+
+        ctrl_ptr_flags = self.DataTypes.build_ptr_flags_enum()
+        ptr_sizes = self.DataTypes.build_ptr_sizes_enum()
+        ctrl_ptr_struct = self.DataTypes.build_ctrl_struct_ptr_struct()
+        ctrl_ptr_info_struct = self.DataTypes.build_ctrl_ptr_info_struct()
+        # struct_types = self.DataTypes.build_ctrl_struct_type_enum(self.structs, self.struct_type_start_index)
+        externs = self.DataTypes.build_externs()
+
+        result.append(ctrl_ptr_flags)
+        result.append(ptr_sizes)
+        result.append(ctrl_ptr_info_struct)
+        result.append(self.structs_enum)
+        result.append(ctrl_ptr_struct)
+        result.extend(externs)
+
+        # Order of adding things Matters for C file to compile.
+        for union in self.unions:
+            result.append(union)
+
+        for enum in self.enums:
+            result.append(enum)
+
+        structs = []
+        structs.extend(self.struct_arrays)
+        structs.extend(self.structs)
+        for struct in structs:
+            if len(struct.entries) == 1:
+                if '[]' in struct.entries[0].name:
+                    continue
+            result.append(struct)
+
+        return result

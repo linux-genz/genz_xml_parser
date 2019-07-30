@@ -1,0 +1,74 @@
+<structs>
+    <struct name="Core Structure" type="0x0">
+        <offset num_bits="64" value="0x8">
+            <field max_bit="63" min_bit="0" num_bits="64" mo="M">
+                <name>C-Status</name>
+                <subfield max_bit="2" min_bit="0" num_bits="3" access="RO">
+                    <name>C-State</name>
+                    <value val="0x0">
+                        <name>C-Down</name>
+                    </value>
+                    <value val="0x1">
+                        <name>C-CFG</name>
+                    </value>
+                    <value val="0x2">
+                        <name>C-Up</name>
+                    </value>
+                    <value val="0x3">
+                        <name>C-LP</name>
+                    </value>
+                    <value val="0x4">
+                        <name>C-DLP</name>
+                    </value>
+                    <value min_val="0x5" max_val="0x7">
+                        <name>Reserved</name>
+                    </value>
+                </subfield>
+                <subfield max_bit="3" min_bit="3" num_bits="1" access="RW1C">
+                    <name>Unsolicited Event (UE) Packet Status</name>
+                </subfield>
+                <subfield max_bit="4" min_bit="4" num_bits="1" access="RW1C">
+                    <name>Non-Fatal Internal Error Detected</name>
+                </subfield>
+            </field>
+        </offset>
+        <offset num_bits="32" value="0x0">
+            <field max_bit="0" min_bit="0" num_bits="1" mo="M" access="RW">
+                <name>A</name>
+                <value val="0b">
+                    <name>Available</name>
+                </value>
+                <value val="1b">
+                    <name>Unavailable</name>
+                </value>
+            </field>
+            <field max_bit="2" min_bit="1" num_bits="2" mo="M" access="RW">
+                <name>Vers</name>
+            </field>
+            <field max_bit="3" min_bit="3" num_bits="1" mo="M" access="RW">
+                <name>CV</name>
+            </field>
+            <field max_bit="4" min_bit="4" num_bits="1" mo="M" access="RW">
+                <name>SV</name>
+            </field>
+            <field max_bit="5" min_bit="5" num_bits="1" mo="M" access="RW">
+                <name>GC</name>
+            </field>
+            <field max_bit="6" min_bit="6" num_bits="1" mo="M" access="RW">
+                <name>IV</name>
+            </field>
+            <field max_bit="7" min_bit="7" num_bits="1" access="RsvdP">
+                <name>R0</name>
+            </field>
+            <field max_bit="15" min_bit="8" num_bits="8" mo="M" access="RW">
+                <name>Event</name>
+            </field>
+            <field max_bit="19" min_bit="16" num_bits="4" access="RsvdP">
+                <name>R1</name>
+            </field>
+            <field max_bit="31" min_bit="20" num_bits="12" mo="O" access="RW">
+                <name>Interface ID</name>
+            </field>
+        </offset>
+    </struct>
+</structs>

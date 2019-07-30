@@ -1,0 +1,14 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <struct name="Core Structure" type="0x0" vers="0x1" size="0x200">
+            <offset num_bits="64" value="0x48">
+                <field max_bit="31" min_bit="0" num_bits="32" mo="M" access="RO" ptr_to="Generic Structure">
+                    <name>Control Structure PTR 0</name>
+                </field>
+                <field max_bit="63" min_bit="32" num_bits="32" mo="M" access="RO" ptr_to="Generic Structure">
+                    <name>Control Structure PTR 1</name>
+                </field>
+            </offset>
+        </struct>
+    </structs>
+</genz>
