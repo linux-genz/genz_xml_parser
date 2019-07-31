@@ -48,10 +48,10 @@ class ClassParser(FieldBuilderBase):
             raw_name = get_name(class_elem)
 
             trimmed_name = raw_name.lower().split('(')[0].strip()
-            if 'switch' in trimmed_name:
-                trimmed_name = 'switch'
-            if 'bridge' in trimmed_name:
-                trimmed_name = 'bridge'
+            # if 'switch' in trimmed_name:
+            #     trimmed_name = 'switch'
+            # if 'bridge' in trimmed_name:
+            #     trimmed_name = 'bridge'
 
             name = trim_name(trimmed_name, replaceable=' —[:](),=.\n', removable='\'|!<>@#$%^&*+–’-/')
 

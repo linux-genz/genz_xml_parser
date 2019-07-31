@@ -47,7 +47,7 @@
  * **************************************************************
  *
  * Struct        -----------------------------------  1
- * Struct entries(declared inside structs and enums)  35
+ * Struct entries(declared inside structs and enums)  38
  * Unions        -----------------------------------  0
  * Enums         -----------------------------------  1
  */
@@ -117,14 +117,17 @@ extern size_t genz_ctrl_struct_type_to_ptrs_nelems;
 enum hardware_types {
     RESERVED_SHALL_NOT_BE_USED = 0,
     MEMORY = 1,
-    SWITCH = 3,
+    INTEGRATED_SWITCH = 3,
+    ENCLOSURE_EXPANSION_SWITCH = 4,
+    FABRIC_SWITCH = 5,
     PROCESSOR = 6,
     ACCELERATOR = 8,
     IO = 12,
     BLOCK_STORAGE = 16,
     TRANSPARENT_ROUTER = 18,
     MULTICLASS_COMPONENT = 19,
-    BRIDGE = 20,
+    DISCRETE_GENZ_BRIDGE = 20,
+    INTEGRATED_GENZ_BRIDGE = 21,
     COMPLIANCE_TEST_BOARD = 22,
     LOGICAL_PCIE_HIERARCHY = 23
 };
