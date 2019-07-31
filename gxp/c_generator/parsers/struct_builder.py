@@ -67,6 +67,10 @@ class StructBuilder(FieldBuilderBase):
         """
             TODO
         """
+        if field is None:
+            logging.error('Failed parsing field (is None)! Root: %s' % self.root)
+            return
+
         s_entry = None
         name = get_name(field)
         field_name = trim_name(name)
@@ -90,9 +94,14 @@ class StructBuilder(FieldBuilderBase):
         if props.get('offset_bits', None) is None:
             props['offset_bits'] = bits
 
+        var_type = None
+        if 'uuid' in field_name:
+            var_type = 'uuid_t'
+
         s_entry = fields.CStructEntry(name=field_name,
                                     num_type=props['offset_bits'],
-                                    bitfield=props['num_bits'])
+                                    bitfield=props['num_bits'],
+                                    var_type=var_type)
 
         s_entry.parent = self.root
         if is_no_name:

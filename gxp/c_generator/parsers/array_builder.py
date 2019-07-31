@@ -22,10 +22,8 @@ class ArrayBuilder(FieldBuilderBase):
         """
         root_name = get_name(root)
         arrays = root.findall('array')
-        is_indexed = False
         if len(arrays) > 1:
             logging.warn('More than one <array> in "%s"... not bad, but not good either.' % root_name)
-            is_indexed = True
 
         #use indexed loop to asign index to the name when(if) more than one array
         for index in range(len(arrays)):
@@ -38,5 +36,3 @@ class ArrayBuilder(FieldBuilderBase):
             if len(elements) == 0:
                 logging.warn('No <element> in array of "%s"! Skipping...' % root_name)
                 continue
-
-            element = elements[0] #only One element in the <array> makes sense here.

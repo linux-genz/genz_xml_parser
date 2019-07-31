@@ -31,7 +31,7 @@ class CStruct(BaseXmler):
     the resulted .h file.
     """
 
-    def __init__(self, name, entries=None, **kwargs):
+    def __init__(self, name, **kwargs):
         super().__init__(name, **kwargs)
 
         if name is not None:

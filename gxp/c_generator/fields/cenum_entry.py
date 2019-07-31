@@ -25,10 +25,16 @@ from gxp import c_generator
 
 class CEnumEntry(BaseXmler):
     """
-        TODO: docs
+    An Enum formated for the C language entry:
+        enum <name> {
+            estate_entry field,
+        }
     """
 
     def __init__(self, name):
+        """
+            @param name: Name of the Enum definition.
+        """
         super().__init__(name)
         self._longest_name: int = -1
 

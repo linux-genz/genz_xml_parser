@@ -42,6 +42,8 @@ class CStructEntry(BaseXmler):
         super().__init__(name, **kwargs)
         self.bitfield: int = None
         self.num_type: int = None
+        self._value = kwargs.get('value', None)
+        self.ignore_long_name_warning = kwargs.get('ignore_long_name_warning', False)
 
         if bitfield is not None:
             try:
@@ -77,11 +79,13 @@ class CStructEntry(BaseXmler):
         if self._var_type is not None:
             return self._var_type
 
-        if 'uuid' in self.name:
-            if self.definition is None:
-                return 'uuid_t'
+        # if 'uuid' in self.name:
+        #     if self.definition is None:
+        #         return 'uuid_t'
+        if self.num_type is not None:
+            return 'uint%s_t' % self.num_type
 
-        return 'uint%s_t' % self.num_type
+        return ''
 
 
     @var_type.setter
@@ -105,8 +109,8 @@ class CStructEntry(BaseXmler):
         :return: formatted string suited for C type struct field:
                     uint<offset_bits>_t <var_name> : <bitfield>
         """
-        if 'uuid' in self.name and self.definition is None:
-            return '%s%s %s;' % (self.str_left_space, self.var_type, self.name)
+        # if 'uuid' in self.name and self.definition is None:
+        #     return '%s%s %s;' % (self.str_left_space, self.var_type, self.name)
 
         semicolon_with_bits = '{var_space} : {bits_val}'\
                                 .format(var_space=self.str_var_space,
@@ -115,12 +119,14 @@ class CStructEntry(BaseXmler):
         # "var_type Name;"
         if self.bitfield is None or int(self.bitfield) < 0:
             semicolon_with_bits = ''
+        if self._value is not None:
+            semicolon_with_bits = ' = %s' % self._value
 
+        end_str = self.str_end
         length_comment = is_name_too_long(self.name)
         if length_comment:
-            end_str = '%s %s' % (self.str_end, length_comment)
-        else:
-            end_str = self.str_end
+            if not self.ignore_long_name_warning:
+                end_str = '%s %s' % (self.str_end, length_comment)
 
         msg = '{start}{left_space}{var_type} {name}{bits}{var_close_symbol}{end}'
         return msg.format(

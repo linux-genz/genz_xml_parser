@@ -55,6 +55,9 @@ class CGenerator:
                         list is a child of the previous.  Default: [ 'offest',
                         'field', 'subfield']-> 'field' searched in the 'offset'.
         """
+        if context is None:
+            return
+
         xml_structs = context.findall(self.struct_tag_name)
         self._parse_structs(xml_structs)
 

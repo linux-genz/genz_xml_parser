@@ -30,7 +30,7 @@ class BaseXmler(ABC):
 
     def __init__(self, name, **kwargs):
         self.name = name
-        self.entries: list = []
+        self.entries: list = kwargs.get('entries', [])
         #XML element or whatever else used to parse it into an entry.
         self.origin = kwargs.get('origin', None)
 
