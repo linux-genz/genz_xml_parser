@@ -41,7 +41,6 @@ class CPointerEntry(BaseXmler):
     """
 
     def __init__(self, name, p_size : str, p_value : str, p_type=None, ptr_to=None, p_flag=None, **kwargs):
-
         """
         @param name: name for the field to be used. Trimmed by parent class.
         @param p_size <str>: pointer size. Either '4' or '6'
@@ -126,7 +125,10 @@ class CPointerEntry(BaseXmler):
 
 
     def __eq__(self, other):
-        return self.p_value == other.p_value and self.name == other.name
+        return self.name == other.name and \
+                self.p_value == other.p_value and \
+                self.p_flag == other.p_flag
+
 
 
     def __str__(self):

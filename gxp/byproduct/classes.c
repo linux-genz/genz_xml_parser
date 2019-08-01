@@ -36,14 +36,13 @@
 #include <linux/kernel.h>
 #include "classes.h"
 
-
 struct hardware_classes_meta hardware_classes[] = {
      {  "Reserved—shall not be used",                          "reserved_shall_not_be_used", RESERVED_SHALL_NOT_BE_USED },
      {  "Memory ( P2P 64 )",                                   "memory", MEMORY },
      {  "Memory (Explicit OpClass)",                           "memory", MEMORY },
-     {  "Integrated Switch",                                   "integrated_switch", INTEGRATED_SWITCH },
-     {  "Enclosure / Expansion Switch",                        "enclosure_expansion_switch", ENCLOSURE_EXPANSION_SWITCH },
-     {  "Fabric Switch",                                       "fabric_switch", FABRIC_SWITCH },
+     {  "Integrated Switch",                                   "switch", SWITCH },
+     {  "Enclosure / Expansion Switch",                        "switch", SWITCH },
+     {  "Fabric Switch",                                       "switch", SWITCH },
      {  "Processor (Bootable)",                                "processor", PROCESSOR },
      {  "Processor (Non-boot)",                                "processor", PROCESSOR },
      {  "Accelerator (Non-coherent, non-boot)",                "accelerator", ACCELERATOR },
@@ -58,11 +57,15 @@ struct hardware_classes_meta hardware_classes[] = {
      {  "Block Storage (Non-boot)",                            "block_storage", BLOCK_STORAGE },
      {  "Transparent Router",                                  "transparent_router", TRANSPARENT_ROUTER },
      {  "Multi-class Component (see Service UUID Structure )", "multiclass_component", MULTICLASS_COMPONENT },
-     {  "Discrete Gen-Z Bridge",                               "discrete_genz_bridge", DISCRETE_GENZ_BRIDGE },
-     {  "Integrated Gen-Z Bridge",                             "integrated_genz_bridge", INTEGRATED_GENZ_BRIDGE },
+     {  "Discrete Gen-Z Bridge",                               "bridge", BRIDGE },
+     {  "Integrated Gen-Z Bridge",                             "bridge", BRIDGE },
      {  "Compliance Test Board",                               "compliance_test_board", COMPLIANCE_TEST_BOARD },
      {  "Logical PCIe Hierarchy (LPH)",                        "logical_pcie_hierarchy", LOGICAL_PCIE_HIERARCHY },
 };
+
+
+
+struct genz_control_structure_ptr genz_control_structure_type_to_ptrs[] = {};
 
 struct genz_control_ptr_info genz_control_structure_type_to_ptrs[] = {
 };

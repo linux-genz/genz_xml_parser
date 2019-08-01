@@ -77,7 +77,8 @@ class CGenerator:
 
             pointer_parser = parsers.PointerBuilder(struct_elem, data_types=self.DataTypes)
             if pointer_parser.instance is not None:
-                self.pointers.append(pointer_parser.instance)
+                if pointer_parser.instance not in self.pointers:
+                    self.pointers.append(pointer_parser.instance)
                 struct_parser.instance.child_pointers.extend(pointer_parser.instance.entries)
 
             #Parsing a table is almost a recursive process. Each <table> or
@@ -111,11 +112,6 @@ class CGenerator:
                         self._add_to_list(cgen.enums, self.enums)
                         self._add_to_list(cgen.pointers, self.pointers)
                         self._add_to_list(cgen.struct_arrays, self.struct_arrays, is_push_front=True)
-
-
-    def refresh_pointers(self):
-        for pointer in self.pointers:
-            print('refresh_pointers -> %s' % pointer.name)
 
 
     def merge(self, generator):
@@ -182,7 +178,8 @@ class CGenerator:
                 if pointer.p_type is None:
                     pointer.p_type = struct_ptr_enum.entries[0].name
 
-                result.append(pointer)
+                if pointer not in result:
+                    result.append(pointer)
         return result
 
 
@@ -208,8 +205,6 @@ class CGenerator:
             return False
 
         p_flag_to_set = None
-        # if pointer.name == 'next_opcode_set_ptr':
-            # set_trace()
 
         # struct_pointer_count = len(struct.child_pointers)
         for struct_ptr in struct.child_pointers:
@@ -303,6 +298,33 @@ class CGenerator:
             if enum_entry.name.lower() == target_name:
                 return enum_entry
         return None
+
+
+    def build_control_ptr_info_array(self):
+        array_type = self.DataTypes.ctr_ptr_info_struct_name
+        array_name = 'genz_control_structure_type_to_ptrs'
+        array = fields.CArrayEntry(array_name, 'struct %s' % array_type)
+
+        for ptr in self.pointers:
+            name_no_ptr = ptr.name.split('_ptrs')[0]
+            name_no_genz = ptr.name.lstrip('genz_').split('_structure')[0]
+
+            ptr_size = 'sizeof({name})/sizeof({name}[0])'.format(name=ptr.name)
+            ptr_offset = 'sizeof(struct genz_{name})'.format(name=name_no_ptr)
+
+            name = '{ptype}, {size}, {offset}, {vers}, "{stype}"'.format(
+                ptype=ptr.name,
+                size=ptr_size,
+                offset=ptr_offset,
+                vers=-1,
+                stype=name_no_genz
+            )
+            struct_entry = fields.CStructEntry(name, ignore_long_name_warning=True)
+            struct_entry.str_left_space = '%s { ' % struct_entry.str_left_space
+            struct_entry.str_close_symbol = ' },'
+
+            array.append(struct_entry)
+        return array
 
 
     @property

@@ -48,17 +48,18 @@ class ClassParser(FieldBuilderBase):
             raw_name = get_name(class_elem)
 
             trimmed_name = raw_name.lower().split('(')[0].strip()
-            # if 'switch' in trimmed_name:
-            #     trimmed_name = 'switch'
-            # if 'bridge' in trimmed_name:
-            #     trimmed_name = 'bridge'
 
             name = trim_name(trimmed_name, replaceable=' —[:](),=.\n', removable='\'|!<>@#$%^&*+–’-/')
+            if 'switch' in name:
+                name = 'switch'
+            if 'bridge' in trimmed_name:
+                name = 'bridge'
 
             if name not in list_of_names:
                 list_of_names.append(name)
 
-            estate = fields.EStateEntry(name.upper(), value)
+            enum_index =  len(self.enum.entries)
+            estate = fields.EStateEntry(name.upper(), enum_index)
             spaces = ' ' * (longest_name_length - len(raw_name))
             # { raw_name, condenced_name, condenced_enum_value }
             name = '"%s", %s"%s", %s' % (raw_name, spaces, name, estate.name)
@@ -66,7 +67,6 @@ class ClassParser(FieldBuilderBase):
 
             struct_entry.str_left_space = '%s { ' % struct_entry.str_left_space
             struct_entry.str_close_symbol = ' },'
-            struct_entry.pprint()
 
             self._instance.append(struct_entry)
             self.enum.append(estate)

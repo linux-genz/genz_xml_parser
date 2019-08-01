@@ -3,8 +3,8 @@ from gxp.c_generator import fields
 
 class DataTypesModel:
 
-    ptr_flags_enum_name = 'genz_control_ptr_type'
-    ptr_size_enum_name = 'genz_pointer_size'
+    # ptr_flags_enum_name = 'genz_control_ptr_type'
+    # ptr_size_enum_name = 'genz_pointer_size'
 
     ctrl_ptr_struct_name = 'genz_control_structure_ptr'
     ctrl_struct_type_enum_name = 'genz_control_structure_type'
@@ -38,7 +38,7 @@ class DataTypesModel:
             GENZ_CONTROL_POINTER_CHAIN_START = 6
         };
         """
-        return cls.build_enum(cls, cls.ptr_flags_enum_name, DataTypesModel.pointer_types())
+        return cls.build_enum(cls, cls.ctrl_ptr_flags_name, DataTypesModel.pointer_types())
 
 
     @classmethod
@@ -82,8 +82,8 @@ class DataTypesModel:
             struct genz_control_structure_ptr *ptr;
             size_t num_ptrs;
             ssize_t struct_bytes;
-            char *name;
             uint8_t vers;
+            char *name;
         };
         """
         struct = fields.CStruct(cls.ctr_ptr_info_struct_name)
@@ -92,8 +92,8 @@ class DataTypesModel:
             fields.CStructEntry('*ptr', var_type='struct %s' % cls.ctrl_ptr_struct_name),
             fields.CStructEntry('num_ptrs', var_type='size_t'),
             fields.CStructEntry('struct_bytes', var_type='ssize_t'),
-            fields.CStructEntry('*name', var_type='char'),
             fields.CStructEntry('vers', num_type=8),
+            fields.CStructEntry('*name', var_type='char'),
         ]
 
         struct.extend(entries)

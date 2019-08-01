@@ -38,12 +38,6 @@
 
 {{body}}
 
-struct {{type_name}} genz_control_structure_type_to_ptrs[] = {
-{%- for ptr in pointers %}
-    { {{ptr.name}}, sizeof({{ptr.name}})/sizeof({{ptr.name}}[0]), sizeof(struct genz_{{ptr.name.split('_ptrs')[0]}}), "{{ptr.name.lstrip('genz_').split('_structure')[0]}}" },
-{%- endfor %}
-};
-
 EXPORT_SYMBOL(genz_control_structure_type_to_ptrs);
 
 size_t genz_control_structure_type_to_ptrs_nelems =

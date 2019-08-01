@@ -41,13 +41,13 @@
  *
  * Generator Script Meta:
  *     Version      : v0.2
- *     Generated On : 31, Jul 2019
+ *     Generated On : 01, Aug 2019
  *
  *
  * **************************************************************
  *
  * Struct        -----------------------------------  1
- * Struct entries(declared inside structs and enums)  38
+ * Struct entries(declared inside structs and enums)  35
  * Unions        -----------------------------------  0
  * Enums         -----------------------------------  1
  */
@@ -117,19 +117,16 @@ extern size_t genz_ctrl_struct_type_to_ptrs_nelems;
 enum hardware_types {
     RESERVED_SHALL_NOT_BE_USED = 0,
     MEMORY = 1,
-    INTEGRATED_SWITCH = 3,
-    ENCLOSURE_EXPANSION_SWITCH = 4,
-    FABRIC_SWITCH = 5,
-    PROCESSOR = 6,
-    ACCELERATOR = 8,
-    IO = 12,
-    BLOCK_STORAGE = 16,
-    TRANSPARENT_ROUTER = 18,
-    MULTICLASS_COMPONENT = 19,
-    DISCRETE_GENZ_BRIDGE = 20,
-    INTEGRATED_GENZ_BRIDGE = 21,
-    COMPLIANCE_TEST_BOARD = 22,
-    LOGICAL_PCIE_HIERARCHY = 23
+    SWITCH = 2,
+    PROCESSOR = 3,
+    ACCELERATOR = 4,
+    IO = 5,
+    BLOCK_STORAGE = 6,
+    TRANSPARENT_ROUTER = 7,
+    MULTICLASS_COMPONENT = 8,
+    BRIDGE = 9,
+    COMPLIANCE_TEST_BOARD = 10,
+    LOGICAL_PCIE_HIERARCHY = 11
 };
 
 struct hardware_classes_meta {

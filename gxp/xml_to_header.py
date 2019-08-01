@@ -281,7 +281,10 @@ def main(cmd_args: dict):
     }
 
     if class_parser is not None and class_parser.instance is not None:
-        c_template_props['body'] = '\n%s' % class_parser.instance.pprint()
+        c_template_props['body'] = '%s\n\n%s' % (class_parser.instance.pprint(), c_template_props['body'])
+
+    c_template_props['body'] = '%s\n\n%s' % \
+            (c_template_props['body'], generator.build_control_ptr_info_array())
 
     header = render_template_str(cmd_args['header_template'], template_props)
     c_file = render_template_str(cmd_args['c_template'], c_template_props)
