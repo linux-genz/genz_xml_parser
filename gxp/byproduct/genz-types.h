@@ -91,12 +91,12 @@ enum genz_pointer_size {
 };
 
 struct genz_control_ptr_info {
-    struct genz_control_structure_ptr *ptr;
-    size_t num_ptrs;
-    ssize_t struct_bytes;
-    bool chained;
-    uint8_t vers;
-    char *name;
+    const struct genz_control_structure_ptr * const ptr;
+    const size_t num_ptrs;
+    const ssize_t struct_bytes;
+    const bool chained;
+    const uint8_t vers;
+    const char * const name;
 };
 
 enum genz_control_structure_type {
@@ -195,10 +195,10 @@ enum genz_control_structure_type {
 };
 
 struct genz_control_structure_ptr {
-    enum genz_control_ptr_flags ptr_type;
-    enum genz_pointer_size ptr_size;
-    uint32_t pointer_offset;
-    enum genz_control_structure_type struct_type;
+    const enum genz_control_ptr_flags ptr_type;
+    const enum genz_pointer_size ptr_size;
+    const uint32_t pointer_offset;
+    const enum genz_control_structure_type struct_type;
 };
 
 extern struct genz_control_ptr_info genz_ctrl_struct_type_to_ptrs[];
@@ -4808,9 +4808,9 @@ struct genz_pg_restricted_pg_table_array {
 };
 
 struct hardware_classes_meta {
-    char* raw_name;
-    char* condensed_name;
-    enum hardware_types value;
+    const char * const raw_name;
+    const char * const condensed_name;
+    const enum hardware_types value;
 };
 
 struct genz_core_structure {

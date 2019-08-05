@@ -64,10 +64,10 @@ class DataTypesModel:
         struct = fields.CStruct(cls.ctrl_ptr_struct_name)
 
         entries = [
-            fields.CStructEntry('ptr_type', var_type='enum %s' % cls.ctrl_ptr_flags_name),
-            fields.CStructEntry('ptr_size', var_type='enum %s' % cls.ptr_size_enum_name),
-            fields.CStructEntry('pointer_offset', num_type=32),
-            fields.CStructEntry('struct_type', var_type='enum %s' % cls.ctrl_struct_type_enum_name),
+            fields.CStructEntry('ptr_type', var_type='const enum %s' % cls.ctrl_ptr_flags_name),
+            fields.CStructEntry('ptr_size', var_type='const enum %s' % cls.ptr_size_enum_name),
+            fields.CStructEntry('pointer_offset', var_type='const uint32_t'),
+            fields.CStructEntry('struct_type', var_type='const enum %s' % cls.ctrl_struct_type_enum_name),
         ]
 
         struct.extend(entries)
@@ -88,12 +88,12 @@ class DataTypesModel:
         struct = fields.CStruct(cls.ctr_ptr_info_struct_name)
 
         entries = [
-            fields.CStructEntry('*ptr', var_type='struct %s' % cls.ctrl_ptr_struct_name),
-            fields.CStructEntry('num_ptrs', var_type='size_t'),
-            fields.CStructEntry('struct_bytes', var_type='ssize_t'),
-            fields.CStructEntry('chained', var_type='bool'), #structure contains chained ptr
-            fields.CStructEntry('vers', num_type=8),
-            fields.CStructEntry('*name', var_type='char'),
+            fields.CStructEntry('* const ptr', var_type='const struct %s' % cls.ctrl_ptr_struct_name),
+            fields.CStructEntry('num_ptrs', var_type='const size_t'),
+            fields.CStructEntry('struct_bytes', var_type='const ssize_t'),
+            fields.CStructEntry('chained', var_type='const bool'), #structure contains chained ptr
+            fields.CStructEntry('vers', var_type='const uint8_t'),
+            fields.CStructEntry('name', var_type='const char * const'),
         ]
 
         struct.extend(entries)

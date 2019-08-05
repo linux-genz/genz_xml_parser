@@ -96,9 +96,9 @@ class ClassParser(FieldBuilderBase):
         "value" - a 'condensed' indexed ('hardware_types' enum defined in __init__).
         """
         entries = [
-            fields.CStructEntry('raw_name', var_type='char*'),
-            fields.CStructEntry('condensed_name', var_type='char*'),
-            fields.CStructEntry('value', var_type='enum %s' % self.enum.name), #name of the enum
+            fields.CStructEntry('raw_name', var_type='const char * const'),
+            fields.CStructEntry('condensed_name', var_type='const char * const'),
+            fields.CStructEntry('value', var_type='const enum %s' % self.enum.name), #name of the enum
         ]
         struct_instance = fields.CStruct(self.struct_name, entries=entries)
         return struct_instance
