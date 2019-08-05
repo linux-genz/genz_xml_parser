@@ -66,9 +66,16 @@ def get_name(field):
     containing the name for that field. This function extracts that.
     """
     name_field = field.find('name')
+    if name_field is not None:
+        name_field = name_field.text
+
     if name_field is None:
-        return field.get('name', None)
-    return name_field.text
+        name_field = field.get('name', None)
+
+    if name_field is None:
+        name_field = field.text.strip().strip('\n')
+
+    return name_field
 
 
 def is_name_too_long(name):

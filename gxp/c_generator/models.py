@@ -3,8 +3,8 @@ from gxp.c_generator import fields
 
 class DataTypesModel:
 
-    ptr_flags_enum_name = 'genz_control_ptr_type'
-    ptr_size_enum_name = 'genz_pointer_size'
+    # ptr_flags_enum_name = 'genz_control_ptr_type'
+    # ptr_size_enum_name = 'genz_pointer_size'
 
     ctrl_ptr_struct_name = 'genz_control_structure_ptr'
     ctrl_struct_type_enum_name = 'genz_control_structure_type'
@@ -35,10 +35,9 @@ class DataTypesModel:
         enum genz_control_ptr_flags {
             GENZ_CONTROL_POINTER_NONE = 0,
             ...
-            GENZ_CONTROL_POINTER_CHAIN_START = 6
         };
         """
-        return cls.build_enum(cls, cls.ptr_flags_enum_name, DataTypesModel.pointer_types())
+        return cls.build_enum(cls, cls.ctrl_ptr_flags_name, DataTypesModel.pointer_types())
 
 
     @classmethod
@@ -65,10 +64,10 @@ class DataTypesModel:
         struct = fields.CStruct(cls.ctrl_ptr_struct_name)
 
         entries = [
-            fields.CStructEntry('ptr_type', var_type='enum %s' % cls.ctrl_ptr_flags_name),
-            fields.CStructEntry('ptr_size', var_type='enum %s' % cls.ptr_size_enum_name),
-            fields.CStructEntry('pointer_offset', num_type=32),
-            fields.CStructEntry('struct_type', var_type='enum %s' % cls.ctrl_struct_type_enum_name),
+            fields.CStructEntry('ptr_type', var_type='const enum %s' % cls.ctrl_ptr_flags_name),
+            fields.CStructEntry('ptr_size', var_type='const enum %s' % cls.ptr_size_enum_name),
+            fields.CStructEntry('pointer_offset', var_type='const uint32_t'),
+            fields.CStructEntry('struct_type', var_type='const enum %s' % cls.ctrl_struct_type_enum_name),
         ]
 
         struct.extend(entries)
@@ -82,18 +81,19 @@ class DataTypesModel:
             struct genz_control_structure_ptr *ptr;
             size_t num_ptrs;
             ssize_t struct_bytes;
-            char *name;
             uint8_t vers;
+            char *name;
         };
         """
         struct = fields.CStruct(cls.ctr_ptr_info_struct_name)
 
         entries = [
-            fields.CStructEntry('*ptr', var_type='struct %s' % cls.ctrl_ptr_struct_name),
-            fields.CStructEntry('num_ptrs', var_type='size_t'),
-            fields.CStructEntry('struct_bytes', var_type='ssize_t'),
-            fields.CStructEntry('*name', var_type='char'),
-            fields.CStructEntry('vers', num_type=8),
+            fields.CStructEntry('* const ptr', var_type='const struct %s' % cls.ctrl_ptr_struct_name),
+            fields.CStructEntry('num_ptrs', var_type='const size_t'),
+            fields.CStructEntry('struct_bytes', var_type='const ssize_t'),
+            fields.CStructEntry('chained', var_type='const bool'), #structure contains chained ptr
+            fields.CStructEntry('vers', var_type='const uint8_t'),
+            fields.CStructEntry('name', var_type='const char * const'),
         ]
 
         struct.extend(entries)
@@ -135,11 +135,10 @@ class DataTypesModel:
         return {
             'none' : fields.EStateEntry('GENZ_CONTROL_POINTER_NONE', 0),
             'generic' : fields.EStateEntry('GENZ_CONTROL_POINTER_STRUCTURE', 1),
-            'chain_start' : fields.EStateEntry('GENZ_CONTROL_POINTER_CHAIN_START', 2),
-            'chained' : fields.EStateEntry('GENZ_CONTROL_POINTER_CHAINED', 3),
-            'array' : fields.EStateEntry('GENZ_CONTROL_POINTER_ARRAY', 4),
-            'table' : fields.EStateEntry('GENZ_CONTROL_POINTER_TABLE', 5),
-            'tbl_w_hdr' : fields.EStateEntry('GENZ_CONTROL_POINTER_TABLE_WITH_HEADER', 6),
+            'chained' : fields.EStateEntry('GENZ_CONTROL_POINTER_CHAINED', 2),
+            'array' : fields.EStateEntry('GENZ_CONTROL_POINTER_ARRAY', 3),
+            'table' : fields.EStateEntry('GENZ_CONTROL_POINTER_TABLE', 4),
+            'tbl_w_hdr' : fields.EStateEntry('GENZ_CONTROL_POINTER_TABLE_WITH_HEADER', 5),
         }
 
 

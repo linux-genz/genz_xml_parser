@@ -43,6 +43,7 @@ from pdb import set_trace
 from gxp.c_generator import fields
 from gxp.c_generator.models import DataTypesModel
 from CGenerator import CGenerator
+from gxp.c_generator.parsers import ClassParser
 
 
 def render_template_str(template_path: str, props: dict):
@@ -234,6 +235,13 @@ def main(cmd_args: dict):
     generator._add_to_list(table_generator.structs, generator.structs)
     pointers = generator.update_pointers()
 
+    struct_info_array, table_info_array = generator.build_control_ptr_info_array()
+
+    class_parser = ClassParser(xml_root.find('classes'))
+    if class_parser is not None and class_parser.instance is not None:
+        generator.enums.append(class_parser.enum)
+        generator.structs.insert(0, class_parser.struct_meta)
+
     entries = generator.entries
 
     write_props = entries_to_str(entries)
@@ -273,6 +281,15 @@ def main(cmd_args: dict):
         'pointers': pointers,
         'type_name': DataTypesModel.ctr_ptr_info_struct_name
     }
+
+    if class_parser is not None and class_parser.instance is not None:
+        c_template_props['body'] = '%s\n\n%s' % (class_parser.instance.pprint(), c_template_props['body'])
+
+    c_template_props['body'] = '%s\n\n%s' % \
+            (c_template_props['body'], struct_info_array)
+    c_template_props['body'] = '%s\n\n%s' % \
+            (c_template_props['body'], table_info_array)
+
     header = render_template_str(cmd_args['header_template'], template_props)
     c_file = render_template_str(cmd_args['c_template'], c_template_props)
 

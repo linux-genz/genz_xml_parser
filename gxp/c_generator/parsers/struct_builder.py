@@ -56,7 +56,10 @@ class StructBuilder(FieldBuilderBase):
         name = trim_name(name)
 
         struct = fields.CStruct('genz_%s' % name, origin=field)
-        struct.tag = self.root.tag
+        struct.vers = field.get('vers', None)
+        struct.index = field.get('type', 0)
+
+        # struct.tag = self.root.tag
         length_comment = is_name_too_long(struct.name)
         if length_comment:
             struct.open_bracket_str = '%s %s' % (struct.open_bracket_str, length_comment)
@@ -67,6 +70,10 @@ class StructBuilder(FieldBuilderBase):
         """
             TODO
         """
+        if field is None:
+            logging.error('Failed parsing field (is None)! Root: %s' % self.root)
+            return
+
         s_entry = None
         name = get_name(field)
         field_name = trim_name(name)
@@ -90,9 +97,16 @@ class StructBuilder(FieldBuilderBase):
         if props.get('offset_bits', None) is None:
             props['offset_bits'] = bits
 
+        var_type = None
+        bitfield = props['num_bits']
+        if 'uuid' in field_name:
+            var_type = 'uuid_t'
+            bitfield = -1
+
         s_entry = fields.CStructEntry(name=field_name,
                                     num_type=props['offset_bits'],
-                                    bitfield=props['num_bits'])
+                                    bitfield=bitfield,
+                                    var_type=var_type)
 
         s_entry.parent = self.root
         if is_no_name:

@@ -29,14 +29,23 @@ class BaseXmler(ABC):
     """
 
     def __init__(self, name, **kwargs):
+        """
+            @param entries: [optional] <list> of entries can be set during init.
+            @param origin: [optional] <xml.etree.ElementTree> xml object this
+                        entry generated from.
+            @param tag: [optional] tag of the entry. If origin is set - its tag
+                        can be used. Origin's tag can be overwritting by setting
+                        this prop.
+            @param
+        """
         self.name = name
-        self.entries: list = []
+        self.entries: list = kwargs.get('entries', [])
         #XML element or whatever else used to parse it into an entry.
         self.origin = kwargs.get('origin', None)
+        self._tag = kwargs.get('tag', None)
 
         self.parent = None # an xml object - a parent of the entry
         self.children = []
-        self.tag = None
         self.str_start = '' # string to put in front of the entry (e.g. comments)
         self.str_end = '' # string to put in the end of the entry
         self.open_bracket_str = '{'
@@ -75,6 +84,15 @@ class BaseXmler(ABC):
 
     def get(self, key, default=None):
         return self.__dict__.get(key, default)
+
+
+    @property
+    def tag(self):
+        if self._tag is not None:
+            return self._tag
+        if self.origin is not None:
+            return self.origin.tag
+        return None
 
 
     @abstractmethod

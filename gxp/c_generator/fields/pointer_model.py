@@ -41,7 +41,6 @@ class CPointerEntry(BaseXmler):
     """
 
     def __init__(self, name, p_size : str, p_value : str, p_type=None, ptr_to=None, p_flag=None, **kwargs):
-
         """
         @param name: name for the field to be used. Trimmed by parent class.
         @param p_size <str>: pointer size. Either '4' or '6'
@@ -73,45 +72,6 @@ class CPointerEntry(BaseXmler):
     @staticmethod
     def enum_sizes_model():
         return DataTypesModel.pointer_sizes()
-
-
-    @property
-    def p_type_name(self):
-        """
-            Pointer types are, technically, defined in the templates/header.template
-        file. This mirror's those enum entries and figures out which type to use.
-
-        Name should have a PTR in the string. Otherwise - no soup.
-
-        If PTR follow with a number, then it is a "generic" type (e.g. "something PTR 1").
-        If "NEXT" is in the name, then it is a 'chained' type (e.g. "NEXT something PTR").
-        TODO: array and link types dsc
-        """
-        # if self._p_type is not None:
-        #     if self._p_type in self._ptr_names:
-        #         return self._ptr_names[self._p_type]
-        #     else:
-        #         logging.error('Pointer type for %s is invalid: %s.' %
-        #                         (self.name, self._p_type))
-
-        # if not '_ptr' in self.name:
-        #     self.str_end = '%s %s' % (self.str_end, self._ptr_names['none'])
-        #     return self._ptr_names['generic']
-
-        # splitted = self.name.split('_ptr')
-
-        # ptr_number = splitted[-1].strip('_').strip() #either empty or a number
-        # if ptr_number.isdigit():
-        #     return self._ptr_names['generic']
-
-        # if 'next' in self.name.lower():
-        #     return self._ptr_names['chained']
-
-        #no soup. Name didn't match a pointer type. Default: generic, but shout.
-        # self.str_end = '%s %s' % (self.str_end, self._ptr_names['none'])
-        # logging.warning('Pointer entry %s has no known type.' % self.name)
-        return self._ptr_names['none']
-
 
     @property
     def p_size(self):
@@ -165,7 +125,10 @@ class CPointerEntry(BaseXmler):
 
 
     def __eq__(self, other):
-        return self.p_value == other.p_value and self.name == other.name
+        return self.name == other.name and \
+                self.p_value == other.p_value and \
+                self.p_flag == other.p_flag
+
 
 
     def __str__(self):

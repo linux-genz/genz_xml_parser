@@ -4,6 +4,7 @@ from .pointer_builder import PointerBuilder
 from .enum_builder import EnumBuilder
 from .union_builder import UnionBuilder
 from .table_builder import TableBuilder
+from .classes_parser import ClassParser
 
 FieldBuilderBase = FieldBuilderBase
 StructBuilder = StructBuilder
@@ -11,3 +12,4 @@ PointerBuilder = PointerBuilder
 EnumBuilder = EnumBuilder
 UnionBuilder = UnionBuilder
 TableBuilder = TableBuilder
+ClassParser = ClassParser

@@ -1,0 +1,30 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="" pkt="" word="">
+    <classes>
+        <class value="0">Reserved—shall not be used</class>
+        <class value="1">Memory ( P2P 64 )</class>
+        <class value="2">Memory (Explicit OpClass)</class>
+        <class value="3">Integrated Switch</class>
+        <class value="4">Enclosure / Expansion Switch</class>
+        <class value="5">Fabric Switch</class>
+        <class value="6">Processor (Bootable)</class>
+        <class value="7">Processor (Non-boot)</class>
+        <class value="8">Accelerator (Non-coherent, non-boot)</class>
+        <class value="9">Accelerator (Coherent, non-boot)</class>
+        <class value="10">Accelerator (Non-coherent, bootable)</class>
+        <class value="11">Accelerator (Coherent, bootable)</class>
+        <class value="12">I/O (Non-coherent, non-boot)</class>
+        <class value="13">I/O (Coherent, non-boot)</class>
+        <class value="14">I/O (Non-coherent, bootable)</class>
+        <class value="15">I/O (Coherent, bootable)</class>
+        <class value="16">Block Storage (Bootable)</class>
+        <class value="17">Block Storage (Non-boot)</class>
+        <class value="18">Transparent Router</class>
+        <class value="19">
+Multi-class Component (see Service UUID Structure )
+        </class>
+        <class value="20">Discrete Gen-Z Bridge</class>
+        <class value="21">Integrated Gen-Z Bridge</class>
+        <class value="22">Compliance Test Board</class>
+        <class value="23">Logical PCIe Hierarchy (LPH)</class>
+    </classes>
+</genz>

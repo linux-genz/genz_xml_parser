@@ -24,10 +24,14 @@ from gxp.c_generator.fields.base_xmler import BaseXmler
 
 class EStateEntry(BaseXmler):
     """
-        TODO: docs
+        An entry for the Enum instance.
     """
 
     def __init__(self, name, value):
+        """
+            @param name: name of the enum state.
+            @param value: Value of the state.
+        """
         super().__init__(name)
         #FIXME: hack. Few entries has those values that python crashes on.
         if value == '0b':

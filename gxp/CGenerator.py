@@ -55,6 +55,9 @@ class CGenerator:
                         list is a child of the previous.  Default: [ 'offest',
                         'field', 'subfield']-> 'field' searched in the 'offset'.
         """
+        if context is None:
+            return
+
         xml_structs = context.findall(self.struct_tag_name)
         self._parse_structs(xml_structs)
 
@@ -74,7 +77,8 @@ class CGenerator:
 
             pointer_parser = parsers.PointerBuilder(struct_elem, data_types=self.DataTypes)
             if pointer_parser.instance is not None:
-                self.pointers.append(pointer_parser.instance)
+                if pointer_parser.instance not in self.pointers:
+                    self.pointers.append(pointer_parser.instance)
                 struct_parser.instance.child_pointers.extend(pointer_parser.instance.entries)
 
             #Parsing a table is almost a recursive process. Each <table> or
@@ -108,11 +112,6 @@ class CGenerator:
                         self._add_to_list(cgen.enums, self.enums)
                         self._add_to_list(cgen.pointers, self.pointers)
                         self._add_to_list(cgen.struct_arrays, self.struct_arrays, is_push_front=True)
-
-
-    def refresh_pointers(self):
-        for pointer in self.pointers:
-            print('refresh_pointers -> %s' % pointer.name)
 
 
     def merge(self, generator):
@@ -179,7 +178,8 @@ class CGenerator:
                 if pointer.p_type is None:
                     pointer.p_type = struct_ptr_enum.entries[0].name
 
-                result.append(pointer)
+                if pointer not in result:
+                    result.append(pointer)
         return result
 
 
@@ -205,16 +205,16 @@ class CGenerator:
             return False
 
         p_flag_to_set = None
-        # if pointer.name == 'next_opcode_set_ptr':
-            # set_trace()
 
         # struct_pointer_count = len(struct.child_pointers)
         for struct_ptr in struct.child_pointers:
             ptr_to_name = 'genz_%s' % trim_name(struct_ptr.ptr_to)
             if struct.name == ptr_to_name:
-                p_flag_to_set = ptr_types['chain_start'].name
+                # p_flag_to_set = ptr_types['chain_start'].name
+                p_flag_to_set = ptr_types['generic'].name
             if struct_ptr == pointer:
                 p_flag_to_set = ptr_types['chained'].name
+                struct.is_chained = True
 
         if p_flag_to_set is not None:
             pointer.p_flag = p_flag_to_set
@@ -300,6 +300,49 @@ class CGenerator:
             if enum_entry.name.lower() == target_name:
                 return enum_entry
         return None
+
+
+    def build_control_ptr_info_array(self):
+        """
+         This is a list of all the <struct>.
+         Index by <struct> "type" number. There could be "gaps" in the type index -
+        so add "null" entry and move on.
+
+        Same thing should be created for <table>, except no need to have gaps.
+        Assign index as you go.
+        """
+        array_type = self.DataTypes.ctr_ptr_info_struct_name
+        array_name = 'genz_%s_type_to_ptrs'
+        struct_array = fields.CArrayEntry(array_name % 'struct', 'struct %s' % array_type)
+        table_array = fields.CArrayEntry(array_name % 'table', 'struct %s' % array_type)
+
+        for struct in self.structs:
+            if struct.origin is None:
+                continue
+            name_no_ptr = struct.name.split('_ptrs')[0]
+            name_no_genz = struct.name.lstrip('genz_').split('_structure')[0]
+
+            ptr_size = 'sizeof({name})/sizeof({name}[0])'.format(name=struct.name)
+            ptr_offset = 'sizeof(struct genz_{name})'.format(name=name_no_ptr)
+
+            name = '{ptype}, {size}, {offset}, {chained}, {vers}, "{stype}"'.format(
+                ptype=struct.name,
+                size=ptr_size,
+                offset=ptr_offset,
+                vers=struct.vers,
+                stype=name_no_genz,
+                chained='true' if struct.is_chained else 'false'
+            )
+            struct_entry = fields.CStructEntry(name, ignore_long_name_warning=True)
+            struct_entry.str_left_space = '%s { ' % struct_entry.str_left_space
+            struct_entry.str_close_symbol = ' },'
+
+            if struct.tag == 'struct':
+                struct_array.append(struct_entry)
+            elif struct.tag == 'table':
+                table_array.append(struct_entry)
+
+        return struct_array, table_array
 
 
     @property
