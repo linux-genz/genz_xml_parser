@@ -210,9 +210,11 @@ class CGenerator:
         for struct_ptr in struct.child_pointers:
             ptr_to_name = 'genz_%s' % trim_name(struct_ptr.ptr_to)
             if struct.name == ptr_to_name:
-                p_flag_to_set = ptr_types['chain_start'].name
+                # p_flag_to_set = ptr_types['chain_start'].name
+                p_flag_to_set = ptr_types['generic'].name
             if struct_ptr == pointer:
                 p_flag_to_set = ptr_types['chained'].name
+                struct.is_chained = True
 
         if p_flag_to_set is not None:
             pointer.p_flag = p_flag_to_set
@@ -301,30 +303,46 @@ class CGenerator:
 
 
     def build_control_ptr_info_array(self):
+        """
+         This is a list of all the <struct>.
+         Index by <struct> "type" number. There could be "gaps" in the type index -
+        so add "null" entry and move on.
+
+        Same thing should be created for <table>, except no need to have gaps.
+        Assign index as you go.
+        """
         array_type = self.DataTypes.ctr_ptr_info_struct_name
-        array_name = 'genz_control_structure_type_to_ptrs'
-        array = fields.CArrayEntry(array_name, 'struct %s' % array_type)
+        array_name = 'genz_%s_type_to_ptrs'
+        struct_array = fields.CArrayEntry(array_name % 'struct', 'struct %s' % array_type)
+        table_array = fields.CArrayEntry(array_name % 'table', 'struct %s' % array_type)
 
-        for ptr in self.pointers:
-            name_no_ptr = ptr.name.split('_ptrs')[0]
-            name_no_genz = ptr.name.lstrip('genz_').split('_structure')[0]
+        for struct in self.structs:
+            if struct.origin is None:
+                continue
+            name_no_ptr = struct.name.split('_ptrs')[0]
+            name_no_genz = struct.name.lstrip('genz_').split('_structure')[0]
 
-            ptr_size = 'sizeof({name})/sizeof({name}[0])'.format(name=ptr.name)
+            ptr_size = 'sizeof({name})/sizeof({name}[0])'.format(name=struct.name)
             ptr_offset = 'sizeof(struct genz_{name})'.format(name=name_no_ptr)
 
-            name = '{ptype}, {size}, {offset}, {vers}, "{stype}"'.format(
-                ptype=ptr.name,
+            name = '{ptype}, {size}, {offset}, {chained}, {vers}, "{stype}"'.format(
+                ptype=struct.name,
                 size=ptr_size,
                 offset=ptr_offset,
-                vers=-1,
-                stype=name_no_genz
+                vers=struct.vers,
+                stype=name_no_genz,
+                chained='true' if struct.is_chained else 'false'
             )
             struct_entry = fields.CStructEntry(name, ignore_long_name_warning=True)
             struct_entry.str_left_space = '%s { ' % struct_entry.str_left_space
             struct_entry.str_close_symbol = ' },'
 
-            array.append(struct_entry)
-        return array
+            if struct.tag == 'struct':
+                struct_array.append(struct_entry)
+            elif struct.tag == 'table':
+                table_array.append(struct_entry)
+
+        return struct_array, table_array
 
 
     @property

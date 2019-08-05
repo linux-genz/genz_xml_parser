@@ -235,6 +235,8 @@ def main(cmd_args: dict):
     generator._add_to_list(table_generator.structs, generator.structs)
     pointers = generator.update_pointers()
 
+    struct_info_array, table_info_array = generator.build_control_ptr_info_array()
+
     class_parser = ClassParser(xml_root.find('classes'))
     if class_parser is not None and class_parser.instance is not None:
         generator.enums.append(class_parser.enum)
@@ -284,7 +286,9 @@ def main(cmd_args: dict):
         c_template_props['body'] = '%s\n\n%s' % (class_parser.instance.pprint(), c_template_props['body'])
 
     c_template_props['body'] = '%s\n\n%s' % \
-            (c_template_props['body'], generator.build_control_ptr_info_array())
+            (c_template_props['body'], struct_info_array)
+    c_template_props['body'] = '%s\n\n%s' % \
+            (c_template_props['body'], table_info_array)
 
     header = render_template_str(cmd_args['header_template'], template_props)
     c_file = render_template_str(cmd_args['c_template'], c_template_props)

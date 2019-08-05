@@ -88,7 +88,7 @@ enum genz_control_pointer_flags {
     GENZ_CONTROL_POINTER_STRUCTURE = 1, /* Points to a structure. Use ptr_type to see if it is generic or a particular type.  */
     //Looked for a Struct or Table - look up the structure and look inside it and its pointers,
     //the First pointer is Start
-    GENZ_CONTROL_POINTER_CHAIN_START = 6,
+    // GENZ_CONTROL_POINTER_CHAIN_START = 6, # NOTE: THIS ONE IS NO MORE. IT IS NOW A GENZ_CONTROL_POINTER_STRUCTURE
     //every next point (technically the last one referencing itself) is Chained.
     GENZ_CONTROL_POINTER_CHAINED = 2, /* e.g. Interface structures */
     //If points to a thing that is a Table and it has an array that is THE ONLY thing in the table.
@@ -103,3 +103,20 @@ enum genz_control_pointer_flags {
 
 //OpCode Set PTR is a chain start
 //Next OpCode Set PTR - is a chain
+
+//Make the workd CONST ---> e.g. char* or any other pointer type entry should
+//be CONST
+
+struct genz_control_ptr_info {
+    const struct genz_control_structure_ptr * const ptr;
+    const size_t num_ptrs;
+    const ssize_t struct_bytes;
+    const uint8_t vers;
+    const char * const name;
+};
+
+struct hardware_classes_meta {
+    const char* const raw_name;
+    const char* const condensed_name;
+    const enum hardware_types value;
+};

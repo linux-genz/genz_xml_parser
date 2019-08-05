@@ -44,6 +44,10 @@ class CStruct(BaseXmler):
         self._commented_entries = 0
         self.child_pointers = [] #CPointerEntry collection updated by CGenerator
         self.child_arrays = []
+        self.vers = kwargs.get('vers', 0)
+        self.index = kwargs.get('index', -1)
+        #a flag set to True if there is a chained pointer in this struct.
+        self.is_chained = False
 
 
     def append(self, entry):

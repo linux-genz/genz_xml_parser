@@ -55,6 +55,7 @@
 #define __GENZH__
 
 #ifndef __KERNEL__
+
 #include <stdint.h>
 #include <inttypes.h>
 

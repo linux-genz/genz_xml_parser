@@ -35,7 +35,6 @@ class DataTypesModel:
         enum genz_control_ptr_flags {
             GENZ_CONTROL_POINTER_NONE = 0,
             ...
-            GENZ_CONTROL_POINTER_CHAIN_START = 6
         };
         """
         return cls.build_enum(cls, cls.ctrl_ptr_flags_name, DataTypesModel.pointer_types())
@@ -92,6 +91,7 @@ class DataTypesModel:
             fields.CStructEntry('*ptr', var_type='struct %s' % cls.ctrl_ptr_struct_name),
             fields.CStructEntry('num_ptrs', var_type='size_t'),
             fields.CStructEntry('struct_bytes', var_type='ssize_t'),
+            fields.CStructEntry('chained', var_type='bool'), #structure contains chained ptr
             fields.CStructEntry('vers', num_type=8),
             fields.CStructEntry('*name', var_type='char'),
         ]
@@ -135,11 +135,10 @@ class DataTypesModel:
         return {
             'none' : fields.EStateEntry('GENZ_CONTROL_POINTER_NONE', 0),
             'generic' : fields.EStateEntry('GENZ_CONTROL_POINTER_STRUCTURE', 1),
-            'chain_start' : fields.EStateEntry('GENZ_CONTROL_POINTER_CHAIN_START', 2),
-            'chained' : fields.EStateEntry('GENZ_CONTROL_POINTER_CHAINED', 3),
-            'array' : fields.EStateEntry('GENZ_CONTROL_POINTER_ARRAY', 4),
-            'table' : fields.EStateEntry('GENZ_CONTROL_POINTER_TABLE', 5),
-            'tbl_w_hdr' : fields.EStateEntry('GENZ_CONTROL_POINTER_TABLE_WITH_HEADER', 6),
+            'chained' : fields.EStateEntry('GENZ_CONTROL_POINTER_CHAINED', 2),
+            'array' : fields.EStateEntry('GENZ_CONTROL_POINTER_ARRAY', 3),
+            'table' : fields.EStateEntry('GENZ_CONTROL_POINTER_TABLE', 4),
+            'tbl_w_hdr' : fields.EStateEntry('GENZ_CONTROL_POINTER_TABLE_WITH_HEADER', 5),
         }
 
 
