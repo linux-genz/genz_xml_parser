@@ -51,7 +51,6 @@ class PointerBuilder(FieldBuilderBase):
         field_name = get_name(field)
         field_name = trim_name(field_name)
 
-
         field_num_bits = field.get('num_bits')
         ptr_to = field.get('ptr_to', None)
         if ptr_to is None:

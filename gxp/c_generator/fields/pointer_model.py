@@ -88,7 +88,7 @@ class CPointerEntry(BaseXmler):
             try:
                 int(self.p_value, 0)
             except ValueError: # should NEVER happened.
-                logging.error('Faild to parse hex str value into int: %s ' % self.p_value)
+                logging.error('Failed to parse hex str value into int: %s ' % self.p_value)
                 return False
         else:
             try:

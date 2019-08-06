@@ -19,19 +19,20 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from .base_xmler import BaseXmler
-from .cstruct_utils import is_name_too_long
-from pdb import set_trace
+from gxp.c_generator.fields.base_xmler import BaseXmler
+from gxp.c_generator.utils import is_name_too_long
+
 
 class CDefineEntry(BaseXmler):
-    def __init__(self, name, value, no_scale_down=False):
+    def __init__(self, name, value, **kwargs):
         """
         #define GENZ_MIN_STRUCTURE					(0x0)
 
             @param name: name for the field to be used.
         """
-        super().__init__(name)
+        super().__init__(name, **kwargs)
         self.value = value
+        self.str_left_space = kwargs.get('str_left_space', '')
 
 
     def pprint(self):

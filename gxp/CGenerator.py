@@ -78,6 +78,7 @@ class CGenerator:
             pointer_parser = parsers.PointerBuilder(struct_elem, data_types=self.DataTypes)
             if pointer_parser.instance is not None:
                 if pointer_parser.instance not in self.pointers:
+                    pointer_parser.instance.origin = struct_parser.instance
                     self.pointers.append(pointer_parser.instance)
                 struct_parser.instance.child_pointers.extend(pointer_parser.instance.entries)
 
@@ -316,17 +317,36 @@ class CGenerator:
         struct_array = fields.CArrayEntry(array_name % 'struct', 'struct %s' % array_type)
         table_array = fields.CArrayEntry(array_name % 'table', 'struct %s' % array_type)
 
-        for struct in self.structs:
-            if struct.origin is None:
+        for index in range(len(self.pointers)):
+            ptr = self.pointers[index]
+            struct = ptr.origin
+            if struct.tag not in ['struct', 'table']:
                 continue
-            name_no_ptr = struct.name.split('_ptrs')[0]
-            name_no_genz = struct.name.lstrip('genz_').split('_structure')[0]
 
-            ptr_size = 'sizeof({name})/sizeof({name}[0])'.format(name=struct.name)
+            struct_index = struct.origin.get('type', None)
+            if struct_index is None:
+                print('NOOONE -> %s' % struct.name)
+            else:
+                print(' -> %s' % int(struct_index, 0))
+
+            if not isinstance(struct, fields.cstruct.CStruct):
+                logging.critical('Pointer "%s" origin is not of type CStruct!' %\
+                                ptr.name)
+                continue
+
+            if struct.origin is None:
+                logging.critical('Pointer "%s" struct "%s" origin is None?!' %\
+                                (ptr.name, struct.name))
+                continue
+
+            name_no_ptr = ptr.name.split('_ptrs')[0]
+            name_no_genz = ptr.name.lstrip('genz_').split('_structure')[0]
+
+            ptr_size = 'sizeof({name})/sizeof({name}[0])'.format(name=ptr.name)
             ptr_offset = 'sizeof(struct genz_{name})'.format(name=name_no_ptr)
 
             name = '{ptype}, {size}, {offset}, {chained}, {vers}, "{stype}"'.format(
-                ptype=struct.name,
+                ptype=ptr.name,
                 size=ptr_size,
                 offset=ptr_offset,
                 vers=struct.vers,
@@ -364,12 +384,12 @@ class CGenerator:
     @property
     def entries(self):
         result = []
+        result.append(self.DataTypes.table_index_define())
 
         ctrl_ptr_flags = self.DataTypes.build_ptr_flags_enum()
         ptr_sizes = self.DataTypes.build_ptr_sizes_enum()
         ctrl_ptr_struct = self.DataTypes.build_ctrl_struct_ptr_struct()
         ctrl_ptr_info_struct = self.DataTypes.build_ctrl_ptr_info_struct()
-        # struct_types = self.DataTypes.build_ctrl_struct_type_enum(self.structs, self.struct_type_start_index)
         externs = self.DataTypes.build_externs()
 
         result.append(ctrl_ptr_flags)
