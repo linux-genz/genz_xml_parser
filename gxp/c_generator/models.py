@@ -3,9 +3,7 @@ from gxp.c_generator import fields
 
 class DataTypesModel:
 
-    # ptr_flags_enum_name = 'genz_control_ptr_type'
-    # ptr_size_enum_name = 'genz_pointer_size'
-
+    tables_start_index = '0x1000' #value at which table's ctrl_struct_type_enum_name entries start
     ctrl_ptr_struct_name = 'genz_control_structure_ptr'
     ctrl_struct_type_enum_name = 'genz_control_structure_type'
     ctrl_ptr_flags_name = 'genz_control_ptr_flags'
@@ -113,7 +111,7 @@ class DataTypesModel:
         generic_entry = fields.EStateEntry('GENZ_GENERIC_STRUCTURE', -1)
         struct.append(generic_entry)
 
-        table_index = 1000
+        table_index = int(cls.tables_start_index, 0)
         for index in range(len(structs)):
             s = structs[index]
             value = start_index
@@ -124,6 +122,11 @@ class DataTypesModel:
                 table_index += 1
             else:
                 value += index
+
+            if hex(value) == cls.tables_start_index:
+                value = cls.table_index_define().name
+            else:
+                value = hex(value)
 
             entry = fields.EStateEntry(s.name.upper(), value)
             struct.append(entry)
@@ -148,6 +151,12 @@ class DataTypesModel:
             '4' : fields.EStateEntry('GENZ_4_BYTE_POINTER', 4),
             '6' : fields.EStateEntry('GENZ_6_BYTE_POINTER', 6),
         }
+
+
+    @classmethod
+    def table_index_define(cls):
+        return fields.CDefineEntry('TABLE_ENUM_START_INDEX',
+                                int(cls.tables_start_index ,  0))
 
 
     @classmethod

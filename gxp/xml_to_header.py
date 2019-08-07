@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-(C) Copyright 2018 Hewlett Packard Enterprise Development LP” on your code
+(C) Copyright 2019 Hewlett Packard Enterprise Development LP” on your code
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -229,8 +229,8 @@ def main(cmd_args: dict):
     xml_meta = extract_xml_meta(xml_root)
     generator = CGenerator(xml_root)
     table_generator = CGenerator(xml_root, tags={'struct' : 'table'})
-    table_generator.struct_type_start_index = 1000
     generator.merge(table_generator)
+
     #.merge ignores structs. Thus, need to add table structs manually
     generator._add_to_list(table_generator.structs, generator.structs)
     pointers = generator.update_pointers()

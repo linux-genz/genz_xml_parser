@@ -7,6 +7,8 @@ from .csubunion import CSubunion
 from .carray_entry import CArrayEntry
 from .pointer_model import CPointerEntry
 from .estate_entry import EStateEntry
+from .cdefine_entry import CDefineEntry
+from .null_entry import NullEntry
 
 BaseXmler = BaseXmler
 CStruct = CStruct
@@ -17,3 +19,5 @@ CSubfield = CSubfield
 CSubunion = CSubunion
 CArrayEntry = CArrayEntry
 EStateEntry = EStateEntry
+CDefineEntry = CDefineEntry
+NullEntry = NullEntry

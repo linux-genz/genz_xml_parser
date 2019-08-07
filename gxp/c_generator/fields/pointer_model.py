@@ -1,6 +1,6 @@
 #!/usr/lib/python3
 """
-(C) Copyright 2018 Hewlett Packard Enterprise Development LP” on your code
+(C) Copyright 2019 Hewlett Packard Enterprise Development LP” on your code
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -88,7 +88,7 @@ class CPointerEntry(BaseXmler):
             try:
                 int(self.p_value, 0)
             except ValueError: # should NEVER happened.
-                logging.error('Faild to parse hex str value into int: %s ' % self.p_value)
+                logging.error('Failed to parse hex str value into int: %s ' % self.p_value)
                 return False
         else:
             try:
