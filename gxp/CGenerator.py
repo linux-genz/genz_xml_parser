@@ -143,6 +143,11 @@ class CGenerator:
 
 
     def update_pointers(self):
+        """
+            After every field of the xml is parsed, we need to figure out each
+        pointers' (xml fields with "ptr_to" attr) type (generic, chained, table
+        and etc. Refer to models.py).
+        """
         ptr_types = self.DataTypes.pointer_types()
         result = []
         struct_ptr_enum = self.structs_enum
@@ -207,11 +212,9 @@ class CGenerator:
 
         p_flag_to_set = None
 
-        # struct_pointer_count = len(struct.child_pointers)
         for struct_ptr in struct.child_pointers:
             ptr_to_name = 'genz_%s' % trim_name(struct_ptr.ptr_to)
             if struct.name == ptr_to_name:
-                # p_flag_to_set = ptr_types['chain_start'].name
                 p_flag_to_set = ptr_types['generic'].name
             if struct_ptr == pointer:
                 p_flag_to_set = ptr_types['chained'].name
@@ -303,6 +306,26 @@ class CGenerator:
         return None
 
 
+    def find_highest_struct_index(self, tag=['struct']):
+        """
+            Loop through self.structs and return its highest .index value.
+
+            @param tag: the tag names to search for the index of
+        """
+        hIndex = -1
+        for struct in self.structs:
+            if struct.tag not in tag:
+                continue
+            index = struct.index
+            if index is None:
+                continue
+            if isinstance(index, str):
+                index = int(index, 0)
+            if index > hIndex:
+                hIndex = index
+        return hIndex
+
+
     def build_control_ptr_info_array(self):
         """
          This is a list of all the <struct>.
@@ -313,25 +336,33 @@ class CGenerator:
         Assign index as you go.
         """
         array_type = self.DataTypes.ctr_ptr_info_struct_name
-        array_name = 'genz_%s_type_to_ptrs'
-        struct_array = fields.CArrayEntry(array_name % 'struct', 'struct %s' % array_type)
-        table_array = fields.CArrayEntry(array_name % 'table', 'struct %s' % array_type)
+        array_name = 'genz_struct_type_to_ptrs'
+        table_name = 'genz_table_type_to_ptrs'
+        struct_array = fields.CArrayEntry(array_name, 'struct %s' % array_type)
+        table_array = fields.CArrayEntry(table_name, 'struct %s' % array_type)
+        pointers_count = len(self.pointers)
 
-        for index in range(len(self.pointers)):
+        #Need to know how big the pointers list is going to be, based of the
+        #struct's highest "type" attribut's value which indicates its position
+        #in the array that is built here.
+        highest_struct_index = self.find_highest_struct_index()
+        for i in range(highest_struct_index + 1):
+            null_entry = fields.NullEntry(close_bracket_str=',')
+            struct_array.append(null_entry)
+
+        for index in range(pointers_count):
             ptr = self.pointers[index]
             struct = ptr.origin
             if struct.tag not in ['struct', 'table']:
                 continue
 
-            struct_index = struct.origin.get('type', None)
-            if struct_index is None:
-                print('NOOONE -> %s' % struct.name)
-            else:
-                print(' -> %s' % int(struct_index, 0))
+            if struct.index is None:
+                msg = 'NOOOOOOO!! No "type" attr in struct -> %s' % struct.name
+                logging.critical(msg)
 
             if not isinstance(struct, fields.cstruct.CStruct):
-                logging.critical('Pointer "%s" origin is not of type CStruct!' %\
-                                ptr.name)
+                msg = 'Pointer "%s" origin is not of type CStruct!' % ptr.name
+                logging.critical(msg)
                 continue
 
             if struct.origin is None:
@@ -349,7 +380,7 @@ class CGenerator:
                 ptype=ptr.name,
                 size=ptr_size,
                 offset=ptr_offset,
-                vers=struct.vers,
+                vers=struct.vers if struct.vers is not None else '0x0',
                 stype=name_no_genz,
                 chained='true' if struct.is_chained else 'false'
             )
@@ -358,7 +389,7 @@ class CGenerator:
             struct_entry.str_close_symbol = ' },'
 
             if struct.tag == 'struct':
-                struct_array.append(struct_entry)
+                struct_array.entries[int(struct.index, 0)] = struct_entry
             elif struct.tag == 'table':
                 table_array.append(struct_entry)
 
@@ -367,7 +398,8 @@ class CGenerator:
 
     @property
     def structs_enum(self):
-        return self.DataTypes.build_ctrl_struct_type_enum(self.structs, self.struct_type_start_index)
+        return self.DataTypes.build_ctrl_struct_type_enum(self.structs,
+                                                    self.struct_type_start_index)
 
 
     @property
@@ -378,7 +410,23 @@ class CGenerator:
         #Note to self: this is awful! I don't like the "dynamic" building of this,
         #cause it has to loop through each struct entry every time this property
         #is called. Madeness. By convenient...
-        return self.DataTypes.build_ctrl_struct_type_enum(self.structs, self.struct_type_start_index)
+        return self.DataTypes.build_ctrl_struct_type_enum(self.structs,
+                                                    self.struct_type_start_index)
+
+
+    @property
+    def table_structs(self):
+        """
+            Return a list of <table> type struct entries from the self.structs
+        collection.
+        """
+        result = []
+        for entry in self.structs:
+            if entry.tag is None:
+                continue
+            if entry.tag == 'table':
+                result.append(entry)
+        return result
 
 
     @property

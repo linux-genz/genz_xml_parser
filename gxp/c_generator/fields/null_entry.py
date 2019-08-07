@@ -19,40 +19,28 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+from gxp.c_generator import fields
 from gxp.c_generator.fields.base_xmler import BaseXmler
-from gxp import c_generator
+from gxp.c_generator.utils import trim_name
 
+from pdb import set_trace
 
-class CEnumEntry(BaseXmler):
+class NullEntry(BaseXmler):
     """
-    An Enum formated for the C language entry:
-        enum <name> {
-            estate_entry field,
-        }
+        Object that holds all the StructEntry entries to be part of That struct in
+    the resulted .h file.
     """
 
-    def __init__(self, name):
-        """
-            @param name: Name of the Enum definition.
-        """
-        super().__init__(name)
-        self._longest_name: int = -1
+    def __init__(self, name='NULL', **kwargs):
+        super().__init__(name, **kwargs)
+        self.close_bracket_str = kwargs.get('close_bracket_str', '')
 
 
     def pprint(self):
-        """ Formats XML parsed entries into a 'proper' display format. """
-        states = ''
-        for index in range(len(self.entries)):
-            entry = self.entries[index]
-            states = '%s\n%s' % (states, entry.pprint())
-        states = states.lstrip('\n')
-        states = states.rstrip(',')
-
-        return '{str_start}enum {name} {br_op}\n{enums}\n{br_cl}{str_end}'.format(
-                        str_start=self.str_start,
-                        br_op=self.open_bracket_str,
+        msg = '{start_str}{left_space}{name}{var_close_symbol}{end_str}'
+        return msg.format(
+                        start_str=self.str_start,
+                        left_space=self.str_left_space,
                         name=self.name,
-                        enums=states,
-                        br_cl=self.close_bracket_str,
-                        str_end=self.str_end
-                        )
+                        var_close_symbol=self.close_bracket_str,
+                        end_str=self.str_end)

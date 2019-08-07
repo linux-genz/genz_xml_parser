@@ -328,6 +328,8 @@ struct genz_control_ptr_info genz_struct_type_to_ptrs[] = {
      {  component_switch_structure_ptrs, sizeof(component_switch_structure_ptrs)/sizeof(component_switch_structure_ptrs[0]), sizeof(struct genz_component_switch_structure), false, 0x1, "component_switch" },
      {  component_statistics_structure_ptrs, sizeof(component_statistics_structure_ptrs)/sizeof(component_statistics_structure_ptrs[0]), sizeof(struct genz_component_statistics_structure), true, 0x1, "component_statistics" },
      {  component_extension_structure_ptrs, sizeof(component_extension_structure_ptrs)/sizeof(component_extension_structure_ptrs[0]), sizeof(struct genz_component_extension_structure), true, 0x1, "component_extension" },
+    NULL,
+    NULL,
      {  component_multicast_structure_ptrs, sizeof(component_multicast_structure_ptrs)/sizeof(component_multicast_structure_ptrs[0]), sizeof(struct genz_component_multicast_structure), false, 0x1, "component_multicast" },
      {  component_security_structure_ptrs, sizeof(component_security_structure_ptrs)/sizeof(component_security_structure_ptrs[0]), sizeof(struct genz_component_security_structure), false, 0x1, "component_security" },
      {  component_tr_structure_ptrs, sizeof(component_tr_structure_ptrs)/sizeof(component_tr_structure_ptrs[0]), sizeof(struct genz_component_tr_structure), false, 0x1, "component_tr" },
@@ -337,12 +339,16 @@ struct genz_control_ptr_info genz_struct_type_to_ptrs[] = {
      {  component_destination_table_structure_ptrs, sizeof(component_destination_table_structure_ptrs)/sizeof(component_destination_table_structure_ptrs[0]), sizeof(struct genz_component_destination_table_structure), false, 0x1, "component_destination_table" },
      {  service_uuid_structure_ptrs, sizeof(service_uuid_structure_ptrs)/sizeof(service_uuid_structure_ptrs[0]), sizeof(struct genz_service_uuid_structure), false, 0x1, "service_uuid" },
      {  component_c_access_structure_ptrs, sizeof(component_c_access_structure_ptrs)/sizeof(component_c_access_structure_ptrs[0]), sizeof(struct genz_component_c_access_structure), true, 0x1, "component_c_access" },
+    NULL,
      {  requester_p2p_structure_ptrs, sizeof(requester_p2p_structure_ptrs)/sizeof(requester_p2p_structure_ptrs[0]), sizeof(struct genz_requester_p2p_structure), true, 0x1, "requester_p2p" },
      {  component_pa_structure_ptrs, sizeof(component_pa_structure_ptrs)/sizeof(component_pa_structure_ptrs[0]), sizeof(struct genz_component_pa_structure), false, 0x1, "component_pa" },
+    NULL,
      {  component_lpd_structure_ptrs, sizeof(component_lpd_structure_ptrs)/sizeof(component_lpd_structure_ptrs[0]), sizeof(struct genz_component_lpd_structure), true, 0x1, "component_lpd" },
      {  component_sod_structure_ptrs, sizeof(component_sod_structure_ptrs)/sizeof(component_sod_structure_ptrs[0]), sizeof(struct genz_component_sod_structure), false, 0x1, "component_sod" },
      {  congestion_management_structure_ptrs, sizeof(congestion_management_structure_ptrs)/sizeof(congestion_management_structure_ptrs[0]), sizeof(struct genz_congestion_management_structure), false, 0x1, "congestion_management" },
+    NULL,
      {  component_pm_structure_ptrs, sizeof(component_pm_structure_ptrs)/sizeof(component_pm_structure_ptrs[0]), sizeof(struct genz_component_pm_structure), false, 0x1, "component_pm" },
+    NULL,
      {  component_re_table_structure_ptrs, sizeof(component_re_table_structure_ptrs)/sizeof(component_re_table_structure_ptrs[0]), sizeof(struct genz_component_re_table_structure), true, 0x1, "component_re_table" },
      {  component_lph_structure_ptrs, sizeof(component_lph_structure_ptrs)/sizeof(component_lph_structure_ptrs[0]), sizeof(struct genz_component_lph_structure), true, 0x1, "component_lph" },
      {  component_page_grid_structure_ptrs, sizeof(component_page_grid_structure_ptrs)/sizeof(component_page_grid_structure_ptrs[0]), sizeof(struct genz_component_page_grid_structure), true, 0x1, "component_page_grid" },
@@ -353,9 +359,9 @@ struct genz_control_ptr_info genz_struct_type_to_ptrs[] = {
 };
 
 struct genz_control_ptr_info genz_table_type_to_ptrs[] = {
-     {  opcode_set_table_ptrs, sizeof(opcode_set_table_ptrs)/sizeof(opcode_set_table_ptrs[0]), sizeof(struct genz_opcode_set_table), true, None, "opcode_set_table_ptrs" },
-     {  elog_table_ptrs, sizeof(elog_table_ptrs)/sizeof(elog_table_ptrs[0]), sizeof(struct genz_elog_table), true, None, "log_table_ptrs" },
-     {  backup_mgmt_table_ptrs, sizeof(backup_mgmt_table_ptrs)/sizeof(backup_mgmt_table_ptrs[0]), sizeof(struct genz_backup_mgmt_table), false, None, "backup_mgmt_table_ptrs" },
+     {  opcode_set_table_ptrs, sizeof(opcode_set_table_ptrs)/sizeof(opcode_set_table_ptrs[0]), sizeof(struct genz_opcode_set_table), true, 0x0, "opcode_set_table_ptrs" },
+     {  elog_table_ptrs, sizeof(elog_table_ptrs)/sizeof(elog_table_ptrs[0]), sizeof(struct genz_elog_table), true, 0x0, "log_table_ptrs" },
+     {  backup_mgmt_table_ptrs, sizeof(backup_mgmt_table_ptrs)/sizeof(backup_mgmt_table_ptrs[0]), sizeof(struct genz_backup_mgmt_table), false, 0x0, "backup_mgmt_table_ptrs" },
 };
 
 EXPORT_SYMBOL(genz_control_structure_type_to_ptrs);

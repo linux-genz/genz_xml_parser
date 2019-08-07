@@ -41,7 +41,7 @@
  *
  * Generator Script Meta:
  *     Version      : v0.2
- *     Generated On : 06, Aug 2019
+ *     Generated On : 07, Aug 2019
  *
  *
  * **************************************************************
@@ -53,6 +53,8 @@
  */
 #ifndef __GENZH__
 #define __GENZH__
+
+#include <stdbool.h>
 
 #ifndef __KERNEL__
 
