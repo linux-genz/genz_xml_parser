@@ -15,6 +15,9 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     url='https://github.com/linux-genz/genz_xml_parser',
     packages=setuptools.find_packages(),
+    install_requires=[
+        'jinja2',
+    ],
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
