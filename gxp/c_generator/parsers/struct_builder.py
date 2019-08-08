@@ -57,7 +57,7 @@ class StructBuilder(FieldBuilderBase):
 
         struct = fields.CStruct('genz_%s' % name, origin=field)
         struct.vers = field.get('vers', None)
-        struct.index = field.get('type', 0)
+        struct.index = field.get('type', -1)
 
         # struct.tag = self.root.tag
         length_comment = is_name_too_long(struct.name)

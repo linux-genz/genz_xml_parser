@@ -312,6 +312,8 @@ def main(cmd_args: dict):
 
 
 if __name__ == '__main__':
+    this_file = os.path.realpath(__file__)
+    this_dir = os.path.dirname(this_file)
     parser = argparse.ArgumentParser(description='XML parser parameters')
     parser.add_argument('xml_path',
                         help='Path or URL to a XML file to parse into .h')
@@ -326,11 +328,11 @@ if __name__ == '__main__':
                         help="Disable creation of .c file.")
 
     parser.add_argument('--header-template',
-                        default='./templates/header.template',
+                        default=os.path.join(this_dir, 'templates/header.template'),
                         help='(optional) Header string to go into .h file.')
 
     parser.add_argument('--c-template',
-                    default='./templates/c.template',
+                    default=os.path.join(this_dir, 'templates/c.template'),
                     help='(optional) C file template path.')
 
     parser.add_argument('--verbose', '-v',

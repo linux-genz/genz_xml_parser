@@ -47,7 +47,7 @@ class BaseXmler(ABC):
         self.parent = None # an xml object - a parent of the entry
         self.children = []
         self.str_start = '' # string to put in front of the entry (e.g. comments)
-        self.str_end = '' # string to put in the end of the entry
+        self.str_end = kwargs.get('str_end', '') # string to put in the end of the entry
         self.open_bracket_str = '{'
         self.close_bracket_str = '};'
         self.str_left_space: int = kwargs.get('str_left_space', ' ' * 4)

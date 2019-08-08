@@ -42,10 +42,11 @@ struct genz_control_structure_ptr core_structure_ptrs[] = {
 };
 
 
-struct genz_control_ptr_info genz_control_structure_type_to_ptrs[] = {
-    { control_structure_ptr_0, sizeof(control_structure_ptr_0)/sizeof(control_structure_ptr_0[0]), sizeof(struct genz_control_structure_ptr_0), "control" },
-    { control_structure_ptr_1, sizeof(control_structure_ptr_1)/sizeof(control_structure_ptr_1[0]), sizeof(struct genz_control_structure_ptr_1), "control" },
+struct genz_control_ptr_info genz_struct_type_to_ptrs[] = {
+     {  core_structure_ptrs, sizeof(core_structure_ptrs)/sizeof(core_structure_ptrs[0]), sizeof(struct genz_core_structure), false, 0x1, "core" },
 };
+
+struct genz_control_ptr_info genz_table_type_to_ptrs[] = {};
 
 EXPORT_SYMBOL(genz_control_structure_type_to_ptrs);
 

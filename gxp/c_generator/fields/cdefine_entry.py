@@ -40,12 +40,6 @@ class CDefineEntry(BaseXmler):
         :return: formatted string suited for C type struct field:
                     uint<offset_bits>_t <var_name> : <num_bits>
         """
-        length_comment = is_name_too_long(self.name)
-        if length_comment:
-            end_str = '%s %s' % (self.str_end, length_comment)
-        else:
-            end_str = self.str_end
-
         msg = '{start}{left_space}#define {name}{name_space}{bits}{end}'
         return msg.format(
                  start=self.str_start, # could indicate a commented, e.g. '//'
@@ -53,7 +47,7 @@ class CDefineEntry(BaseXmler):
                  name=self.name.upper(),
                  name_space=self.space_after_name,
                  bits=self.value,
-                 end=end_str) # could be a comment description of the entry
+                 end=self.str_end) # could be a comment description of the entry
 
 
     def __str__(self):
