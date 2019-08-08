@@ -3,7 +3,7 @@ from gxp.c_generator.parsers import FieldBuilderBase
 import math
 import logging
 
-from gxp.CGenerator import CGenerator
+from gxp import CGenerator
 from gxp.c_generator import fields
 from gxp.c_generator.utils import get_name, trim_name, is_name_too_long
 
@@ -42,9 +42,7 @@ class TableBuilder(FieldBuilderBase):
                 name_to_set = '%s Array' % name_to_set
                 element.set('name', name_to_set)
 
-            # if root.tag is not 'table':
-                # self.parent = root
-            cgen = CGenerator(root, parse_on_init=False, name='table: %s' % name_to_set)
+            cgen = CGenerator.CGenerator(root, parse_on_init=False, name='table: %s' % name_to_set)
             cgen.struct_tag_name = 'element'
             cgen.parse_xml(array)
             self._instance.append(cgen)

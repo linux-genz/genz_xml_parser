@@ -42,7 +42,7 @@ import logging
 from pdb import set_trace
 from gxp.c_generator import fields
 from gxp.c_generator.models import DataTypesModel
-from CGenerator import CGenerator
+from gxp.CGenerator import CGenerator
 from gxp.c_generator.parsers import ClassParser
 
 
@@ -200,17 +200,22 @@ def build_control_structure_types(structs: list, start_index=0):
     return result
 
 
+def default_args(self) -> dict:
+    return
+
+
 def main(cmd_args: dict):
     """
         Look at __name__ argparse arguments for expected parameters.
     """
     logging.getLogger().setLevel(cmd_args.get('verbose', 10))
     path: str = cmd_args['xml_path']
-    dest: str = cmd_args['output']
+    dest: str = cmd_args['output'].strip()
     is_no_c_file: bool = cmd_args.get('no_c', False)
     c_dest: str = ''
-    if '.h' in dest:
-        c_dest = dest.replace('.h', '.c')
+    if '.h' not in dest:
+        dest = '%s.h' % dest
+    c_dest = dest.replace('.h', '.c')
 
     # context = None  # xml root
     is_clean_tmp: bool = False  # url file downloaded and to be removed in the end
@@ -293,6 +298,9 @@ def main(cmd_args: dict):
     header = render_template_str(cmd_args['header_template'], template_props)
     c_file = render_template_str(cmd_args['c_template'], c_template_props)
 
+    if not os.path.exists(os.path.dirname(dest)):
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+
     with open(dest, 'w+') as file_obj:
         file_obj.write(header)
 
@@ -310,8 +318,7 @@ def main(cmd_args: dict):
 
     return 0
 
-
-if __name__ == '__main__':
+def parse_args():
     this_file = os.path.realpath(__file__)
     this_dir = os.path.dirname(this_file)
     parser = argparse.ArgumentParser(description='XML parser parameters')
@@ -341,4 +348,8 @@ if __name__ == '__main__':
                     help='Use: 10=debug, 20=info, 30=warning, 40=error or 50=critical. Ref to python3 logging docs.')
 
     args = parser.parse_args()
+    return args
+
+if __name__ == '__main__':
+    args = parse_args()
     main(vars(args))

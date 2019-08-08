@@ -18,4 +18,4 @@ EXPOSE 80
 ENV NAME GXP
 
 # Run app.py when the container launches
-CMD ["python3", "./gxp/xml_to_header.py"]
+CMD ["python3", "./gxp/tests/test_raw.py"]
