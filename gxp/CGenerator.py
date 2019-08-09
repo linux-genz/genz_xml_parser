@@ -36,10 +36,8 @@ class CGenerator:
         self.unions = []
         self.struct_arrays = []
 
-        self.DataTypes = kwargs.get('data_types', DataTypesModel)
-
+        self.DataTypes = kwargs.get('model', DataTypesModel)
         self.struct_type_start_index = kwargs.get('struct_type_start_index', 0)
-
         self.root_tag_name = tags.get('root', 'structs')
         self.struct_tag_name = tags.get('struct', 'struct')
 
@@ -306,19 +304,26 @@ class CGenerator:
         return None
 
 
-    def find_highest_struct_index(self, tag=['struct']):
+    def find_enum_value_by_name(self, target_name, enum_obj):
+        for entry in enum_obj.entries:
+            if target_name == entry.name:
+                return entry
+        return None
+
+
+    def find_highest_struct_index(self, tag='struct'):
         """
             Loop through self.structs and return its highest .index value.
 
-            @param tag: the tag names to search for the index of
+            @param tag: the tag names to search for the index of.
         """
         hIndex = -1
         for struct in self.structs:
             if struct.tag not in tag:
                 continue
             index = struct.index
-            if index is None:
-                continue
+            if index is None or index == -1:
+                index = hIndex + 1
             if isinstance(index, str):
                 index = int(index, 0)
             if index > hIndex:
@@ -345,10 +350,16 @@ class CGenerator:
         #Need to know how big the pointers list is going to be, based of the
         #struct's highest "type" attribut's value which indicates its position
         #in the array that is built here.
-        highest_struct_index = self.find_highest_struct_index()
-        for i in range(highest_struct_index + 1):
+        hIndex_struct = self.find_highest_struct_index()
+        hIndex_tbl = self.find_highest_struct_index(tag='table')
+        for _ in range(hIndex_struct + 1):
             null_entry = fields.NullEntry(close_bracket_str=',')
             struct_array.append(null_entry)
+
+        struct_enum = self.structs_enum
+        for _ in range(hIndex_tbl + 1):
+            null_entry = fields.NullEntry(close_bracket_str=',')
+            table_array.append(null_entry)
 
         for index in range(pointers_count):
             ptr = self.pointers[index]
@@ -391,7 +402,12 @@ class CGenerator:
             if struct.tag == 'struct':
                 struct_array.entries[int(struct.index, 0)] = struct_entry
             elif struct.tag == 'table':
-                table_array.append(struct_entry)
+                enum = self.find_enum_value_by_name(struct.name.upper(),
+                                                    struct_enum)
+                enum_val = enum.value.split('+')[-1].strip()
+                if enum_val.isdigit(): enum_val = int(enum_val, 0)
+                else: enum_val = 0
+                table_array.entries[enum_val] = struct_entry
 
         return struct_array, table_array
 

@@ -2,6 +2,14 @@ from gxp.c_generator import fields
 
 
 class DataTypesModel:
+    """
+     This is practically a config file/class purpose of which to provide a "common"
+    ground for struct names, types and values that are used in various other places
+    of the generated artifacts (.c, .h, .py..). Therefore, if you want to use
+    different names, you can either modify values in here directly (not recommended,
+    but is easier) or inherit from this class, override the class variables and
+    pass your new class object to CGenerator constructor as a different model.
+    """
 
     tables_start_index = '0x1000' #value at which table's ctrl_struct_type_enum_name entries start
     ctrl_ptr_struct_name = 'genz_control_structure_ptr'
@@ -111,22 +119,20 @@ class DataTypesModel:
         generic_entry = fields.EStateEntry('GENZ_GENERIC_STRUCTURE', -1)
         struct.append(generic_entry)
 
-        table_index = int(cls.tables_start_index, 0)
+        table_index = 0
         for index in range(len(structs)):
             s = structs[index]
             value = start_index
             #FIXME: this is stupid! Need to index Table entries to start from 1000
             # while the struct entries index from 0 to whatever.
             if s.tag == 'table':
-                value = table_index
+                if table_index == 0:
+                    value = '%s' % cls.table_index_define().name
+                else:
+                    value = '%s + %s' % (cls.table_index_define().name, table_index)
                 table_index += 1
             else:
-                value += index
-
-            if hex(value) == cls.tables_start_index:
-                value = cls.table_index_define().name
-            else:
-                value = hex(value)
+                value = hex(index)
 
             entry = fields.EStateEntry(s.name.upper(), value)
             struct.append(entry)
@@ -156,7 +162,8 @@ class DataTypesModel:
     @classmethod
     def table_index_define(cls):
         return fields.CDefineEntry('TABLE_ENUM_START_INDEX',
-                                int(cls.tables_start_index ,  0))
+                                cls.tables_start_index,
+                                str_end=' //int val: %s' % int(cls.tables_start_index ,  0))
 
 
     @classmethod

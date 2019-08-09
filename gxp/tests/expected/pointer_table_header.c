@@ -41,8 +41,13 @@ struct genz_control_structure_ptr fake_struct_for_table_header_testing_ptrs[] = 
 };
 
 
-struct genz_control_ptr_info genz_control_structure_type_to_ptrs[] = {
-    { fake_header_table_ptr, sizeof(fake_header_table_ptr)/sizeof(fake_header_table_ptr[0]), sizeof(struct genz_fake_header_table_ptr), "fake_header_table_ptr" },
+struct genz_control_ptr_info genz_struct_type_to_ptrs[] = {
+    NULL,
+     {  fake_struct_for_table_header_testing_ptrs, sizeof(fake_struct_for_table_header_testing_ptrs)/sizeof(fake_struct_for_table_header_testing_ptrs[0]), sizeof(struct genz_fake_struct_for_table_header_testing), false, 0x1, "fake_struct_for_table_header_testing_ptrs" },
+};
+
+struct genz_control_ptr_info genz_table_type_to_ptrs[] = {
+    NULL,
 };
 
 EXPORT_SYMBOL(genz_control_structure_type_to_ptrs);

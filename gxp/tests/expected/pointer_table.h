@@ -41,7 +41,7 @@
  *
  * Generator Script Meta:
  *     Version      : v0.2
- *     Generated On : 30, Jul 2019
+ *     Generated On : 09, Aug 2019
  *
  *
  * **************************************************************
@@ -54,7 +54,10 @@
 #ifndef __GENZH__
 #define __GENZH__
 
+#include <stdbool.h>
+
 #ifndef __KERNEL__
+
 #include <stdint.h>
 #include <inttypes.h>
 
@@ -75,14 +78,15 @@ struct genz_control_structure_header {
     uint32_t size   : 16;
 };
 
-enum genz_control_ptr_type {
+#define TABLE_ENUM_START_INDEX 0x1000 //int val: 4096
+
+enum genz_control_ptr_flags {
     GENZ_CONTROL_POINTER_NONE = 0,
     GENZ_CONTROL_POINTER_STRUCTURE = 1,
-    GENZ_CONTROL_POINTER_CHAIN_START = 2,
-    GENZ_CONTROL_POINTER_CHAINED = 3,
-    GENZ_CONTROL_POINTER_ARRAY = 4,
-    GENZ_CONTROL_POINTER_TABLE = 5,
-    GENZ_CONTROL_POINTER_TABLE_WITH_HEADER = 6
+    GENZ_CONTROL_POINTER_CHAINED = 2,
+    GENZ_CONTROL_POINTER_ARRAY = 3,
+    GENZ_CONTROL_POINTER_TABLE = 4,
+    GENZ_CONTROL_POINTER_TABLE_WITH_HEADER = 5
 };
 
 enum genz_pointer_size {
@@ -91,26 +95,27 @@ enum genz_pointer_size {
 };
 
 struct genz_control_ptr_info {
-    struct genz_control_structure_ptr *ptr;
-    size_t num_ptrs;
-    ssize_t struct_bytes;
-    char *name;
-    uint8_t vers;
+    const struct genz_control_structure_ptr * const ptr;
+    const size_t num_ptrs;
+    const ssize_t struct_bytes;
+    const bool chained;
+    const uint8_t vers;
+    const char * const name;
 };
 
 enum genz_control_structure_type {
     GENZ_GENERIC_STRUCTURE = -1,
-    GENZ_OPCODE_SET_STRUCTURE = 0,
-    GENZ_FAKE_STRUCT_FOR_TESTING = 1,
-    GENZ_COMPONENT_ERROR_ELOG_ENTRY = 1000,
-    GENZ_OPCODE_SET_UUID_TABLE = 1001
+    GENZ_OPCODE_SET_STRUCTURE = 0x0,
+    GENZ_FAKE_STRUCT_FOR_TESTING = 0x1,
+    GENZ_COMPONENT_ERROR_ELOG_ENTRY = TABLE_ENUM_START_INDEX,
+    GENZ_OPCODE_SET_UUID_TABLE = TABLE_ENUM_START_INDEX + 1
 };
 
 struct genz_control_structure_ptr {
-    enum genz_control_ptr_flags ptr_type;
-    enum genz_pointer_size ptr_size;
-    uint32_t pointer_offset;
-    enum genz_control_structure_type struct_type;
+    const enum genz_control_ptr_flags ptr_type;
+    const enum genz_pointer_size ptr_size;
+    const uint32_t pointer_offset;
+    const enum genz_control_structure_type struct_type;
 };
 
 extern struct genz_control_ptr_info genz_ctrl_struct_type_to_ptrs[];
