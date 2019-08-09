@@ -40,8 +40,8 @@
  *     Date    : 2019-06-27 12:58:33
  *
  * Generator Script Meta:
- *     Version      : N/A
- *     Generated On : 08, Aug 2019
+ *     Version      : v0.2
+ *     Generated On : 09, Aug 2019
  *
  *
  * **************************************************************
@@ -78,7 +78,7 @@ struct genz_control_structure_header {
     uint32_t size   : 16;
 };
 
-#define TABLE_ENUM_START_INDEX 4096
+#define TABLE_ENUM_START_INDEX 0x1000 //int val: 4096
 
 enum genz_control_ptr_flags {
     GENZ_CONTROL_POINTER_NONE = 0,
@@ -108,7 +108,7 @@ enum genz_control_structure_type {
     GENZ_OPCODE_SET_STRUCTURE = 0x0,
     GENZ_FAKE_STRUCT_FOR_TESTING = 0x1,
     GENZ_COMPONENT_ERROR_ELOG_ENTRY = TABLE_ENUM_START_INDEX,
-    GENZ_OPCODE_SET_UUID_TABLE = 0x1001
+    GENZ_OPCODE_SET_UUID_TABLE = TABLE_ENUM_START_INDEX + 1
 };
 
 struct genz_control_structure_ptr {

@@ -50,11 +50,29 @@ struct genz_control_structure_ptr fake_struct_for_testing_ptrs[] = {
 };
 
 
-struct genz_control_ptr_info genz_control_structure_type_to_ptrs[] = {
-    { tr_table_ptr, sizeof(tr_table_ptr)/sizeof(tr_table_ptr[0]), sizeof(struct genz_tr_table_ptr), "tr_table_ptr" },
-    { opcode_set_uuid_ptr, sizeof(opcode_set_uuid_ptr)/sizeof(opcode_set_uuid_ptr[0]), sizeof(struct genz_opcode_set_uuid_ptr), "opcode_set_uuid_ptr" },
-    { component_error_elog_entry_ptr, sizeof(component_error_elog_entry_ptr)/sizeof(component_error_elog_entry_ptr[0]), sizeof(struct genz_component_error_elog_entry_ptr), "component_error_elog_entry_ptr" },
-    { fake_header_table_ptr, sizeof(fake_header_table_ptr)/sizeof(fake_header_table_ptr[0]), sizeof(struct genz_fake_header_table_ptr), "fake_header_table_ptr" },
+struct genz_control_ptr_info genz_struct_type_to_ptrs[] = {
+    NULL,
+     {  opcode_set_structure_ptrs, sizeof(opcode_set_structure_ptrs)/sizeof(opcode_set_structure_ptrs[0]), sizeof(struct genz_opcode_set_structure), false, 0x1, "opcode_set" },
+    NULL,
+     {  fake_struct_for_testing_ptrs, sizeof(fake_struct_for_testing_ptrs)/sizeof(fake_struct_for_testing_ptrs[0]), sizeof(struct genz_fake_struct_for_testing), false, 0x1, "fake_struct_for_testing_ptrs" },
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+     {  component_tr_structure_ptrs, sizeof(component_tr_structure_ptrs)/sizeof(component_tr_structure_ptrs[0]), sizeof(struct genz_component_tr_structure), false, 0x1, "component_tr" },
+};
+
+struct genz_control_ptr_info genz_table_type_to_ptrs[] = {
+    NULL,
+    NULL,
+    NULL,
+    NULL,
 };
 
 EXPORT_SYMBOL(genz_control_structure_type_to_ptrs);

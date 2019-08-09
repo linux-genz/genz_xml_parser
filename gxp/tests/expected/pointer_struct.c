@@ -43,8 +43,8 @@ struct genz_control_structure_ptr core_structure_ptrs[] = {
 };
 
 struct genz_control_structure_ptr opcode_set_structure_ptrs[] = {
-    { GENZ_CONTROL_POINTER_CHAIN_START, GENZ_4_BYTE_POINTER, 0x1c, GENZ_OPCODE_SET_TABLE },
-    { GENZ_CONTROL_POINTER_TABLE_WITH_HEADER, GENZ_4_BYTE_POINTER, 0x18, GENZ_OPCODE_SET_UUID_TABLE },
+    { GENZ_CONTROL_POINTER_STRUCTURE, GENZ_4_BYTE_POINTER, 0x1c, GENZ_OPCODE_SET_TABLE },
+    { GENZ_CONTROL_POINTER_TABLE, GENZ_4_BYTE_POINTER, 0x18, GENZ_OPCODE_SET_UUID_TABLE },
 };
 
 struct genz_control_structure_ptr opcode_set_table_ptrs[] = {
@@ -52,13 +52,14 @@ struct genz_control_structure_ptr opcode_set_table_ptrs[] = {
 };
 
 
-struct genz_control_ptr_info genz_control_structure_type_to_ptrs[] = {
-    { control_structure_ptr_6, sizeof(control_structure_ptr_6)/sizeof(control_structure_ptr_6[0]), sizeof(struct genz_control_structure_ptr_6), "control" },
-    { control_structure_ptr_7, sizeof(control_structure_ptr_7)/sizeof(control_structure_ptr_7[0]), sizeof(struct genz_control_structure_ptr_7), "control" },
-    { opcode_set_structure_ptr, sizeof(opcode_set_structure_ptr)/sizeof(opcode_set_structure_ptr[0]), sizeof(struct genz_opcode_set_structure_ptr), "opcode_set" },
-    { opcode_set_ptr, sizeof(opcode_set_ptr)/sizeof(opcode_set_ptr[0]), sizeof(struct genz_opcode_set_ptr), "opcode_set_ptr" },
-    { opcode_set_uuid_ptr, sizeof(opcode_set_uuid_ptr)/sizeof(opcode_set_uuid_ptr[0]), sizeof(struct genz_opcode_set_uuid_ptr), "opcode_set_uuid_ptr" },
-    { next_opcode_set_ptr, sizeof(next_opcode_set_ptr)/sizeof(next_opcode_set_ptr[0]), sizeof(struct genz_next_opcode_set_ptr), "xt_opcode_set_ptr" },
+struct genz_control_ptr_info genz_struct_type_to_ptrs[] = {
+     {  core_structure_ptrs, sizeof(core_structure_ptrs)/sizeof(core_structure_ptrs[0]), sizeof(struct genz_core_structure), false, 0x0, "core" },
+     {  opcode_set_structure_ptrs, sizeof(opcode_set_structure_ptrs)/sizeof(opcode_set_structure_ptrs[0]), sizeof(struct genz_opcode_set_structure), false, 0x1, "opcode_set" },
+};
+
+struct genz_control_ptr_info genz_table_type_to_ptrs[] = {
+     {  opcode_set_table_ptrs, sizeof(opcode_set_table_ptrs)/sizeof(opcode_set_table_ptrs[0]), sizeof(struct genz_opcode_set_table), true, 0x0, "opcode_set_table_ptrs" },
+    NULL,
 };
 
 EXPORT_SYMBOL(genz_control_structure_type_to_ptrs);

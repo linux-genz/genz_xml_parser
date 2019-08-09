@@ -59,6 +59,7 @@ struct genz_control_ptr_info genz_struct_type_to_ptrs[] = {
 
 struct genz_control_ptr_info genz_table_type_to_ptrs[] = {
      {  opcode_set_table_ptrs, sizeof(opcode_set_table_ptrs)/sizeof(opcode_set_table_ptrs[0]), sizeof(struct genz_opcode_set_table), true, 0x0, "opcode_set_table_ptrs" },
+    NULL,
 };
 
 EXPORT_SYMBOL(genz_control_structure_type_to_ptrs);

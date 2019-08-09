@@ -50,7 +50,10 @@ struct genz_control_ptr_info genz_struct_type_to_ptrs[] = {
      {  fake_struct_for_testing_ptrs, sizeof(fake_struct_for_testing_ptrs)/sizeof(fake_struct_for_testing_ptrs[0]), sizeof(struct genz_fake_struct_for_testing), false, 0x1, "fake_struct_for_testing_ptrs" },
 };
 
-struct genz_control_ptr_info genz_table_type_to_ptrs[] = {};
+struct genz_control_ptr_info genz_table_type_to_ptrs[] = {
+    NULL,
+    NULL,
+};
 
 EXPORT_SYMBOL(genz_control_structure_type_to_ptrs);
 

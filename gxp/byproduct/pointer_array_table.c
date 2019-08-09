@@ -68,7 +68,12 @@ struct genz_control_ptr_info genz_struct_type_to_ptrs[] = {
      {  component_tr_structure_ptrs, sizeof(component_tr_structure_ptrs)/sizeof(component_tr_structure_ptrs[0]), sizeof(struct genz_component_tr_structure), false, 0x1, "component_tr" },
 };
 
-struct genz_control_ptr_info genz_table_type_to_ptrs[] = {};
+struct genz_control_ptr_info genz_table_type_to_ptrs[] = {
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+};
 
 EXPORT_SYMBOL(genz_control_structure_type_to_ptrs);
 
