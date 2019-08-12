@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include "../byproduct/genz-types.c"
 #include "../byproduct/genz-types.h"
 
 int main(void){

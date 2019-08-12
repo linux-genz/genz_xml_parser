@@ -38,10 +38,4 @@
 
 {{body}}
 
-EXPORT_SYMBOL(genz_control_structure_type_to_ptrs);
-
-size_t genz_control_structure_type_to_ptrs_nelems =
-    sizeof(genz_control_structure_type_to_ptrs) /
-    sizeof(genz_control_structure_type_to_ptrs[0]);
-
-EXPORT_SYMBOL(genz_control_structure_type_to_ptrs_nelems);
+{{export_symbols}}

@@ -1,9 +1,7 @@
 """
- If your brain boils in the process of reading this code - its normal, since you
-are dealing with nested XML structure... hang in there.
-
 TODO: real docs here
 """
+
 import datetime
 import math
 import os
@@ -40,6 +38,8 @@ class CGenerator:
         self.struct_type_start_index = kwargs.get('struct_type_start_index', 0)
         self.root_tag_name = tags.get('root', 'structs')
         self.struct_tag_name = tags.get('struct', 'struct')
+        self.struct_type_to_ptrs_name = 'genz_struct_type_to_ptrs'
+        self.table_type_to_ptrs_name = 'genz_table_type_to_ptrs'
 
         root_structs = root.find(self.root_tag_name)
         if parse_on_init:
@@ -412,6 +412,35 @@ class CGenerator:
         return struct_array, table_array
 
 
+    def build_export_symbol(self, name):
+        """
+            EXPORT_SYMBOL(genz_struct_type_to_ptrs);
+
+            size_t genz_struct_type_to_ptrs_nelems =
+                sizeof(genz_struct_type_to_ptrs) /
+                sizeof(genz_struct_type_to_ptrs[0]);
+
+            EXPORT_SYMBOL(genz_struct_type_to_ptrs);
+        """
+        export_symbol = 'EXPORT_SYMBOL(%s)' % name
+        value = 'sizeof(%s) / sizeof([0])' % name
+        return [
+            fields.CStructEntry(export_symbol, var_type='', str_left_space=''),
+            fields.EStateEntry('size_t %s_nelems' % name, value, str_left_space='', close_bracket_str=';'),
+            fields.CStructEntry(export_symbol, var_type='', str_left_space=''),
+        ]
+
+
+    @property
+    def export_symbol_struct(self):
+        return self.build_export_symbol(self.struct_type_to_ptrs_name)
+
+
+    @property
+    def export_symbol_table(self):
+        return self.build_export_symbol(self.table_type_to_ptrs_name)
+
+
     @property
     def structs_enum(self):
         return self.DataTypes.build_ctrl_struct_type_enum(self.structs,
@@ -454,7 +483,9 @@ class CGenerator:
         ptr_sizes = self.DataTypes.build_ptr_sizes_enum()
         ctrl_ptr_struct = self.DataTypes.build_ctrl_struct_ptr_struct()
         ctrl_ptr_info_struct = self.DataTypes.build_ctrl_ptr_info_struct()
-        externs = self.DataTypes.build_externs()
+        externs = self.DataTypes.build_externs(self.struct_type_to_ptrs_name)
+        externs.extend(self.DataTypes.build_externs(self.table_type_to_ptrs_name))
+
 
         result.append(ctrl_ptr_flags)
         result.append(ptr_sizes)

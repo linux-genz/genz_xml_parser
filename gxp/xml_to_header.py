@@ -279,9 +279,13 @@ def main(cmd_args: dict):
     template_props['body'] = '\n'.join(write_props['data'])
 
     pointer_entries = entries_to_str([ptr for ptr in generator.pointers])
-    # array_names = [ptr.name for ptr in generator.pointers]
+    export_symbols = generator.export_symbol_struct
+    export_symbols.extend(generator.export_symbol_table)
+    export_symbols = entries_to_str(export_symbols)
+
     c_template_props = {
         'body': '\n'.join(pointer_entries['data']),
+        'export_symbols': '\n'.join(export_symbols['data']),
         'header_file': os.path.basename(dest),
         'pointers': pointers,
         'type_name': DataTypesModel.ctr_ptr_info_struct_name

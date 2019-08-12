@@ -31,7 +31,7 @@ class NullEntry(BaseXmler):
     the resulted .h file.
     """
 
-    def __init__(self, name='NULL', **kwargs):
+    def __init__(self, name='{}', **kwargs):
         super().__init__(name, **kwargs)
         self.close_bracket_str = kwargs.get('close_bracket_str', '')
 
