@@ -49,7 +49,7 @@ class BaseXmler(ABC):
         self.str_start = '' # string to put in front of the entry (e.g. comments)
         self.str_end = kwargs.get('str_end', '') # string to put in the end of the entry
         self.open_bracket_str = '{'
-        self.close_bracket_str = '};'
+        self.close_bracket_str = kwargs.get('close_bracket_str', '};')
         self.str_left_space: int = kwargs.get('str_left_space', ' ' * 4)
         self.str_var_space: int = kwargs.get('str_var_space',' ' * 6)
         self.space_after_name: int = kwargs.get('space_after_name',' ' * 1)

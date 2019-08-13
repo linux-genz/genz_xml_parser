@@ -27,12 +27,12 @@ class EStateEntry(BaseXmler):
         An entry for the Enum instance.
     """
 
-    def __init__(self, name, value):
+    def __init__(self, name, value, **kwargs):
         """
             @param name: name of the enum state.
             @param value: Value of the state.
         """
-        super().__init__(name)
+        super().__init__(name, **kwargs)
         #FIXME: hack. Few entries has those values that python crashes on.
         if value == '0b':
             value = '0x0'
@@ -40,12 +40,15 @@ class EStateEntry(BaseXmler):
             value = '0x1'
 
         self.value = value
+        self.close_bracket_str: str = kwargs.get('close_bracket_str', ',')
 
-        self.str_close_symbol: str = ','
 
 
     def pprint(self):
-        """ Formats XML parsed entries into a 'proper' display format. """
+        """ Formats XML parsed entries into a 'proper' display format.
+
+        ENTRY_NAME = 0x0,
+        """
         start_str = self.str_start
         str_end = self.str_end
 
@@ -58,5 +61,5 @@ class EStateEntry(BaseXmler):
                         left_space=self.str_left_space,
                         name=self.name,
                         value=self.value,
-                        close_symbol=self.str_close_symbol,
+                        close_symbol=self.close_bracket_str,
                         str_end=str_end)

@@ -41,7 +41,7 @@
  *
  * Generator Script Meta:
  *     Version      : v0.2
- *     Generated On : 08, Aug 2019
+ *     Generated On : 13, Aug 2019
  *
  *
  * **************************************************************
@@ -54,10 +54,10 @@
 #ifndef __GENZH__
 #define __GENZH__
 
-#include <stdbool.h>
 
 #ifndef __KERNEL__
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <inttypes.h>
 
@@ -205,9 +205,13 @@ struct genz_control_structure_ptr {
     const enum genz_control_structure_type struct_type;
 };
 
-extern struct genz_control_ptr_info genz_ctrl_struct_type_to_ptrs[];
+extern struct genz_control_ptr_info genz_struct_type_to_ptrs[];
 
-extern size_t genz_ctrl_struct_type_to_ptrs_nelems;
+extern size_t genz_struct_type_to_ptrs_nelems;
+
+extern struct genz_control_ptr_info genz_table_type_to_ptrs[];
+
+extern size_t genz_table_type_to_ptrs_nelems;
 
 
 union genz_c_status {

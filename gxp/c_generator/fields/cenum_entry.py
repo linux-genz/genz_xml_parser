@@ -40,7 +40,10 @@ class CEnumEntry(BaseXmler):
 
 
     def pprint(self):
-        """ Formats XML parsed entries into a 'proper' display format. """
+        """ Formats XML parsed entries into a 'proper' display format:
+
+        enum genz_c_status_c_state { };
+        """
         states = ''
         for index in range(len(self.entries)):
             entry = self.entries[index]

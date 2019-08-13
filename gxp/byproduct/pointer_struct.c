@@ -62,10 +62,10 @@ struct genz_control_ptr_info genz_table_type_to_ptrs[] = {
     NULL,
 };
 
-EXPORT_SYMBOL(genz_control_structure_type_to_ptrs);
+EXPORT_SYMBOL(genz_struct_type_to_ptrs);
 
 size_t genz_control_structure_type_to_ptrs_nelems =
-    sizeof(genz_control_structure_type_to_ptrs) /
-    sizeof(genz_control_structure_type_to_ptrs[0]);
+    sizeof(genz_struct_type_to_ptrs) /
+    sizeof(genz_struct_type_to_ptrs[0]);
 
 EXPORT_SYMBOL(genz_control_structure_type_to_ptrs_nelems);
