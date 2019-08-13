@@ -40,10 +40,10 @@ import jinja2
 import logging
 
 from pdb import set_trace
-from gxp.c_generator import fields
-from gxp.c_generator.models import DataTypesModel
+from gxp.generator import fields
+from gxp.generator.models import DataTypesModel
 from gxp.CGenerator import CGenerator
-from gxp.c_generator.parsers import ClassParser
+from gxp.generator.parsers import ClassParser
 
 
 def render_template_str(template_path: str, props: dict):
@@ -167,10 +167,10 @@ def entries_to_str(entries: list) -> dict:
     for entry in entries:
         # Ignore empty structs to the .h file.
         if entry.is_empty():
-            struct_comment = entry.fields.get('open_bracket_str', None)
+            struct_comment = entry.fields.get('open_bracket', None)
             if struct_comment:
                 msg = '//FIXME: empty struct.'
-                entry.open_bracket_str = '%s %s' % (struct_comment, msg)
+                entry.open_bracket = '%s %s' % (struct_comment, msg)
 
         # Enums of size 1 are no needed in the header - so skip them
         if isinstance(entry, fields.CEnumEntry):
