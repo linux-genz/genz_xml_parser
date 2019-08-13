@@ -422,8 +422,8 @@ class CGenerator:
 
             EXPORT_SYMBOL(genz_struct_type_to_ptrs);
         """
-        export_symbol = 'EXPORT_SYMBOL(%s)' % name
-        value = 'sizeof(%s) / sizeof([0])' % name
+        export_symbol = 'EXPORT_SYMBOL(%s_nelems)' % name
+        value = 'sizeof({name}) / sizeof({name}[0])'.format(name=name)
         return [
             fields.CStructEntry(export_symbol, var_type='', str_left_space=''),
             fields.EStateEntry('size_t %s_nelems' % name, value, str_left_space='', close_bracket_str=';'),
