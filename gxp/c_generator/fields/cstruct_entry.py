@@ -128,11 +128,12 @@ class CStructEntry(BaseXmler):
             if not self.ignore_long_name_warning:
                 end_str = '%s %s' % (self.str_end, length_comment)
 
-        msg = '{start}{left_space}{var_type} {name}{bits}{var_close_symbol}{end}'
+        var_type = '' if not self.var_type else '%s ' % self.var_type
+        msg = '{start}{left_space}{var_type}{name}{bits}{var_close_symbol}{end}'
         return msg.format(
                  start=self.str_start, # could indicate a commented, e.g. '//'
                  left_space=self.str_left_space,
-                 var_type=self.var_type,
+                 var_type=var_type,
                  name=self.name,
                  bits=semicolon_with_bits,
                  var_close_symbol=self.str_close_symbol,

@@ -54,10 +54,10 @@
 #ifndef __GENZH__
 #define __GENZH__
 
-#include <stdbool.h>
 
 #ifndef __KERNEL__
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <inttypes.h>
 

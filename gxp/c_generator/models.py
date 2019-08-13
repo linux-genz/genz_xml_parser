@@ -167,8 +167,8 @@ class DataTypesModel:
 
 
     @classmethod
-    def build_externs(cls):
-        name = 'genz_ctrl_struct_type_to_ptrs'
+    def build_externs(cls, name):
+        # name = 'genz_ctrl_struct_type_to_ptrs'
         array_type = 'extern struct %s' % cls.ctr_ptr_info_struct_name
         return [
             fields.CArrayEntry(name, array_type, is_allow_empty=False),
