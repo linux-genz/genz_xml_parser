@@ -414,13 +414,13 @@ struct genz_control_ptr_info genz_table_type_to_ptrs[] = {
     {},
 };
 
-EXPORT_SYMBOL(genz_struct_type_to_ptrs_nelems);
+EXPORT_SYMBOL(genz_struct_type_to_ptrs);
 
 size_t genz_struct_type_to_ptrs_nelems = sizeof(genz_struct_type_to_ptrs) / sizeof(genz_struct_type_to_ptrs[0]);
 
 EXPORT_SYMBOL(genz_struct_type_to_ptrs_nelems);
 
-EXPORT_SYMBOL(genz_table_type_to_ptrs_nelems);
+EXPORT_SYMBOL(genz_table_type_to_ptrs);
 
 size_t genz_table_type_to_ptrs_nelems = sizeof(genz_table_type_to_ptrs) / sizeof(genz_table_type_to_ptrs[0]);
 
