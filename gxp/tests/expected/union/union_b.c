@@ -34,34 +34,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 #include <linux/kernel.h>
-#include "classes.h"
-
-struct hardware_classes_meta hardware_classes[] = {
-     { "Reserved—shall not be used",                          "reserved_shall_not_be_used", RESERVED_SHALL_NOT_BE_USED },
-     { "Memory ( P2P 64 )",                                   "memory", MEMORY },
-     { "Memory (Explicit OpClass)",                           "memory", MEMORY },
-     { "Integrated Switch",                                   "switch", SWITCH },
-     { "Enclosure / Expansion Switch",                        "switch", SWITCH },
-     { "Fabric Switch",                                       "switch", SWITCH },
-     { "Processor (Bootable)",                                "processor", PROCESSOR },
-     { "Processor (Non-boot)",                                "processor", PROCESSOR },
-     { "Accelerator (Non-coherent, non-boot)",                "accelerator", ACCELERATOR },
-     { "Accelerator (Coherent, non-boot)",                    "accelerator", ACCELERATOR },
-     { "Accelerator (Non-coherent, bootable)",                "accelerator", ACCELERATOR },
-     { "Accelerator (Coherent, bootable)",                    "accelerator", ACCELERATOR },
-     { "I/O (Non-coherent, non-boot)",                        "io", IO },
-     { "I/O (Coherent, non-boot)",                            "io", IO },
-     { "I/O (Non-coherent, bootable)",                        "io", IO },
-     { "I/O (Coherent, bootable)",                            "io", IO },
-     { "Block Storage (Bootable)",                            "block_storage", BLOCK_STORAGE },
-     { "Block Storage (Non-boot)",                            "block_storage", BLOCK_STORAGE },
-     { "Transparent Router",                                  "transparent_router", TRANSPARENT_ROUTER },
-     { "Multi-class Component (see Service UUID Structure )", "multiclass_component", MULTICLASS_COMPONENT },
-     { "Discrete Gen-Z Bridge",                               "bridge", BRIDGE },
-     { "Integrated Gen-Z Bridge",                             "bridge", BRIDGE },
-     { "Compliance Test Board",                               "compliance_test_board", COMPLIANCE_TEST_BOARD },
-     { "Logical PCIe Hierarchy (LPH)",                        "logical_pcie_hierarchy", LOGICAL_PCIE_HIERARCHY },
-};
+#include "union_b.h"
 
 
 

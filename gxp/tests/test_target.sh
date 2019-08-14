@@ -1,20 +1,20 @@
 #!/bin/bash
 
 MOCK_DIR="$( cd "$(dirname "$0")" ; pwd -P )/mock/"
-# BYPRODUCT_DIR="$( cd "$(dirname "$0")" ; pwd -P )/../byproduct/"
 BYPRODUCT_DIR="/tmp/gxp_byproduct/"
 EXPECTED_DIR="$( cd "$(dirname "$0")" ; pwd -P )/expected/"
 RUN_FILE="$( cd "$(dirname "$0")" ; pwd -P )/../xml_to_header.py"
 TARGET=
 IS_CLEAN=false
 OUTPUT_DIR_CREATED=false
+QUITE=false
 
 while [[ $# -gt 0 ]]
 do
 key="$1"
 
 case $key in
-    
+
     -o|--output)
     BYPRODUCT_DIR="$2"
     shift # past argument
@@ -29,6 +29,11 @@ case $key in
     IS_CLEAN=true
     shift # past argument
     shift # past value
+    ;;
+    -q|--quite)
+    QUITE=true
+    shift
+    shift
     ;;
     *)
     if [ -z $TARGET ]; then TARGET=$1; fi
@@ -47,7 +52,7 @@ if [[ $BYPRODUCT_DIR == /tmp/* ]]; then
     if [ ! -d "$BYPRODUCT_DIR" ]; then
         OUTPUT_DIR_CREATED=true
         mkdir -p $BYPRODUCT_DIR
-        echo 'Output dir created at: %BYPRODUCT_DIR'
+        echo 'Output dir created at: $BYPRODUCT_DIR'
     fi
 else
     echo "Output dir at $BYPRODUCT_DIR is not in /tmp/*!"
@@ -65,6 +70,7 @@ echo_error() { printf "\n%s\n" "$*" 1>&2; }
 diff_target() {
     expected=$1
     received=$2
+    quite=$3
     if [ -f "$expected" ]; then
         h_diff=`diff -bB -I "$ignore_in_diff" $expected $received`
         if [ ! -z "$h_diff" ]; then
@@ -72,8 +78,9 @@ diff_target() {
             echo_error "$h_diff"
             return 1
         else
-            echo ''
-            echo "-- Success for $(basename $received)! --"
+            if [ "$quite" = false ]; then
+                echo "-- Success for $(basename $received)! --"
+            fi
             return 0
         fi
     else
@@ -99,22 +106,25 @@ for mock_file in ${target_names[*]}; do
         continue
     fi
 
-    $RUN_FILE $mock_file -o $BYPRODUCT_DIR/$file_name.h -v 20
+    $RUN_FILE $mock_file -o $BYPRODUCT_DIR/$file_name.h -v 100
     ignore_in_diff=".Generated On."
 
-    diff_target $expected_file.h $BYPRODUCT_DIR/$file_name.h
+    diff_target $expected_file.h $BYPRODUCT_DIR/$file_name.h $QUITE
     has_failed=$?
-    echo "--> $has_failed"
-    if [ has_failed = -1 ]; then failed_targets += "$file_name.h"; fi
+    if [ $has_failed = 1 ]; then failed_targets+=("$file_name.h"); fi
 
-    diff_target $expected_file.c $BYPRODUCT_DIR/$file_name.c
+    diff_target $expected_file.c $BYPRODUCT_DIR/$file_name.c $QUITE
     has_failed=$?
-    echo "--> $has_failed"
-    if [ has_failed = -1 ]; then failed_targets += "$file_name.c"; fi
+    if [ $has_failed = 1 ]; then failed_targets+=("$file_name.c"); fi
 
-    printf "\n*** END OF TEST ****\n\n"
+    if [ "$quite" = false ]; then
+        printf "\n*** END OF TEST ****\n\n"
+    fi
 done
 
+if [ "${#failed_targets[@]}" = 0 ]; then
+    echo "-- All Passed for target '$TARGET' --"
+fi
 
 for failed in ${failed_targets[*]}; do
     echo " -- Failed: $failed"
