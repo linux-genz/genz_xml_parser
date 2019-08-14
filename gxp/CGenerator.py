@@ -11,10 +11,10 @@ import logging
 
 from pdb import set_trace
 
-from gxp.c_generator import parsers
-from gxp.c_generator import fields
-from gxp.c_generator.models import DataTypesModel
-from gxp.c_generator.utils import get_name, is_name_too_long, trim_name
+from gxp.generator import parsers
+from gxp.generator import fields
+from gxp.generator.models import DataTypesModel
+from gxp.generator.utils import get_name, is_name_too_long, trim_name
 
 
 class CGenerator:
@@ -353,12 +353,12 @@ class CGenerator:
         hIndex_struct = self.find_highest_struct_index()
         hIndex_tbl = self.find_highest_struct_index(tag='table')
         for _ in range(hIndex_struct + 1):
-            null_entry = fields.NullEntry(close_bracket_str=',')
+            null_entry = fields.NullEntry(close_bracket=',')
             struct_array.append(null_entry)
 
         struct_enum = self.structs_enum
         for _ in range(hIndex_tbl + 1):
-            null_entry = fields.NullEntry(close_bracket_str=',')
+            null_entry = fields.NullEntry(close_bracket=',')
             table_array.append(null_entry)
 
         for index in range(pointers_count):
@@ -396,7 +396,7 @@ class CGenerator:
                 chained='true' if struct.is_chained else 'false'
             )
             struct_entry = fields.CStructEntry(name, ignore_long_name_warning=True)
-            struct_entry.str_left_space = '%s { ' % struct_entry.str_left_space
+            struct_entry.l_space = '%s { ' % struct_entry.l_space
             struct_entry.str_close_symbol = ' },'
 
             if struct.tag == 'struct':
@@ -425,9 +425,9 @@ class CGenerator:
         export_symbol = 'EXPORT_SYMBOL(%s)'
         value = 'sizeof({name}) / sizeof({name}[0])'.format(name=name)
         return [
-            fields.CStructEntry(export_symbol % name, var_type='', str_left_space=''),
-            fields.EStateEntry('size_t %s_nelems' % name, value, str_left_space='', close_bracket_str=';'),
-            fields.CStructEntry(export_symbol % (name + '_nelems'), var_type='', str_left_space=''),
+            fields.CStructEntry(export_symbol % name, var_type='', l_space=''),
+            fields.EStateEntry('size_t %s_nelems' % name, value, l_space='', close_bracket=';'),
+            fields.CStructEntry(export_symbol % (name + '_nelems'), var_type='', l_space=''),
         ]
 
 

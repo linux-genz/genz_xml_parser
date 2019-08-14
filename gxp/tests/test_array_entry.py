@@ -3,7 +3,8 @@ import os
 import unittest
 from pdb import set_trace
 
-from genz_specs_parser import datastruct
+from gxp.generator import fields
+from gxp.generator import utils
 
 
 class TestArrayEntry(unittest.TestCase):
@@ -15,8 +16,8 @@ class TestArrayEntry(unittest.TestCase):
         """
         name = 'core_structure_pointers'
         var_type = 'struct control_structure_pointers'
-        array_entry = datastruct.CArrayEntry(name, var_type)
-        array_entry.str_left_space = ''
+        array_entry = fields.CArrayEntry(name, var_type)
+        array_entry.l_space = ''
         expected = 'struct control_structure_pointers core_structure_pointers[]'
         result = array_entry.header_str
         self.assertEqual(expected, result)
@@ -32,14 +33,16 @@ class TestArrayEntry(unittest.TestCase):
         """
         name = 'Core Structure PTR 1'
         p_value = '0x48'
-        expected = '{ GENZ_CONTROL_POINTER_GENERIC, GENZ_4_BYTE_POINTER, 0x48 },'
+        expected = '{ None, GENZ_4_BYTE_POINTER, 0x48, None },'
         var_type = 'struct control_structure_pointers'
-        array_entry = datastruct.CArrayEntry(name.split('PTR')[0] + '_pointers', var_type)
-        array_entry.str_left_space = ''
+        name = name.split('PTR')[0].strip() + '_pointers'
+        name = utils.trim_name(name)
+        array_entry = fields.CArrayEntry(name, var_type)
+        array_entry.l_space = ''
 
-        pModel = datastruct.CPointerEntry(name, '4', p_value)
+        pModel = fields.CPointerEntry(name, '4', p_value=p_value)
         array_entry.append(pModel)
-        expected = 'struct control_structure_pointers core_structure_pointers[] = {\n    { GENZ_CONTROL_POINTER_GENERIC, GENZ_4_BYTE_POINTER, 0x48 },\n};'
+        expected = 'struct control_structure_pointers core_structure_pointers[] = {\n    %s\n};' % expected
         result = array_entry.pprint()
         self.assertEqual(expected, result)
 

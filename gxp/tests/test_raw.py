@@ -21,7 +21,7 @@ class TestRaw(unittest.TestCase):
 
         this_file = os.path.realpath(__file__)
         this_dir = os.path.dirname(this_file)
-        to_search = os.path.join(this_dir, 'mock/') + '*.xml'
+        to_search = os.path.join(this_dir, 'mock/*/') + '*.xml'
 
         mockfiles = glob.glob(to_search, recursive=True)
         self.assertTrue(len(mockfiles) > 0)
