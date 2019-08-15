@@ -52,7 +52,7 @@ if [[ $BYPRODUCT_DIR == /tmp/* ]]; then
     if [ ! -d "$BYPRODUCT_DIR" ]; then
         OUTPUT_DIR_CREATED=true
         mkdir -p $BYPRODUCT_DIR
-        echo 'Output dir created at: $BYPRODUCT_DIR'
+        echo "Output dir created at: $BYPRODUCT_DIR"
     fi
 else
     echo "Output dir at $BYPRODUCT_DIR is not in /tmp/*!"

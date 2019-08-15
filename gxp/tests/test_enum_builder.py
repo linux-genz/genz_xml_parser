@@ -10,6 +10,11 @@ from gxp.generator.parsers import enum_builder
 
 class TestEnumBuilder(unittest.TestCase):
 
+    def setUp(self):
+        self.this_file = os.path.abspath(__file__)
+        self.this_file = os.path.dirname(self.this_file)
+
+
     def test_simple(self):
         expected = """
 enum genz_c_status_c_state {
@@ -20,7 +25,7 @@ enum genz_c_status_c_state {
     C_STATUS_C_STATE_C_DLP = 0x4
 };""".strip().strip('\n')
 
-        xml_path = './mock/union/union.xml'
+        xml_path = os.path.join(self.this_file, 'mock/union/union.xml')
         root = xml.etree.ElementTree.parse(xml_path).getroot()
         xml_struct = root.find('struct')
 

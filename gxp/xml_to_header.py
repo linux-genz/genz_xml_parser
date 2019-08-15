@@ -305,11 +305,11 @@ def main(cmd_args: dict):
     if not os.path.exists(os.path.dirname(dest)):
         os.makedirs(os.path.dirname(dest), exist_ok=True)
 
-    with open(dest, 'w+') as file_obj:
+    with open(dest, 'w+', encoding="utf-8") as file_obj:
         file_obj.write(header)
 
     if not is_no_c_file:
-        with open(c_dest, 'w+') as file_obj:
+        with open(c_dest, 'w+', encoding="utf-8") as file_obj:
             file_obj.write(c_file)
 
     if is_clean_tmp:
