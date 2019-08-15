@@ -1,11 +1,14 @@
 # Use an official Python runtime as a parent image
-FROM python:3.6.8
+FROM ubuntu:18.04
 
 # Set the working directory to /app
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
 COPY . /app
+
+RUN export LANG=C.UTF-8
+RUN apt update -y; apt install -y python3-pip git
 
 # Install any needed packages specified in requirements.txt
 RUN pip3 install -e .
@@ -18,4 +21,4 @@ EXPOSE 80
 ENV NAME GXP
 
 # Run app.py when the container launches
-CMD ["python3", "./gxp/tests/test_raw.py"]
+CMD ["bash", "./gxp/tests/everything.sh"]
