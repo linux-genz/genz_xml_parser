@@ -36,6 +36,10 @@ class TableBuilder(FieldBuilderBase):
             if self.elements_type is None:
                 self.elements_type = array.get('elements')
             elements = array.findall('element')
+            if elements is None or len(elements) == 0:
+                logging.warning('Empty array in the table "%s"' % root.get('name', 'unknown'))
+                continue
+
             for element in elements:
                 name_to_set = get_name(root)
                 # if not name_to_set.lower().endswith('array'):

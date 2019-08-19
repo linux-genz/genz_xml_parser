@@ -20,7 +20,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTI
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-def trim_name(name, replaceable=' —-/[:](),=.\n', removable='|!<>@#$%^&*+–’'):
+def trim_name(name, replaceable=' —-/[:](),=.\n', removable='|!<>@#$%^&*+–’;'):
     """
         Replace garbage with the '_' character.
     :param name: a field name to be trimmed from garbage chars not allowed by
