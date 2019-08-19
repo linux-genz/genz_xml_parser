@@ -1,0 +1,64 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <struct name="Component PM Structure" type="0x1d" vers="0x1" size="0x10">
+            <offset num_bits="64" value="0x0">
+                <field max_bit="11" min_bit="0" num_bits="12" value="0x1d" mo="M" access="RO">
+                    <name>Type</name>
+                </field>
+                <field max_bit="15" min_bit="12" num_bits="4" value="0x1" mo="M" access="RO">
+                    <name>Vers</name>
+                </field>
+                <field max_bit="31" min_bit="16" num_bits="16" value="0x10" mo="M" access="RO">
+                    <name>Size</name>
+                </field>
+                <field max_bit="47" min_bit="32" num_bits="16" mo="M">
+                    <name>PM CAP 1</name>
+                    <subfield max_bit="2" min_bit="0" num_bits="3" access="RO">
+                        <name>Performance Marker Support</name>
+                        <value val="0x0">
+                            <name>Unsupported</name>
+                        </value>
+                        <value val="0x1">
+                            <name>Generates Performance Log Record Type 0</name>
+                        </value>
+                        <value val="0x2">
+                            <name>Generates Performance Log Record Types 1</name>
+                        </value>
+                        <value min_val="0x3" max_val="0x7">
+                            <name>Reserved</name>
+                        </value>
+                    </subfield>
+                    <subfield max_bit="7" min_bit="3" num_bits="5" access="RO">
+                        <name>Max_Perf_Records</name>
+                    </subfield>
+                    <subfield max_bit="15" min_bit="8" num_bits="8" access="Reserved">
+                        <name>Reserved</name>
+                    </subfield>
+                </field>
+                <field max_bit="63" min_bit="48" num_bits="16" mo="M">
+                    <name>PM Control</name>
+                    <subfield max_bit="0" min_bit="0" num_bits="1" access="RW">
+                        <name>Performance Log Record Enable</name>
+                    </subfield>
+                    <subfield max_bit="1" min_bit="1" num_bits="1" access="WO">
+                        <name>Clear Performance Marker Log</name>
+                        <value val="1b">
+                            <name>Clear Performance Log</name>
+                        </value>
+                    </subfield>
+                    <subfield max_bit="15" min_bit="2" num_bits="14" access="RsvdP">
+                        <name>RsvdP</name>
+                    </subfield>
+                </field>
+            </offset>
+            <offset num_bits="64" value="0x8">
+                <field max_bit="31" min_bit="0" num_bits="32" mo="M" access="RO" ptr_to="UNKNOWN">
+                    <name>Performance Log PTR</name>
+                </field>
+                <field max_bit="63" min_bit="32" num_bits="32" access="Reserved">
+                    <name>R0</name>
+                </field>
+            </offset>
+        </struct>
+    </structs>
+</genz>
