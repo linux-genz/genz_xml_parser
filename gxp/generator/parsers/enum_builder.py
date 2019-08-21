@@ -71,6 +71,7 @@ class EnumBuilder(FieldBuilderBase):
                     continue
 
                 entry_name = '%s_%s_%s' % (field_name, subfield_name, entry_name)
+                entry_name = trim_name(entry_name)
                 entry_name = entry_name.upper()
 
                 val = xml_value.get('val', -1)

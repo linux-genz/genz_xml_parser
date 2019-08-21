@@ -1,0 +1,38 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <table name="PG / Restricted PG Table" size="VARIABLE" min_size="0x0" ptr="PG Base PTR | Restricted PG Base PTR">
+            <array bytes="VARIABLE" elements="VARIABLE" offset="0x0">
+                <element bytes="0x10" offset="0x0">
+                    <offset num_bits="64" value="0x0">
+                        <field max_bit="11" min_bit="0" num_bits="12" access="RsvdP">
+                            <name>R0</name>
+                        </field>
+                        <field max_bit="63" min_bit="12" num_bits="52" mo="M" access="RW">
+                            <name>PG Base Address 0</name>
+                        </field>
+                    </offset>
+                    <offset num_bits="64" value="0x8">
+                        <field max_bit="6" min_bit="0" num_bits="7" mo="M" access="RW">
+                            <name>Page Size 0</name>
+                        </field>
+                        <field max_bit="7" min_bit="7" num_bits="1" mo="O" access="RW">
+                            <name>RES</name>
+                            <value val="0b">
+                                <name>No additional access control</name>
+                            </value>
+                            <value val="1b">
+                                <name>Restricted Access</name>
+                            </value>
+                        </field>
+                        <field max_bit="31" min_bit="8" num_bits="24" mo="M" access="RW">
+                            <name>Page Count 0</name>
+                        </field>
+                        <field max_bit="63" min_bit="32" num_bits="32" mo="M" access="RW">
+                            <name>Base PTE Index 0</name>
+                        </field>
+                    </offset>
+                </element>
+            </array>
+        </table>
+    </structs>
+</genz>

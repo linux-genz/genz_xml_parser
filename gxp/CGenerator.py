@@ -70,8 +70,14 @@ class CGenerator:
                 self.unions.extend(union_builder.instance)
 
             enum_builder = parsers.EnumBuilder(struct_elem)
-            if enum_builder.instance is not None:
+            if enum_builder.instance is not None and len(enum_builder.instance) > 0:
                 self.enums.extend(enum_builder.instance)
+                #create field entries for each Enum definition to add to the struct.
+                for enum in enum_builder.instance:
+                    e_type = 'enum %s' % enum.name
+                    e_name = enum.name.split('genz_')[-1]
+                    enum_entry = fields.CStructEntry(e_name, var_type=e_type)
+                    struct_parser.instance.append(enum_entry)
 
             pointer_parser = parsers.PointerBuilder(struct_elem, data_types=self.DataTypes)
             if pointer_parser.instance is not None:
