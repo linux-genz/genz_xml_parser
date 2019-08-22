@@ -25,7 +25,13 @@ class EnumBuilder(FieldBuilderBase):
         offsets = root.findall('offset')
         for xml_offset in offsets:
             for xml_field in xml_offset.findall('field'):
-                self._create_entry(xml_field)
+                entries = self._create_entry(xml_field)
+                if entries is None:
+                    continue
+
+                for entry in entries:
+                    entry.parent = xml_offset
+                    self._instance.append(entry)
 
 
     def _create_entry(self, field):
@@ -47,6 +53,7 @@ class EnumBuilder(FieldBuilderBase):
             return None
 
         enum_instance = None
+        result = []
         for xml_subfield in xml_subfields:
             xml_values = xml_subfield.findall('value')
             if xml_values is None or len(xml_values) == 0: # No value - not an enum
@@ -61,8 +68,9 @@ class EnumBuilder(FieldBuilderBase):
             inst_name = 'genz_%s_%s' % (field_name, subfield_name)
             #empty subfield_name produces trailing '_'. Thus - clean it up.
             inst_name = inst_name.strip('_')
-
-            enum_instance = fields.CEnumEntry(inst_name)
+            enum_instance = fields.CEnumEntry(inst_name,
+                                            origin=xml_subfield,
+                                            parent=field)
 
             for xml_value in xml_values:
                 entry_name = get_name(xml_value)
@@ -78,4 +86,32 @@ class EnumBuilder(FieldBuilderBase):
                 entry = fields.EStateEntry(entry_name, val)
                 enum_instance.append(entry)
 
-            self._instance.append(enum_instance)
+            # self._instance.append(enum_instance)
+            result.append(enum_instance)
+        return result
+
+
+    @property
+    def as_bitfield(self):
+        """
+            Take Enum entry type and convert into a bitfield type:
+            uint64_t NameOfEnum : offset.num_bits;
+        """
+        if self.instance is None:
+            return []
+
+        result = []
+        for enum in self.instance:
+            type_val = 64
+            bits = enum.origin.get('num_bits', -1)
+            if enum.parent is not None:
+                type_val = enum.parent.get('num_bits', type_val)
+
+            e_name = enum.name.split('genz_')[-1]
+            if int(bits) < 0:
+                logging.warning('Enum entry "%s" has invalid bitfield value?' % e_name)
+            enum_entry = fields.CStructEntry(e_name,
+                                            num_type=type_val,
+                                            bitfield=bits)
+            result.append(enum_entry)
+        return result
