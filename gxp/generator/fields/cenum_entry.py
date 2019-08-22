@@ -31,11 +31,11 @@ class CEnumEntry(BaseXmler):
         }
     """
 
-    def __init__(self, name):
+    def __init__(self, name, **kwargs):
         """
             @param name: Name of the Enum definition.
         """
-        super().__init__(name)
+        super().__init__(name, **kwargs)
         self._longest_name: int = -1
 
 
