@@ -72,6 +72,7 @@ class PointerBuilder(FieldBuilderBase):
                 p_value = '-1'
 
         pointer_entry = fields.CPointerEntry(field_name, p_size, p_value, ptr_to=ptr_to)
+        pointer_entry.origin = field
         pointer_entry.parent = self.root
 
         return pointer_entry

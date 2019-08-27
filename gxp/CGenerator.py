@@ -63,7 +63,8 @@ class CGenerator:
     def _parse_structs(self, xml_structs):
         for struct_elem in xml_structs:
             struct_parser = parsers.StructBuilder(struct_elem)
-            self.structs.append(struct_parser.instance)
+            if struct_parser.instance not in self.structs: #duplicates check
+                self.structs.append(struct_parser.instance)
 
             union_builder = parsers.UnionBuilder(struct_elem)
             if union_builder is not None and union_builder.instance is not None:
@@ -71,15 +72,16 @@ class CGenerator:
 
             enum_builder = parsers.EnumBuilder(struct_elem)
             if enum_builder.instance is not None and len(enum_builder.instance) > 0:
-                self.enums.extend(enum_builder.instance)
-                #create field entries for each Enum definition to add to the struct.
-                struct_parser.instance.extend(enum_builder.as_bitfield)
+                for enum in enum_builder.instance: #duplicates check
+                    if enum not in self.enums:
+                        self.enums.append(enum)
 
             pointer_parser = parsers.PointerBuilder(struct_elem, data_types=self.DataTypes)
             if pointer_parser.instance is not None:
                 if pointer_parser.instance not in self.pointers:
                     pointer_parser.instance.origin = struct_parser.instance
-                    self.pointers.append(pointer_parser.instance)
+                    if pointer_parser.instance not in self.pointers: #duplicates check
+                        self.pointers.append(pointer_parser.instance)
                 struct_parser.instance.child_pointers.extend(pointer_parser.instance.entries)
 
             #Parsing a table is almost a recursive process. Each <table> or
@@ -501,7 +503,8 @@ class CGenerator:
             result.append(union)
 
         for enum in self.enums:
-            result.append(enum)
+            if len(enum.entries) > 1:
+                result.append(enum)
 
         structs = []
         structs.extend(self.struct_arrays)

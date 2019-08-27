@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from gxp.generator.parsers import FieldBuilderBase
+from gxp.generator import parsers
 import math
 import logging
 
@@ -7,7 +7,7 @@ from gxp.generator import fields
 from gxp.generator.utils import get_name, trim_name, is_name_too_long
 
 
-class StructBuilder(FieldBuilderBase):
+class StructBuilder(parsers.FieldBuilderBase):
     """
         <struct name="">
             <offset num_bits="">
@@ -36,7 +36,13 @@ class StructBuilder(FieldBuilderBase):
             for xml_field in xml_offset:
                 entry = self.create_entry(xml_field, bits)
                 if entry is None:
-                    continue
+                    enum_builder = parsers.EnumBuilder(xml_field)
+                    enums = enum_builder._create_entry(xml_field)
+                    enum_builder._instance.extend(enums)
+                    entry = enum_builder.as_bitfield
+
+                    if entry is None or len(entry) == 0:
+                        continue
 
                 if isinstance(entry, list):
                     self._instance.extend(entry)
@@ -68,7 +74,8 @@ class StructBuilder(FieldBuilderBase):
 
     def create_entry(self, field, bits):
         """
-            TODO
+            @param field: the xml field to create a struct entry from.
+            @param bits: the 'num_bits' attr of the <offset> field (e.g. parent of field).
         """
         if field is None:
             logging.error('Failed parsing field (is None)! Root: %s' % self.root)
@@ -99,7 +106,7 @@ class StructBuilder(FieldBuilderBase):
 
         var_type = None
         bitfield = props['num_bits']
-        if 'uuid' in field_name:
+        if 'uuid' in field_name and not field_name.endswith('ptr'):
             var_type = 'uuid_t'
             bitfield = -1
 
@@ -108,6 +115,7 @@ class StructBuilder(FieldBuilderBase):
                                     bitfield=bitfield,
                                     var_type=var_type)
 
+        s_entry.origin = field
         s_entry.parent = self.root
         if is_no_name:
             s_entry.str_start = '//'
@@ -133,17 +141,12 @@ class StructBuilder(FieldBuilderBase):
             s_entry.str_start = '//'
             s_entry.str_end = ' //FIXME: skipping rsvd(X) fields for now'
 
-        if s_entry.bitfield > s_entry.num_type:
-            try:
-                s_entry = self.split_entry(s_entry)
-            except Exception as err:
-                s_entry.str_start = '//'
-                s_entry.str_end =' //FIXME: !!Error!!: %s' % err
+        s_entry = self.split_entry(s_entry)
 
         return s_entry
 
 
-    def split_entry(self, entry: fields.CStructEntry):
+    def split_entry(self, entry: fields.CStructEntry, splitbit=64):
         """
             When struct entry bits exceeding offset_bits, the entry needs to be
         splitted in chunks.
@@ -153,25 +156,30 @@ class StructBuilder(FieldBuilderBase):
         if entry.num_type == -1 or entry.bitfield == None or entry.bitfield == -1:
             #this is not a bitfield entry, so skip it.
             return []
+        max_bit = entry.origin.get('max_bit', -1)
+        max_bit = int(max_bit)
+
+        min_bit = entry.origin.get('min_bit', -1)
+        min_bit = int(min_bit)
 
         result = []
-        num_of_splits = entry.bitfield / entry.num_type
+        bit_overflow = min_bit + entry.bitfield
+        if not (min_bit < splitbit and bit_overflow > splitbit) or entry.bitfield <= 64:
+            return [entry]
 
-        num_of_splits = math.ceil(num_of_splits)
-        num_of_splits = int(num_of_splits)
-        bits_left = entry.num_type
-        for index in range(num_of_splits):
+        split_bits = []
+        split_bits.append(abs(splitbit - entry.bitfield))
+        split_bits.append(entry.bitfield - split_bits[0])
+        for index in range(len(split_bits)):
+            bitfield = split_bits[index]
             name = entry.fields.get('name')
-            splited_entry = fields.CStructEntry(name=name,
+            entry_split = fields.CStructEntry(name=name,
                                                 num_type=entry.num_type,
                                                 bitfield=entry.bitfield)
-
-            splited_entry.name = '%s_%s' % (splited_entry.name, index + 1)
-            splited_entry.definition = entry.definition
-            splited_entry.bitfield = bits_left
-            splited_entry.str_end = ' //NOTE: splitted bit'
-
-            bits_left = entry.bitfield - ((index + 1) * entry.num_type)
-            result.append(splited_entry)
+            entry_split.name = '%s_%s' % (entry_split.name, index + 1)
+            entry_split.definition = entry.definition
+            entry_split.bitfield = bitfield
+            entry_split.str_end = ' //NOTE: split bit'
+            result.append(entry_split)
 
         return result

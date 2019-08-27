@@ -1,0 +1,24 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <struct name="Core Structure" type="0x0" vers="0x1" size="0x200">
+            <offset num_bits="128" value="0xd0">
+                <field max_bit="127" min_bit="48" num_bits="80" access="Reserved">
+                    <name>R9</name>
+                </field>
+            </offset>
+            <offset num_bits="128" value="0xe0">
+                <field max_bit="127" min_bit="0" num_bits="128" access="Reserved">
+                    <name>R10</name>
+                </field>
+            </offset>
+            <offset num_bits="64" value="0xe0">
+                <field max_bit="64" min_bit="0" num_bits="64" access="Reserved">
+                    <name>something</name>
+                </field>
+                <field max_bit="124" min_bit="0" num_bits="124" access="Reserved">
+                    <name>some_split</name>
+                </field>
+            </offset>
+        </struct>
+    </structs>
+</genz>

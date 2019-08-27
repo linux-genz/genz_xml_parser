@@ -1,0 +1,31 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <struct name="Core Structure" type="0x0" vers="0x1" size="0x200">
+            <offset num_bits="64" value="0x0">
+                <field max_bit="11" min_bit="0" num_bits="12" value="0x0" mo="M" access="RO">
+                    <name>Type</name>
+                </field>
+            </offset>
+            <offset num_bits="64" value="0x8">
+                <field max_bit="63" min_bit="0" num_bits="64" mo="M">
+                    <name>C-Status</name>
+                    <subfield max_bit="16" min_bit="16" num_bits="1" access="RO">
+                        <name>HwInit Valid</name>
+                        <value val="0b">
+                            <name>In progress</name>
+                        </value>
+                    </subfield>
+                    <subfield max_bit="16" min_bit="16" num_bits="1" access="RO">
+                        <name>nonsingle</name>
+                        <value val="0b">
+                            <name>another_one</name>
+                        </value>
+                        <value val="1b">
+                            <name>another_two</name>
+                        </value>
+                    </subfield>
+                </field>
+            </offset>
+        </struct>
+    </structs>
+</genz>
