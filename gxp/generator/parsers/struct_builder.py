@@ -164,7 +164,7 @@ class StructBuilder(parsers.FieldBuilderBase):
 
         result = []
         bit_overflow = min_bit + entry.bitfield
-        if not (min_bit < splitbit and bit_overflow > splitbit) or entry.bitfield <= 64:
+        if not (min_bit < splitbit and bit_overflow > splitbit):
             return [entry]
 
         split_bits = []
