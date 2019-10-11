@@ -3,7 +3,6 @@ import difflib
 import math
 import logging
 
-
 from gxp.generator.parsers import FieldBuilderBase
 from gxp.generator import fields
 from gxp.generator.utils import get_name, trim_name, is_name_too_long
@@ -18,11 +17,11 @@ class ClassParser(FieldBuilderBase):
     """
 
     def __init__(self, root, **kwargs):
-        self.enum_name = kwargs.get('enum_name', 'hardware_types')
+        self.enum_name = kwargs.get('enum_name', 'genz_hardware_types')
         self.enum = fields.CEnumEntry(self.enum_name)
 
-        self.struct_name = kwargs.get('struct_name', 'hardware_classes_meta')
-        self.name = kwargs.get('name', 'hardware_classes')
+        self.struct_name = kwargs.get('struct_name', 'genz_hardware_classes_meta')
+        self.name = kwargs.get('name', 'genz_hardware_classes')
 
         super().__init__(root, **kwargs)
 
@@ -44,7 +43,6 @@ class ClassParser(FieldBuilderBase):
         longest_name_length = self._get_longest_name_length(root)
 
         for class_elem in root:
-            value = class_elem.get('value', -1)
             raw_name = get_name(class_elem)
 
             trimmed_name = raw_name.lower().split('(')[0].strip()
@@ -59,7 +57,7 @@ class ClassParser(FieldBuilderBase):
                 list_of_names.append(name)
 
             enum_index =  len(self.enum.entries)
-            estate = fields.EStateEntry(name.upper(), enum_index)
+            estate = fields.EStateEntry('GENZ_%s' % name.upper(), enum_index)
             spaces = ' ' * (longest_name_length - len(raw_name))
             # { raw_name, condenced_name, condenced_enum_value }
             name = '"%s", %s"%s", %s' % (raw_name, spaces, name, estate.name)

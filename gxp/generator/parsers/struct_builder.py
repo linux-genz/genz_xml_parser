@@ -83,6 +83,7 @@ class StructBuilder(parsers.FieldBuilderBase):
 
         s_entry = None
         name = get_name(field)
+
         field_name = trim_name(name)
 
         # If a field has <value> entries - it is an Enum, not a struct entry.

@@ -27,6 +27,9 @@ def trim_name(name, replaceable=' —-/[:](),=.\n', removable='|!<>@#$%^&*+–�
                 C compiler.
     :return: trimmed name.
     """
+    name = name.replace('</sub>', '')
+    name = name.replace('<sub>', '_sub_')
+
     split_spaces = name.split(' ')
     if split_spaces[0].isnumeric():
         split_spaces.append(split_spaces.pop(0))
@@ -49,8 +52,6 @@ def trim_name(name, replaceable=' —-/[:](),=.\n', removable='|!<>@#$%^&*+–�
     name = '_'.join(no_underscore)
 
     name = name.lower()
-    name = name.replace('</sub>', '')
-    name = name.replace('<sub>', '_SUB_')
 
     if name[0].isdigit():
         name = '_%s' % name
@@ -60,14 +61,23 @@ def trim_name(name, replaceable=' —-/[:](),=.\n', removable='|!<>@#$%^&*+–�
 
 def get_name(field):
     """
-        The <struct> field will have a "name" property. Otherwise:
+     The <struct> field will have a "name" property. Otherwise: each <field> or
+    <subfield> is expected to have a child field <name> containing the name for
+    that field. This function extracts that.
 
-        Each <field> or <subfield> is expected to have a child field <name>
-    containing the name for that field. This function extracts that.
+    Also, some <name> tags might have <sub> tag. Find it and add a <sub></sub>
+    str into the name. <sub> will be handled later by the trim_name() function.
     """
     name_field = field.find('name')
+
     if name_field is not None:
-        name_field = name_field.text
+        sub_field = name_field.find('sub', None)
+
+        if sub_field is not None:
+            #<sub> Will/can be handled by the trim_name() later
+            name_field = '%s_<sub>%s</sub>' % (name_field.text, sub_field.text)
+        else:
+            name_field = name_field.text
 
     if name_field is None:
         name_field = field.get('name', None)

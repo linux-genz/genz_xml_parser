@@ -60,13 +60,13 @@ class CPointerEntry(BaseXmler):
         self.p_value = str(p_value)
         self.ptr_to = ptr_to
 
-        self._ptr_names = self.enum_model()
+        # self._ptr_names = self.enum_model()
         self._ptr_sizes = self.enum_sizes_model()
 
 
-    @staticmethod
-    def enum_model():
-        return DataTypesModel.pointer_types()
+    # @staticmethod
+    # def enum_model():
+    #     return DataTypesModel.pointer_types()
 
 
     @staticmethod

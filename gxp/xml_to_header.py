@@ -129,21 +129,22 @@ def this_build_version(version_file: str='./VERSION'):
         file_content = file_obj.read()
 
     try:
-        return file_content.split('=')[-1].strip('\'')
+        return file_content.split('=')[-1].strip('\'').strip('\n')
     except IndexError:
         return 'N/A'
 
 
-def extract_xml_meta(xml_data):
+def extract_xml_meta(xml_data) -> dict:
     """
-        XML file should have a "generated" property in its root(genz entry).
-    Extract that value of format "2019-02-04 17:17:24.050242", but split by '.'
-    and assume left side being Date and right side being Version (for whatever reason).
+        XML file should have several "meta" properties in the root element. Looking
+    for "generated" to get date and time; "ctr", "pkt" and "word" file names to.
     """
     meta: dict = {}
-    generated = xml_data.get('generated', 'N/A')
-    meta['date'] =  generated.split('.')[0]
-    meta['version'] = generated.split('.')[-1]
+    meta['date'] =  xml_data.get('generated', 'N/A')
+    meta['ctl'] =  xml_data.get('ctl', 'N/A')
+    meta['pkt'] =  xml_data.get('pkt', 'N/A')
+    meta['word'] =  xml_data.get('word', 'N/A')
+    meta['version'] = xml_data.get('version', 'N/A')
 
     return meta
 
@@ -181,7 +182,6 @@ def entries_to_str(entries: list) -> dict:
             enum_count += 1
 
         to_write.append(entry.pprint() + ('\n' * newline_multiplier))
-        # to_write.append(filler_string)
         total_fields += len(entry.entries)
 
     return { 'data' : to_write,
@@ -228,10 +228,13 @@ def main(cmd_args: dict):
         path = get_xml_from_url(path)
         is_clean_tmp = True
 
+    date_now = datetime.datetime.now()
+    script_meta = { 'date' : date_now, 'version' : this_build_version() }
+
     # Parsing XML file into an stringable object
     xml_root = xml.etree.ElementTree.parse(path).getroot()
-    # context = xml_root.find('structs')
-    xml_meta = extract_xml_meta(xml_root)
+    xml_meta: dict = extract_xml_meta(xml_root)
+
     generator = CGenerator(xml_root)
     table_generator = CGenerator(xml_root, tags={'struct' : 'table'})
     generator.merge(table_generator)
@@ -251,20 +254,15 @@ def main(cmd_args: dict):
 
     write_props = entries_to_str(entries)
 
-    date_now = datetime.datetime.now()
-    date_now = date_now.strftime('%d, %b %Y')
-
     # Template Props fields are matching the ./templates/header.template formate.
     template_props = meta_from_filename(os.path.basename(path))
-    template_props['xml_date'] = xml_meta['date']
-    template_props['xml_version'] = xml_meta['version']
 
-    template_props['generated_on'] = date_now
+    template_props['xml_meta'] = xml_meta
+    template_props['script_meta'] = script_meta
     template_props['struct_count'] = len(generator.structs)
     template_props['enum_count'] = len(generator.enums)
     template_props['fields_count'] = write_props['total_fields']
     template_props['union_count'] = len(generator.unions)
-    template_props['script_version'] = this_build_version()
 
     # Not all things that are in .structs are actually rendered. Thus, need to
     # loop through the .entries instead and add <struct> types to the Union list
@@ -275,12 +273,12 @@ def main(cmd_args: dict):
             rendered_structs.append(s_entry)
     template_props['all_structs'] = rendered_structs
 
-    # template_props['struct_ptr_names'] = ['%s' % p.name for p in generator.pointers]
     template_props['body'] = '\n'.join(write_props['data'])
 
     pointer_entries = entries_to_str([ptr for ptr in generator.pointers])
     export_symbols = generator.export_symbol_struct
     export_symbols.extend(generator.export_symbol_table)
+    export_symbols.extend(generator.build_export_symbol(class_parser.name))
     export_symbols = entries_to_str(export_symbols)
 
     c_template_props = {
@@ -288,7 +286,9 @@ def main(cmd_args: dict):
         'export_symbols': '\n'.join(export_symbols['data']),
         'header_file': os.path.basename(dest),
         'pointers': pointers,
-        'type_name': DataTypesModel.ctr_ptr_info_struct_name
+        'type_name': DataTypesModel.ctr_ptr_info_struct_name,
+        'xml_meta' : xml_meta,
+        'script_meta' : script_meta,
     }
 
     if class_parser is not None and class_parser.instance is not None:

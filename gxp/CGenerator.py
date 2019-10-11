@@ -171,10 +171,15 @@ class CGenerator:
 
                 #Find and set a stuct's ENUM type for the pointer
                 p_type = self.find_struct_enum_by_name(pointer.ptr_to)
-                if p_type is None:  #PARANOIA
+                #sometimes ptr can point to UNKNOWN, therefore - make it NONE.
+                if p_type is None:
                     logging.warning('Ptr "%s" -- ptr_to --> "%s" found no enum struct!' %\
                                 (pointer.name, pointer.ptr_to))
-                    p_type = struct_ptr_enum.entries[0]
+                    p_type = struct_ptr_enum.entries[1] #GENZ_GENERIC_STRUCTURE
+
+                if pointer.ptr_to.lower() == 'unknown':
+                    p_type = struct_ptr_enum.entries[0] #GENZ_UNKNOWN_STRUCTURE
+
                 pointer.p_type = p_type.name
 
                 if pointer.p_flag is None:
@@ -184,7 +189,7 @@ class CGenerator:
                     logging.warning(msg % (pointer.name, pointer.p_flag))
 
                 if pointer.p_type is None:
-                    pointer.p_type = struct_ptr_enum.entries[0].name
+                    pointer.p_type = struct_ptr_enum.entries[1].name
 
                 if pointer not in result:
                     result.append(pointer)

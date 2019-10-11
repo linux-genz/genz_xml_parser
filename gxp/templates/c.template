@@ -33,8 +33,23 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+ /*
+ * This file is machine generated in conjunction with the .h file based of XML
+ * GenZ Specs.
+ *
+ * XML file meta based of which this file was generated:
+ *     Version   : {{ xml_meta.version }}
+ *     Date      : {{ xml_meta.date }}
+ *     ctl_file  : {{ xml_meta.ctl }}
+ *     pkt_file  : {{ xml_meta.pkt }}
+ *     word_file : {{ xml_meta.word }}
+ *
+ * Generator Script Meta:
+ *     Version      : {{ script_meta.version }}
+ *     Generated On : {{ script_meta.date }}
+ */
 #include <linux/kernel.h>
-#include "{{header_file}}"
+#include <linux/{{header_file}}>
 
 {{body}}
 
