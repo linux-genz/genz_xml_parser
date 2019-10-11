@@ -84,9 +84,10 @@ class EnumBuilder(FieldBuilderBase):
 
                 val = xml_value.get('val', -1)
                 entry = fields.EStateEntry(entry_name, val)
+                entry.origin = field
                 enum_instance.append(entry)
 
-            # self._instance.append(enum_instance)
+            self._instance.append(enum_instance)
             result.append(enum_instance)
         return result
 
@@ -113,5 +114,7 @@ class EnumBuilder(FieldBuilderBase):
             enum_entry = fields.CStructEntry(e_name,
                                             num_type=type_val,
                                             bitfield=bits)
-            result.append(enum_entry)
+
+            if enum_entry not in result:
+                result.append(enum_entry)
         return result

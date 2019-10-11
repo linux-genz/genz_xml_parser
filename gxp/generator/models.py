@@ -110,14 +110,21 @@ class DataTypesModel:
     def build_ctrl_struct_type_enum(cls, structs: list, start_index=0):
         """
         enum genz_control_structure_type {
+            GENZ_GENERIC_STRUCTURE = -1,
+            GENZ_UNKNOWN_STRUCTURE = -2,
             genz_core_structure = 0,
             genz_opcode_set_structure = 1,
             genz_interface_structure = 2,
             ....
         """
         struct = fields.CEnumEntry(cls.ctrl_struct_type_enum_name)
+        #FIXME: those two lines below needs to be refactored into something more
+        # portable. Can't rely on getting the Index for the structure, since
+        # more special case types could be added, therefore will need to refactor
+        # every index in the rest of the code using this.
         generic_entry = fields.EStateEntry('GENZ_GENERIC_STRUCTURE', -1)
-        struct.append(generic_entry)
+        unknown_entry = fields.EStateEntry('GENZ_UNKNOWN_STRUCTURE', -2)
+        struct.extend([unknown_entry, generic_entry])
 
         table_index = 0
         for index in range(len(structs)):
@@ -161,7 +168,7 @@ class DataTypesModel:
 
     @classmethod
     def table_index_define(cls):
-        return fields.CDefineEntry('TABLE_ENUM_START_INDEX',
+        return fields.CDefineEntry('GENZ_TABLE_ENUM_START',
                                 cls.tables_start_index,
                                 str_end=' //int val: %s' % int(cls.tables_start_index ,  0))
 

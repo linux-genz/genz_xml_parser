@@ -1,0 +1,67 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <struct name="Core Structure" type="0x0" vers="0x1" size="0x200">
+            <offset num_bits="64" value="0x0">
+                <field max_bit="11" min_bit="0" num_bits="12" value="0x0" mo="M" access="RO">
+                    <name>Type</name>
+                </field>
+            </offset>
+            <offset num_bits="64" value="0x8">
+                <field max_bit="63" min_bit="0" num_bits="64" mo="M">
+                    <name>C-Status</name>
+                    <subfield max_bit="2" min_bit="0" num_bits="3" access="RO">
+                        <name>C-State</name>
+                        <value val="0x0">
+                            <name>C-Down</name>
+                        </value>
+                        <value val="0x1">
+                            <name>C-CFG</name>
+                        </value>
+                        <value val="0x2">
+                            <name>C-Up</name>
+                        </value>
+                        <value val="0x3">
+                            <name>C-LP</name>
+                        </value>
+                        <value val="0x4">
+                            <name>C-DLP</name>
+                        </value>
+                        <value min_val="0x5" max_val="0x7">
+                            <name>Reserved</name>
+                        </value>
+                    </subfield>
+                    <subfield max_bit="3" min_bit="3" num_bits="1" access="RW1C">
+                        <name>Unsolicited Event (UE) Packet Status</name>
+                    </subfield>
+                    <subfield max_bit="9" min_bit="8" num_bits="2" access="RO">
+                        <name>Component Thermal Status</name>
+                        <value val="0x0">
+                            <name>Nominal thermal conditions</name>
+                        </value>
+                        <value val="0x1">
+                            <name>Caution Thermal Limit</name>
+                        </value>
+                        <value val="0x2">
+                            <name>Exceeded Upper Thermal Limit</name>
+                        </value>
+                        <value val="0x3">
+                            <name>Thermal shutdown triggered</name>
+                        </value>
+                    </subfield>
+                    <subfield max_bit="15" min_bit="15" num_bits="1" access="RW1CS">
+                        <name>Cannot Execute Persistent Flush</name>
+                    </subfield>
+                    <subfield max_bit="16" min_bit="16" num_bits="1" access="RO">
+                        <name>HwInit Valid</name>
+                        <value val="0b">
+                            <name>In progress</name>
+                        </value>
+                        <value val="1b">
+                            <name> Something</name>
+                        </value>
+                    </subfield>
+                </field>
+            </offset>
+        </struct>
+    </structs>
+</genz>

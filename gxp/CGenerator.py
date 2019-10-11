@@ -63,7 +63,8 @@ class CGenerator:
     def _parse_structs(self, xml_structs):
         for struct_elem in xml_structs:
             struct_parser = parsers.StructBuilder(struct_elem)
-            self.structs.append(struct_parser.instance)
+            if struct_parser.instance not in self.structs: #duplicates check
+                self.structs.append(struct_parser.instance)
 
             union_builder = parsers.UnionBuilder(struct_elem)
             if union_builder is not None and union_builder.instance is not None:
@@ -71,15 +72,16 @@ class CGenerator:
 
             enum_builder = parsers.EnumBuilder(struct_elem)
             if enum_builder.instance is not None and len(enum_builder.instance) > 0:
-                self.enums.extend(enum_builder.instance)
-                #create field entries for each Enum definition to add to the struct.
-                struct_parser.instance.extend(enum_builder.as_bitfield)
+                for enum in enum_builder.instance: #duplicates check
+                    if enum not in self.enums:
+                        self.enums.append(enum)
 
             pointer_parser = parsers.PointerBuilder(struct_elem, data_types=self.DataTypes)
             if pointer_parser.instance is not None:
                 if pointer_parser.instance not in self.pointers:
                     pointer_parser.instance.origin = struct_parser.instance
-                    self.pointers.append(pointer_parser.instance)
+                    if pointer_parser.instance not in self.pointers: #duplicates check
+                        self.pointers.append(pointer_parser.instance)
                 struct_parser.instance.child_pointers.extend(pointer_parser.instance.entries)
 
             #Parsing a table is almost a recursive process. Each <table> or
@@ -169,10 +171,15 @@ class CGenerator:
 
                 #Find and set a stuct's ENUM type for the pointer
                 p_type = self.find_struct_enum_by_name(pointer.ptr_to)
-                if p_type is None:  #PARANOIA
+                #sometimes ptr can point to UNKNOWN, therefore - make it NONE.
+                if p_type is None:
                     logging.warning('Ptr "%s" -- ptr_to --> "%s" found no enum struct!' %\
                                 (pointer.name, pointer.ptr_to))
-                    p_type = struct_ptr_enum.entries[0]
+                    p_type = struct_ptr_enum.entries[1] #GENZ_GENERIC_STRUCTURE
+
+                if pointer.ptr_to.lower() == 'unknown':
+                    p_type = struct_ptr_enum.entries[0] #GENZ_UNKNOWN_STRUCTURE
+
                 pointer.p_type = p_type.name
 
                 if pointer.p_flag is None:
@@ -182,7 +189,7 @@ class CGenerator:
                     logging.warning(msg % (pointer.name, pointer.p_flag))
 
                 if pointer.p_type is None:
-                    pointer.p_type = struct_ptr_enum.entries[0].name
+                    pointer.p_type = struct_ptr_enum.entries[1].name
 
                 if pointer not in result:
                     result.append(pointer)
@@ -501,7 +508,8 @@ class CGenerator:
             result.append(union)
 
         for enum in self.enums:
-            result.append(enum)
+            if len(enum.entries) > 1:
+                result.append(enum)
 
         structs = []
         structs.extend(self.struct_arrays)

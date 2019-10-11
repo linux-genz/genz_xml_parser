@@ -1,0 +1,278 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <table name="Core LPD BDF Table" size="0x80" ptr="Core LPD BDF Table PTR">
+            <offset num_bits="128" value="0x0">
+                <field max_bit="15" min_bit="0" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>0</sub>
+                    </name>
+                </field>
+                <field max_bit="31" min_bit="16" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>1</sub>
+                    </name>
+                </field>
+                <field max_bit="47" min_bit="32" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>2</sub>
+                    </name>
+                </field>
+                <field max_bit="63" min_bit="48" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>3</sub>
+                    </name>
+                </field>
+                <field max_bit="79" min_bit="64" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>4</sub>
+                    </name>
+                </field>
+                <field max_bit="95" min_bit="80" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>5</sub>
+                    </name>
+                </field>
+                <field max_bit="111" min_bit="96" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>6</sub>
+                    </name>
+                </field>
+                <field max_bit="127" min_bit="112" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>7</sub>
+                    </name>
+                </field>
+            </offset>
+            <offset num_bits="128" value="0x10">
+                <field max_bit="15" min_bit="0" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>8</sub>
+                    </name>
+                </field>
+                <field max_bit="31" min_bit="16" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>9</sub>
+                    </name>
+                </field>
+                <field max_bit="47" min_bit="32" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>10</sub>
+                    </name>
+                </field>
+                <field max_bit="63" min_bit="48" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>11</sub>
+                    </name>
+                </field>
+                <field max_bit="79" min_bit="64" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>12</sub>
+                    </name>
+                </field>
+                <field max_bit="95" min_bit="80" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>13</sub>
+                    </name>
+                </field>
+                <field max_bit="111" min_bit="96" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>14</sub>
+                    </name>
+                </field>
+                <field max_bit="127" min_bit="112" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>15</sub>
+                    </name>
+                </field>
+            </offset>
+            <offset num_bits="128" value="0x20">
+                <field max_bit="15" min_bit="0" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>16</sub>
+                    </name>
+                </field>
+                <field max_bit="31" min_bit="16" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>17</sub>
+                    </name>
+                </field>
+                <field max_bit="47" min_bit="32" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>18</sub>
+                    </name>
+                </field>
+                <field max_bit="63" min_bit="48" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>19</sub>
+                    </name>
+                </field>
+                <field max_bit="79" min_bit="64" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>20</sub>
+                    </name>
+                </field>
+                <field max_bit="95" min_bit="80" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>21</sub>
+                    </name>
+                </field>
+                <field max_bit="111" min_bit="96" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>22</sub>
+                    </name>
+                </field>
+                <field max_bit="127" min_bit="112" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>23</sub>
+                    </name>
+                </field>
+            </offset>
+            <offset num_bits="128" value="0x30">
+                <field max_bit="15" min_bit="0" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>24</sub>
+                    </name>
+                </field>
+                <field max_bit="31" min_bit="16" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>25</sub>
+                    </name>
+                </field>
+                <field max_bit="47" min_bit="32" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>26</sub>
+                    </name>
+                </field>
+                <field max_bit="63" min_bit="48" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>27</sub>
+                    </name>
+                </field>
+                <field max_bit="79" min_bit="64" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>28</sub>
+                    </name>
+                </field>
+                <field max_bit="95" min_bit="80" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>29</sub>
+                    </name>
+                </field>
+                <field max_bit="111" min_bit="96" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>30</sub>
+                    </name>
+                </field>
+                <field max_bit="127" min_bit="112" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>31</sub>
+                    </name>
+                </field>
+            </offset>
+            <offset num_bits="128" value="0x40">
+                <field max_bit="15" min_bit="0" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>32</sub>
+                    </name>
+                </field>
+                <field max_bit="31" min_bit="16" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>33</sub>
+                    </name>
+                </field>
+                <field max_bit="47" min_bit="32" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>34</sub>
+                    </name>
+                </field>
+                <field max_bit="63" min_bit="48" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>35</sub>
+                    </name>
+                </field>
+                <field max_bit="79" min_bit="64" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>36</sub>
+                    </name>
+                </field>
+                <field max_bit="95" min_bit="80" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>37</sub>
+                    </name>
+                </field>
+                <field max_bit="111" min_bit="96" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>38</sub>
+                    </name>
+                </field>
+                <field max_bit="127" min_bit="112" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>39</sub>
+                    </name>
+                </field>
+            </offset>
+            <offset num_bits="128" value="0x50">
+                <field max_bit="15" min_bit="0" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>40</sub>
+                    </name>
+                </field>
+                <field max_bit="31" min_bit="16" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>41</sub>
+                    </name>
+                </field>
+                <field max_bit="47" min_bit="32" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>42</sub>
+                    </name>
+                </field>
+                <field max_bit="63" min_bit="48" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>43</sub>
+                    </name>
+                </field>
+                <field max_bit="79" min_bit="64" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>44</sub>
+                    </name>
+                </field>
+                <field max_bit="95" min_bit="80" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>45</sub>
+                    </name>
+                </field>
+                <field max_bit="111" min_bit="96" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>46</sub>
+                    </name>
+                </field>
+                <field max_bit="127" min_bit="112" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>47</sub>
+                    </name>
+                </field>
+            </offset>
+            <offset num_bits="128" value="0x60">
+                <field max_bit="15" min_bit="0" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>48</sub>
+                    </name>
+                </field>
+                <field max_bit="31" min_bit="16" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>49</sub>
+                    </name>
+                </field>
+                <field max_bit="47" min_bit="32" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>50</sub>
+                    </name>
+                </field>
+                <field max_bit="63" min_bit="48" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>51</sub>
+                    </name>
+                </field>
+                <field max_bit="79" min_bit="64" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>52</sub>
+                    </name>
+                </field>
+                <field max_bit="95" min_bit="80" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>53</sub>
+                    </name>
+                </field>
+                <field max_bit="111" min_bit="96" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>54</sub>
+                    </name>
+                </field>
+                <field max_bit="127" min_bit="112" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>55</sub>
+                    </name>
+                </field>
+            </offset>
+            <offset num_bits="128" value="0x70">
+                <field max_bit="15" min_bit="0" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>56</sub>
+                    </name>
+                </field>
+                <field max_bit="31" min_bit="16" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>57</sub>
+                    </name>
+                </field>
+                <field max_bit="47" min_bit="32" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>58</sub>
+                    </name>
+                </field>
+                <field max_bit="63" min_bit="48" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>59</sub>
+                    </name>
+                </field>
+                <field max_bit="79" min_bit="64" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>60</sub>
+                    </name>
+                </field>
+                <field max_bit="95" min_bit="80" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>61</sub>
+                    </name>
+                </field>
+                <field max_bit="111" min_bit="96" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>62</sub>
+                    </name>
+                </field>
+                <field max_bit="127" min_bit="112" num_bits="16" mo="M" access="RW">
+                    <name>BDF<sub>63</sub>
+                    </name>
+                </field>
+            </offset>
+        </table>
+    </structs>
+</genz>
