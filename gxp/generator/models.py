@@ -174,10 +174,12 @@ class DataTypesModel:
 
 
     @classmethod
-    def build_externs(cls, name):
+    def build_externs(cls, name, var_name=None):
         # name = 'genz_ctrl_struct_type_to_ptrs'
-        array_type = 'extern struct %s' % cls.ctr_ptr_info_struct_name
+        if var_name is None:
+            var_name = cls.ctr_ptr_info_struct_name
+        array_type = 'extern struct %s' % var_name
         return [
             fields.CArrayEntry(name, array_type, is_allow_empty=False),
-            fields.CStructEntry('%s_nelems' % name, var_type='extern size_t', l_space='')
+            fields.CStructEntry('%s_nelems' % var_name, var_type='extern size_t', l_space='')
         ]

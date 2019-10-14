@@ -249,6 +249,11 @@ def main(cmd_args: dict):
     if class_parser is not None and class_parser.instance is not None:
         generator.enums.append(class_parser.enum)
         generator.structs.insert(0, class_parser.struct_meta)
+        cls_meta_extern = generator.DataTypes.build_externs(
+            'genz_hardware_classes',
+            var_name=class_parser.struct_name
+            )
+        generator.externs.extend(cls_meta_extern)
 
     entries = generator.entries
 

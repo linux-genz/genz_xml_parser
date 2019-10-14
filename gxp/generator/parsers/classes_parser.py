@@ -69,6 +69,8 @@ class ClassParser(FieldBuilderBase):
             self._instance.append(struct_entry)
             self.enum.append(estate)
 
+        last_state = fields.EStateEntry('GENZ_NUM_HARDWARE_TYPES', None)
+        self.enum.append(last_state)
         return self.instance
 
 

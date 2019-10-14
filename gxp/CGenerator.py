@@ -33,6 +33,7 @@ class CGenerator:
         self.enums = []
         self.unions = []
         self.struct_arrays = []
+        self.externs = []
 
         self.DataTypes = kwargs.get('model', DataTypesModel)
         self.struct_type_start_index = kwargs.get('struct_type_start_index', 0)
@@ -494,7 +495,7 @@ class CGenerator:
         ctrl_ptr_info_struct = self.DataTypes.build_ctrl_ptr_info_struct()
         externs = self.DataTypes.build_externs(self.struct_type_to_ptrs_name)
         externs.extend(self.DataTypes.build_externs(self.table_type_to_ptrs_name))
-
+        externs.extend(self.externs)
 
         result.append(ctrl_ptr_flags)
         result.append(ptr_sizes)
