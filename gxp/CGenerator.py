@@ -453,12 +453,6 @@ class CGenerator:
 
     @property
     def structs_enum(self):
-        return self.DataTypes.build_ctrl_struct_type_enum(self.structs,
-                                                    self.struct_type_start_index)
-
-
-    @property
-    def structs_enum(self):
         """
             Build and return an Enum of all the struct names as entries.
         """
@@ -502,7 +496,6 @@ class CGenerator:
         result.append(ctrl_ptr_info_struct)
         result.append(self.structs_enum)
         result.append(ctrl_ptr_struct)
-        result.extend(externs)
 
         # Order of adding things Matters for C file to compile.
         for union in self.unions:
@@ -521,4 +514,5 @@ class CGenerator:
                     continue
             result.append(struct)
 
+        result.extend(externs)
         return result

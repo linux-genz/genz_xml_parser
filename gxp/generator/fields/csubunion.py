@@ -53,8 +53,10 @@ union genz_pg_zmmu_cap_1 {
     @property
     def union_entry(self):
         rsrvd_entry = self.rsrvd_field
-        if rsrvd_entry not in self.struct.entries:
-            self.struct.append(rsrvd_entry)
+        #do not add rsrvd entry with 0 padding bits.
+        if rsrvd_entry is not None:
+            if rsrvd_entry not in self.struct.entries:
+                self.struct.append(rsrvd_entry)
 
         return """
 union {name} {{
@@ -68,6 +70,12 @@ union {name} {{
 
     @property
     def rsrvd_field(self):
+        """
+            Calculate the padding bits (the leftover bits of the whole struct).
+
+        @return: CStructEntry for the padding entry with the paddign bits. Or None
+                if padding is <= 0.
+        """
         total: int = 0 #total bits value of all fields in the union
         max: int = int(self.uint_bits) #bits limit
         comments = '' #when things go wrong, this is a field's comment
@@ -81,6 +89,7 @@ union {name} {{
 
         # no bits left - no rsrvd field. But still have it commented...
         if bits_left == 0:
+            return None
             padding = '//'
 
         # This should not happened, but things went wrong. Bits overflow here.

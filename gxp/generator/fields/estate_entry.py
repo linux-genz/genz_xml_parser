@@ -43,7 +43,6 @@ class EStateEntry(BaseXmler):
         self.close_bracket: str = kwargs.get('close_bracket', ',')
 
 
-
     def pprint(self):
         """ Formats XML parsed entries into a 'proper' display format.
 

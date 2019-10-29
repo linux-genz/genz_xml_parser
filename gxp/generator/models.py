@@ -129,7 +129,9 @@ class DataTypesModel:
         table_index = 0
         for index in range(len(structs)):
             s = structs[index]
-            value = start_index
+            if s.is_ignore_ctrl_struct_enum:
+                continue
+            value = s.index
             #FIXME: this is stupid! Need to index Table entries to start from 1000
             # while the struct entries index from 0 to whatever.
             if s.tag == 'table':
@@ -138,8 +140,6 @@ class DataTypesModel:
                 else:
                     value = '%s + %s' % (cls.table_index_define().name, table_index)
                 table_index += 1
-            else:
-                value = hex(index)
 
             entry = fields.EStateEntry(s.name.upper(), value)
             struct.append(entry)

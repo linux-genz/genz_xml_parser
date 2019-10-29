@@ -62,7 +62,6 @@ class ClassParser(FieldBuilderBase):
             # { raw_name, condenced_name, condenced_enum_value }
             name = '"%s", %s"%s", %s' % (raw_name, spaces, name, estate.name)
             struct_entry = fields.CStructEntry(name, ignore_long_name_warning=True)
-
             struct_entry.l_space = '%s { ' % struct_entry.l_space
             struct_entry.str_close_symbol = ' },'
 
@@ -100,5 +99,8 @@ class ClassParser(FieldBuilderBase):
             fields.CStructEntry('condensed_name', var_type='const char * const'),
             fields.CStructEntry('value', var_type='const enum %s' % self.enum.name), #name of the enum
         ]
-        struct_instance = fields.CStruct(self.struct_name, entries=entries)
+        #FIXME: hardcoded index value!
+        struct_instance = fields.CStruct(self.struct_name,
+                                        entries=entries,
+                                        ignore_ctrl_struct_enum=True)
         return struct_instance

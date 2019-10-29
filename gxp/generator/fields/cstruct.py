@@ -48,6 +48,7 @@ class CStruct(BaseXmler):
         self.index = kwargs.get('index', -1)
         #a flag set to True if there is a chained pointer in this struct.
         self.is_chained = False
+        self.is_ignore_ctrl_struct_enum = kwargs.get('ignore_ctrl_struct_enum', False)
 
 
     def append(self, entry):

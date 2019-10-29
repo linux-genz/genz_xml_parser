@@ -156,7 +156,7 @@ class StructBuilder(parsers.FieldBuilderBase):
         """
         if entry.num_type == -1 or entry.bitfield == None or entry.bitfield == -1:
             #this is not a bitfield entry, so skip it.
-            return []
+            return entry
         max_bit = entry.origin.get('max_bit', -1)
         max_bit = int(max_bit)
 

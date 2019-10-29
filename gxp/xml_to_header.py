@@ -167,11 +167,13 @@ def entries_to_str(entries: list) -> dict:
     # to_write.append(filler_string)
     for entry in entries:
         # Ignore empty structs to the .h file.
-        if entry.is_empty():
-            struct_comment = entry.fields.get('open_bracket', None)
-            if struct_comment:
-                msg = '//FIXME: empty struct.'
-                entry.open_bracket = '%s %s' % (struct_comment, msg)
+        # if entry.is_empty():
+        #     struct_comment = entry.fields.get('open_bracket', None)
+        #     if struct_comment:
+        #         msg = '//FIXME: empty struct.'
+        #         entry.str_start = '/*'
+        #         entry.open_bracket = '%s %s' % (struct_comment, msg)
+        #         entry.str_end = '*/'
 
         # Enums of size 1 are no needed in the header - so skip them
         if isinstance(entry, fields.CEnumEntry):
@@ -358,6 +360,7 @@ def parse_args():
 
     args = parser.parse_args()
     return args
+
 
 if __name__ == '__main__':
     args = parse_args()
