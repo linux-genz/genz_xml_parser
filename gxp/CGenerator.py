@@ -427,7 +427,7 @@ class CGenerator:
             EXPORT_SYMBOL(genz_struct_type_to_ptrs);
 
             size_t genz_struct_type_to_ptrs_nelems =
-                sizeof(genz_struct_type_to_ptrs) /
+                sizeof(genz_struct_emtype_to_ptrs) /
                 sizeof(genz_struct_type_to_ptrs[0]);
 
             EXPORT_SYMBOL(genz_struct_type_to_ptrs);
