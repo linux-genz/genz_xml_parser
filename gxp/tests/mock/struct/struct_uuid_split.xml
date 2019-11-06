@@ -1,0 +1,26 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <struct name="Core Structure" type="0x0" vers="0x1" size="0x200">
+          <offset num_bits="64" value="0xf0">
+            <field max_bit="63" min_bit="0" num_bits="64" mo="MC" access="RO">
+              <name>Primary Media UUID [63:0]</name>
+            </field>
+          </offset>
+          <offset num_bits="64" value="0xf8">
+            <field max_bit="63" min_bit="0" num_bits="64" mo="MC" access="RO" base_bit="64">
+              <name>Primary Media UUID [127:64]</name>
+            </field>
+          </offset>
+          <offset num_bits="64" value="0x100">
+            <field max_bit="63" min_bit="0" num_bits="64" mo="MC" access="RO">
+              <name>Secondary Media UUID [63:0]</name>
+            </field>
+          </offset>
+          <offset num_bits="64" value="0x108">
+            <field max_bit="63" min_bit="0" num_bits="64" mo="MC" access="RO" base_bit="64">
+              <name>Secondary Media UUID [127:64]</name>
+            </field>
+          </offset>
+        </struct>
+    </structs>
+</genz>

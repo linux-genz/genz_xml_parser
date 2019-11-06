@@ -487,7 +487,9 @@ class CGenerator:
         ptr_sizes = self.DataTypes.build_ptr_sizes_enum()
         ctrl_ptr_struct = self.DataTypes.build_ctrl_struct_ptr_struct()
         ctrl_ptr_info_struct = self.DataTypes.build_ctrl_ptr_info_struct()
-        externs = self.DataTypes.build_externs(self.struct_type_to_ptrs_name)
+
+        externs = self.DataTypes.build_externs(self.struct_type_to_ptrs_name, 
+                                                self.DataTypes.ctr_ptr_info_struct_name)
         externs.extend(self.DataTypes.build_externs(self.table_type_to_ptrs_name))
         externs.extend(self.externs)
 

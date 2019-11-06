@@ -59,22 +59,10 @@
 #define __GENZH__
 
 
-#ifndef __KERNEL__
-
 #include <stdbool.h>
 #include <stdint.h>
 #include <inttypes.h>
-
-#define UUID_SIZE 16
-typedef struct {
-    unsigned char b[UUID_SIZE];
-} uuid_t;
-
-#else
-
 #include <linux/uuid.h>
-
-#endif
 
 struct genz_control_structure_header {
     uint32_t type   : 12;

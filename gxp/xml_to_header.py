@@ -253,7 +253,7 @@ def main(cmd_args: dict):
         generator.structs.insert(0, class_parser.struct_meta)
         cls_meta_extern = generator.DataTypes.build_externs(
             'genz_hardware_classes',
-            var_name=class_parser.struct_name
+            var_type=class_parser.name
             )
         generator.externs.extend(cls_meta_extern)
 
@@ -279,10 +279,11 @@ def main(cmd_args: dict):
         if isinstance(s_entry, fields.CStruct):
             rendered_structs.append(s_entry)
     template_props['all_structs'] = rendered_structs
-
     template_props['body'] = '\n'.join(write_props['data'])
 
     pointer_entries = entries_to_str([ptr for ptr in generator.pointers])
+    
+    #generate EXPORT_SYMBOL() fields into the .c file.
     export_symbols = generator.export_symbol_struct
     export_symbols.extend(generator.export_symbol_table)
     export_symbols.extend(generator.build_export_symbol(class_parser.name))

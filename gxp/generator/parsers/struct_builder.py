@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from gxp.generator import parsers
 import math
+import re
 import logging
 
 from gxp.generator import fields
@@ -84,32 +85,23 @@ class StructBuilder(parsers.FieldBuilderBase):
         s_entry = None
         name = get_name(field)
 
-        field_name = trim_name(name)
+        # field_name = trim_name(name)
 
         # If a field has <value> entries - it is an Enum, not a struct entry.
         if (len(field.findall('value')) > 0):
-            logging.info('A "%s" field is an Enum...' % field_name)
+            logging.info('A "%s" field is an Enum...' % name)
             if (len(field.findall('subfield')) > 0):
                 msg = 'Both <value> and <subfield> in the "%s" field!'
                 msg += ' What is it? Struct entry or Enum?'
-                logging.error(msg % (field_name))
+                logging.error(msg % (name))
             return
 
         props = field.attrib
-        is_no_name = False
-
-        if name is None:
-            name = str(field.attrib)
-            is_no_name = True
 
         if props.get('offset_bits', None) is None:
             props['offset_bits'] = bits
 
-        var_type = None
-        bitfield = props['num_bits']
-        if 'uuid' in field_name and not field_name.endswith('ptr'):
-            var_type = 'uuid_t'
-            bitfield = -1
+        field_name, var_type, bitfield = self._make_uuid_field(name, None, props['num_bits'])
 
         s_entry = fields.CStructEntry(name=field_name,
                                     num_type=props['offset_bits'],
@@ -118,30 +110,7 @@ class StructBuilder(parsers.FieldBuilderBase):
 
         s_entry.origin = field
         s_entry.parent = self.root
-        if is_no_name:
-            s_entry.str_start = '//'
-            s_entry.str_end = ' //FIXME: entry had no name'
-
-        #FIXME: we are ignoring ... entries for now, but will be fixed later
-        if s_entry.name == '...':
-            s_entry.str_start = '//'
-            s_entry.str_end = ' //FIXME: name "..." entry'
-
-        #FIXME: write this to a file, but comment it out to know which entries
-        # we can't parse.
-        if s_entry.bitfield == 0 or s_entry.num_type == 0:
-            s_entry.str_start = '//'
-            s_entry.str_end = ' //FIXME: 0 bits.'
-            return s_entry
-
-        if name.lower() == 'unknown':
-            s_entry.str_start = '//'
-            s_entry.str_end = ' //FIXME: UNKNOWN in name'
-
-        if 'rsvd' in name.lower():
-            s_entry.str_start = '//'
-            s_entry.str_end = ' //FIXME: skipping rsvd(X) fields for now'
-
+        s_entry = self._moan_and_complain(s_entry)
         s_entry = self.split_entry(s_entry)
 
         return s_entry
@@ -184,3 +153,60 @@ class StructBuilder(parsers.FieldBuilderBase):
             result.append(entry_split)
 
         return result
+
+
+    def _make_uuid_field(self, name, var_type, bitfield):
+        """
+            Given the "name" of the field, will figure out if it is a UUID type
+        entry or a regular one based of the 'UUID" presence in the string.
+
+        @param name: The non-trimed field Name.
+        @param var_type: Variable type to be used for this entry. However, if
+                        it is a uuid entry, then uuid_t will be used instead.
+        @param bitfield: bitfield value for the entry. However, if it is a uuid
+                        entry, then -1 will be used instead.
+
+        return name, var_type, bitfield
+        """
+        name = name.lower()
+        if 'uuid' not in name or name.endswith('ptr'):
+            return trim_name(name), var_type, bitfield
+
+        pattern = '\[\d+:\d+]'
+        match = re.findall(pattern, name)
+        if len(match) > 0:
+            cleaned_name = name.split(match[0])[0].strip()
+            name = trim_name(cleaned_name)
+        var_type = 'uuid_t'
+        bitfield = -1
+
+        return name, var_type, bitfield
+
+
+    def _moan_and_complain(self, s_entry):
+        """ Add FIXME comments into the entry identifying potential problems. """
+        if s_entry.name is None:
+            s_entry.str_start = '//'
+            s_entry.str_end = ' //FIXME error: entry had no name'
+
+        #FIXME: we are ignoring ... entries for now, but will be fixed later
+        if s_entry.name == '...':
+            s_entry.str_start = '//'
+            s_entry.str_end = ' //FIXME: name "..." entry'
+
+        #FIXME: write this to a file, but comment it out to know which entries
+        # we can't parse.
+        if s_entry.bitfield == 0 or s_entry.num_type == 0:
+            s_entry.str_start = '//'
+            s_entry.str_end = ' //FIXME: 0 bits.'
+            return s_entry
+
+        if s_entry.name.lower() == 'unknown':
+            s_entry.str_start = '//'
+            s_entry.str_end = ' //FIXME: UNKNOWN in name'
+
+        if 'rsvd' in s_entry.name.lower():
+            s_entry.str_start = '//'
+            s_entry.str_end = ' //FIXME: skipping rsvd(X) fields for now'
+
+        return s_entry

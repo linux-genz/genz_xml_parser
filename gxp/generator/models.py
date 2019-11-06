@@ -174,12 +174,28 @@ class DataTypesModel:
 
 
     @classmethod
-    def build_externs(cls, name, var_name=None):
-        # name = 'genz_ctrl_struct_type_to_ptrs'
-        if var_name is None:
-            var_name = cls.ctr_ptr_info_struct_name
-        array_type = 'extern struct %s' % var_name
-        return [
-            fields.CArrayEntry(name, array_type, is_allow_empty=False),
-            fields.CStructEntry('%s_nelems' % var_name, var_type='extern size_t', l_space='')
-        ]
+    def build_externs(cls, name, var_type=None):
+        """
+        Build a struct extern followed by size_t extern as follows:
+            extern struct genz_control_ptr_info genz_struct_type_to_ptrs[];
+            extern size_t genz_control_ptr_info_nelems;
+
+        @param name: name of the "extern struct" entry.
+        @param var_type: (default=genz_control_ptr_info) entry type name. 
+                        If None - no "extern size_t" will be generated and default
+                        name "cls.ctr_ptr_info_struct_name" will be used.
+        """
+        nelems_entry = None
+        if var_type is not None:
+            nelems_entry = fields.CStructEntry('%s_nelems' % var_type, 
+                                                var_type='extern size_t',
+                                                l_space='')
+        else:
+            var_type = cls.ctr_ptr_info_struct_name
+
+        array_type = 'extern struct %s' % var_type
+        result = [ fields.CArrayEntry(name, array_type, is_allow_empty=False) ]
+        if nelems_entry is not None:
+            result.append(nelems_entry)
+
+        return result
