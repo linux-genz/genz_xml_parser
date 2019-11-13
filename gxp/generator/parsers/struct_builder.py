@@ -152,6 +152,7 @@ class StructBuilder(parsers.FieldBuilderBase):
             entry_split.str_end = ' //NOTE: split bit'
             result.append(entry_split)
 
+        result.reverse()
         return result
 
 
