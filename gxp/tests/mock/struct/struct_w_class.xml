@@ -1,0 +1,101 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <struct name="Core Structure" type="0x0" vers="0x1" size="0x200">
+            <offset num_bits="64" value="0x0">
+                <field max_bit="11" min_bit="0" num_bits="12" value="0x0" mo="M" access="RO">
+                    <name>Type</name>
+                </field>
+                <field max_bit="15" min_bit="12" num_bits="4" value="0x1" mo="M" access="RO">
+                    <name>Vers</name>
+                </field>
+                <field max_bit="31" min_bit="16" num_bits="16" mo="M" access="RO">
+                    <name>Size</name>
+                </field>
+                <field max_bit="63" min_bit="32" num_bits="32" access="Reserved">
+                    <name>R0</name>
+                </field>
+            </offset>
+            <offset num_bits="64" value="0x8">
+                <field max_bit="63" min_bit="0" num_bits="64" mo="M">
+                    <name>C-Status</name>
+                    <subfield max_bit="2" min_bit="0" num_bits="3" access="RO">
+                        <name>C-State</name>
+                        <value val="0x0">
+                            <name>C-Down</name>
+                        </value>
+                        <value val="0x1">
+                            <name>C-CFG</name>
+                        </value>
+                        <value val="0x2">
+                            <name>C-Up</name>
+                        </value>
+                        <value val="0x3">
+                            <name>C-LP</name>
+                        </value>
+                        <value val="0x4">
+                            <name>C-DLP</name>
+                        </value>
+                        <value min_val="0x5" max_val="0x7">
+                            <name>Reserved</name>
+                        </value>
+                    </subfield>
+                </field>
+            </offset>
+        </struct>
+
+        <struct name="Vendor-Defined Structure" type="0xa" vers="0x1" size="VARIABLE" min_size="0x10">
+            <offset num_bits="32" value="0x0">
+                <field max_bit="11" min_bit="0" num_bits="12" value="0xa" mo="M" access="RO">
+                    <name>Type</name>
+                </field>
+                <field max_bit="15" min_bit="12" num_bits="4" value="0x1" mo="M" access="RO">
+                    <name>Vers</name>
+                </field>
+                <field max_bit="31" min_bit="16" num_bits="16" mo="M" access="RO">
+                    <name>Size</name>
+                </field>
+            </offset>
+            <array elements="VARIABLE" offset="0x4">
+                <element bytes="0x4" offset="0x4">
+                    <offset num_bits="32" value="0x4">
+                        <field max_bit="31" min_bit="0" num_bits="32" mo="-">
+                            <name>
+Vendor-Defined Data
+                                <sub>0</sub>
+                            </name>
+                        </field>
+                    </offset>
+                </element>
+            </array>
+        </struct>
+    </structs>
+
+    <classes>
+        <class value="0">Reserved—shall not be used</class>
+        <class value="1">Memory ( P2P 64 )</class>
+        <class value="2">Memory (Explicit OpClass)</class>
+        <class value="3">Integrated Switch</class>
+        <class value="4">Enclosure / Expansion Switch</class>
+        <class value="5">Fabric Switch</class>
+        <class value="6">Processor (Bootable)</class>
+        <class value="7">Processor (Non-boot)</class>
+        <class value="8">Accelerator (Non-coherent, non-boot)</class>
+        <class value="9">Accelerator (Coherent, non-boot)</class>
+        <class value="10">Accelerator (Non-coherent, bootable)</class>
+        <class value="11">Accelerator (Coherent, bootable)</class>
+        <class value="12">I/O (Non-coherent, non-boot)</class>
+        <class value="13">I/O (Coherent, non-boot)</class>
+        <class value="14">I/O (Non-coherent, bootable)</class>
+        <class value="15">I/O (Coherent, bootable)</class>
+        <class value="16">Block Storage (Bootable)</class>
+        <class value="17">Block Storage (Non-boot)</class>
+        <class value="18">Transparent Router</class>
+        <class value="19">
+Multi-class Component (see Service UUID Structure )
+        </class>
+        <class value="20">Discrete Gen-Z Bridge</class>
+        <class value="21">Integrated Gen-Z Bridge</class>
+        <class value="22">Compliance Test Board</class>
+        <class value="23">Logical PCIe Hierarchy (LPH)</class>
+    </classes>
+</genz>

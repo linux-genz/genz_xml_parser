@@ -43,7 +43,6 @@ class EStateEntry(BaseXmler):
         self.close_bracket: str = kwargs.get('close_bracket', ',')
 
 
-
     def pprint(self):
         """ Formats XML parsed entries into a 'proper' display format.
 
@@ -52,14 +51,20 @@ class EStateEntry(BaseXmler):
         start_str = self.str_start
         str_end = self.str_end
 
-        if not self.value and self.value != 0:
-            start_str = '//%s' % start_str
-            str_end = '/* FIXME: value not set! */ %s' % str_end
+        value = self.value
+        if value is None:
+            value = ''
+        else:
+            value = ' = %s' % value
 
-        return '{str_start}{left_space}{name} = {value}{close_symbol}{str_end}'.format(
+        # if not self.value and self.value != 0:
+        #     start_str = '//%s' % start_str
+        #     str_end = '/* FIXME: value not set! */ %s' % str_end
+
+        return '{str_start}{left_space}{name}{value}{close_symbol}{str_end}'.format(
                         str_start=start_str,
                         left_space=self.l_space,
                         name=self.name,
-                        value=self.value,
+                        value=value,
                         close_symbol=self.close_bracket,
                         str_end=str_end)

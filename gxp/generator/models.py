@@ -18,6 +18,7 @@ class DataTypesModel:
     ptr_size_enum_name = 'genz_pointer_size'
     ctr_ptr_info_struct_name = 'genz_control_ptr_info'
     all_structs_union_name = 'genz_control_structure'
+    ctrl_info_name = 'genz_control_info'
 
 
     def build_enum(self, name: str, model: dict):
@@ -74,6 +75,7 @@ class DataTypesModel:
             fields.CStructEntry('ptr_size', var_type='const enum %s' % cls.ptr_size_enum_name),
             fields.CStructEntry('pointer_offset', var_type='const uint32_t'),
             fields.CStructEntry('struct_type', var_type='const enum %s' % cls.ctrl_struct_type_enum_name),
+            fields.CStructEntry('(*size_fn)(struct %s *ci)' % cls.ctrl_info_name, var_type='ssize_t'),
         ]
 
         struct.extend(entries)
@@ -129,7 +131,9 @@ class DataTypesModel:
         table_index = 0
         for index in range(len(structs)):
             s = structs[index]
-            value = start_index
+            if s.is_ignore_ctrl_struct_enum:
+                continue
+            value = s.index
             #FIXME: this is stupid! Need to index Table entries to start from 1000
             # while the struct entries index from 0 to whatever.
             if s.tag == 'table':
@@ -138,12 +142,22 @@ class DataTypesModel:
                 else:
                     value = '%s + %s' % (cls.table_index_define().name, table_index)
                 table_index += 1
-            else:
-                value = hex(index)
 
             entry = fields.EStateEntry(s.name.upper(), value)
             struct.append(entry)
         return struct
+
+
+    @classmethod
+    def build_struct_sizes(cls, structs: list):
+        """ """
+        result = []
+        for struct in structs:
+            v_type = 'ssize_t %s_size' % struct.name.lower()
+            field_name = '(struct %s *ci)' % cls.ctrl_info_name
+            entry = fields.CStructEntry(field_name, var_type=v_type, l_space='')
+            result.append(entry)
+        return result
 
 
     @staticmethod
@@ -174,10 +188,12 @@ class DataTypesModel:
 
 
     @classmethod
-    def build_externs(cls, name):
+    def build_externs(cls, name, var_name=None):
         # name = 'genz_ctrl_struct_type_to_ptrs'
-        array_type = 'extern struct %s' % cls.ctr_ptr_info_struct_name
+        if var_name is None:
+            var_name = cls.ctr_ptr_info_struct_name
+        array_type = 'extern struct %s' % var_name
         return [
             fields.CArrayEntry(name, array_type, is_allow_empty=False),
-            fields.CStructEntry('%s_nelems' % name, var_type='extern size_t', l_space='')
+            fields.CStructEntry('%s_nelems' % var_name, var_type='extern size_t', l_space='')
         ]

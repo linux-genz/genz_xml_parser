@@ -167,11 +167,13 @@ def entries_to_str(entries: list) -> dict:
     # to_write.append(filler_string)
     for entry in entries:
         # Ignore empty structs to the .h file.
-        if entry.is_empty():
-            struct_comment = entry.fields.get('open_bracket', None)
-            if struct_comment:
-                msg = '//FIXME: empty struct.'
-                entry.open_bracket = '%s %s' % (struct_comment, msg)
+        # if entry.is_empty():
+        #     struct_comment = entry.fields.get('open_bracket', None)
+        #     if struct_comment:
+        #         msg = '//FIXME: empty struct.'
+        #         entry.str_start = '/*'
+        #         entry.open_bracket = '%s %s' % (struct_comment, msg)
+        #         entry.str_end = '*/'
 
         # Enums of size 1 are no needed in the header - so skip them
         if isinstance(entry, fields.CEnumEntry):
@@ -249,6 +251,11 @@ def main(cmd_args: dict):
     if class_parser is not None and class_parser.instance is not None:
         generator.enums.append(class_parser.enum)
         generator.structs.insert(0, class_parser.struct_meta)
+        cls_meta_extern = generator.DataTypes.build_externs(
+            'genz_hardware_classes',
+            var_name=class_parser.struct_name
+            )
+        generator.externs.extend(cls_meta_extern)
 
     entries = generator.entries
 
@@ -269,8 +276,9 @@ def main(cmd_args: dict):
     # of all the structs rendered to the header file.
     rendered_structs = []
     for s_entry in entries:
-        if isinstance(s_entry, fields.CStruct):
+        if isinstance(s_entry, fields.CStruct) and s_entry.name != 'genz_control_info':
             rendered_structs.append(s_entry)
+
     template_props['all_structs'] = rendered_structs
 
     template_props['body'] = '\n'.join(write_props['data'])
@@ -353,6 +361,7 @@ def parse_args():
 
     args = parser.parse_args()
     return args
+
 
 if __name__ == '__main__':
     args = parse_args()

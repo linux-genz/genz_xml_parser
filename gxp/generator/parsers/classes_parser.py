@@ -20,7 +20,7 @@ class ClassParser(FieldBuilderBase):
         self.enum_name = kwargs.get('enum_name', 'genz_hardware_types')
         self.enum = fields.CEnumEntry(self.enum_name)
 
-        self.struct_name = kwargs.get('struct_name', 'genz_hardware_classes_meta')
+        self.struct_name = kwargs.get('struct_name', 'genz_hardware_classes')
         self.name = kwargs.get('name', 'genz_hardware_classes')
 
         super().__init__(root, **kwargs)
@@ -62,13 +62,14 @@ class ClassParser(FieldBuilderBase):
             # { raw_name, condenced_name, condenced_enum_value }
             name = '"%s", %s"%s", %s' % (raw_name, spaces, name, estate.name)
             struct_entry = fields.CStructEntry(name, ignore_long_name_warning=True)
-
             struct_entry.l_space = '%s { ' % struct_entry.l_space
             struct_entry.str_close_symbol = ' },'
 
             self._instance.append(struct_entry)
             self.enum.append(estate)
 
+        last_state = fields.EStateEntry('GENZ_NUM_HARDWARE_TYPES', None)
+        self.enum.append(last_state)
         return self.instance
 
 
@@ -98,5 +99,8 @@ class ClassParser(FieldBuilderBase):
             fields.CStructEntry('condensed_name', var_type='const char * const'),
             fields.CStructEntry('value', var_type='const enum %s' % self.enum.name), #name of the enum
         ]
-        struct_instance = fields.CStruct(self.struct_name, entries=entries)
+        #FIXME: hardcoded index value!
+        struct_instance = fields.CStruct(self.struct_name,
+                                        entries=entries,
+                                        ignore_ctrl_struct_enum=True)
         return struct_instance
