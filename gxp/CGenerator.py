@@ -189,6 +189,16 @@ class CGenerator:
                     msg = '%s pointer flag type not set! Defaulting to %s'
                     logging.warning(msg % (pointer.name, pointer.p_flag))
 
+                # Set the "ssize_t <genz_control_structure_type>_size" to those
+                # pointers that are not chained or generic
+                tbl_size_exception = [
+                    ptr_types['chained'].name.lower(),
+                    ptr_types['generic'].name.lower(),
+                ]
+                if pointer.p_flag.lower() not in tbl_size_exception:
+                    if pointer.p_type != struct_ptr_enum.entries[0].name:
+                        pointer.tbl_size = '%s_size' % pointer.p_type.lower()
+
                 if pointer.p_type is None:
                     pointer.p_type = struct_ptr_enum.entries[1].name
 
@@ -464,6 +474,12 @@ class CGenerator:
 
 
     @property
+    def struct_enum_size_t(self):
+        """ """
+        return self.DataTypes.build_struct_sizes(self.structs)
+
+
+    @property
     def table_structs(self):
         """
             Return a list of <table> type struct entries from the self.structs
@@ -487,9 +503,17 @@ class CGenerator:
         ptr_sizes = self.DataTypes.build_ptr_sizes_enum()
         ctrl_ptr_struct = self.DataTypes.build_ctrl_struct_ptr_struct()
         ctrl_ptr_info_struct = self.DataTypes.build_ctrl_ptr_info_struct()
+
         externs = self.DataTypes.build_externs(self.struct_type_to_ptrs_name)
-        externs.extend(self.DataTypes.build_externs(self.table_type_to_ptrs_name))
+        # externs.extend(self.DataTypes.build_externs(self.table_type_to_ptrs_name))
+
         externs.extend(self.externs)
+
+        externs.extend([
+            fields.CArrayEntry(self.table_type_to_ptrs_name, 'extern struct genz_control_ptr_info', is_allow_empty=False),
+            fields.CStructEntry('genz_struct_type_to_ptrs_nelems', var_type='extern size_t', l_space=''),
+            fields.CStructEntry('genz_table_type_to_ptrs_nelems', var_type='extern size_t', l_space='')
+        ])
 
         result.append(ctrl_ptr_flags)
         result.append(ptr_sizes)
@@ -506,6 +530,11 @@ class CGenerator:
                 result.append(enum)
 
         structs = []
+
+        # structs.append(
+        #     fields.CStruct('genz_control_info', str_start='', open_bracket='', close_bracket=';')
+        # )
+
         structs.extend(self.struct_arrays)
         structs.extend(self.structs)
         for struct in structs:
@@ -515,4 +544,11 @@ class CGenerator:
             result.append(struct)
 
         result.extend(externs)
+
+        result.extend(self.struct_enum_size_t)
+
+        #tentative declaration
+        result.insert(0,
+            fields.CStruct('genz_control_info', str_start='', open_bracket='', close_bracket=';')
+        )
         return result

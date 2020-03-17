@@ -20,7 +20,7 @@ class ClassParser(FieldBuilderBase):
         self.enum_name = kwargs.get('enum_name', 'genz_hardware_types')
         self.enum = fields.CEnumEntry(self.enum_name)
 
-        self.struct_name = kwargs.get('struct_name', 'genz_hardware_classes_meta')
+        self.struct_name = kwargs.get('struct_name', 'genz_hardware_classes')
         self.name = kwargs.get('name', 'genz_hardware_classes')
 
         super().__init__(root, **kwargs)

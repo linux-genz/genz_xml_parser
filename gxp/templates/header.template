@@ -64,6 +64,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <inttypes.h>
+#include <uuid/uuid.h>
 
 #define UUID_SIZE 16
 typedef struct {
@@ -80,6 +81,12 @@ struct genz_control_structure_header {
     uint32_t type   : 12;
     uint32_t vers   : 4;
     uint32_t size   : 16;
+};
+
+struct genz_vcat_entry {
+    uint32_t vcm : 32;
+    uint32_t th : 7;
+    uint32_t r0 : 25;
 };
 
 {{ body }}

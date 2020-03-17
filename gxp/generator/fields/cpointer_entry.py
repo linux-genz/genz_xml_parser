@@ -49,6 +49,9 @@ class CPointerEntry(BaseXmler):
                             which will make it figure out a type from name.
         @param p_type <str>: structure name that this pointer points to in the
                         "enum genz_control_structure_type" entry.
+
+        @param tbl_size <str>: the last (optional) entry of the "genz_control_structure_ptr",
+                                and is set for none CTRL_PTR_CHAINED or CTRL_PTR_STRUCT.
         """
         super().__init__(name, **kwargs)
         self.str_close_symbol = ','
@@ -59,6 +62,7 @@ class CPointerEntry(BaseXmler):
         self._p_size = str(p_size)
         self.p_value = str(p_value)
         self.ptr_to = ptr_to
+        self.tbl_size = kwargs.get('tbl_size', None)
 
         # self._ptr_names = self.enum_model()
         self._ptr_sizes = self.enum_sizes_model()
@@ -109,11 +113,13 @@ class CPointerEntry(BaseXmler):
             msg = 'incorrect hex value!'
             self.str_end = '%s //FIXME: %s' % (self.str_end, msg)
 
-        entry = '{{ {p_flag}, {p_size}, {p_value}, {p_type} }}'.format(
+        tbl_size = '' if not self.tbl_size else ', %s' % self.tbl_size
+        entry = '{{ {p_flag}, {p_size}, {p_value}, {p_type}{tbl_size} }}'.format(
                     p_flag=self.p_flag,
                     p_size=self.p_size.name,
                     p_value=self.p_value,
                     p_type=self.p_type,
+                    tbl_size=tbl_size
         )
         msg = '{start}{left_space}{entry}{var_close_symbol}{end}'
         return msg.format(

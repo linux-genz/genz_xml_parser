@@ -18,6 +18,7 @@ class DataTypesModel:
     ptr_size_enum_name = 'genz_pointer_size'
     ctr_ptr_info_struct_name = 'genz_control_ptr_info'
     all_structs_union_name = 'genz_control_structure'
+    ctrl_info_name = 'genz_control_info'
 
 
     def build_enum(self, name: str, model: dict):
@@ -74,6 +75,7 @@ class DataTypesModel:
             fields.CStructEntry('ptr_size', var_type='const enum %s' % cls.ptr_size_enum_name),
             fields.CStructEntry('pointer_offset', var_type='const uint32_t'),
             fields.CStructEntry('struct_type', var_type='const enum %s' % cls.ctrl_struct_type_enum_name),
+            fields.CStructEntry('(*size_fn)(struct %s *ci)' % cls.ctrl_info_name, var_type='ssize_t'),
         ]
 
         struct.extend(entries)
@@ -144,6 +146,18 @@ class DataTypesModel:
             entry = fields.EStateEntry(s.name.upper(), value)
             struct.append(entry)
         return struct
+
+
+    @classmethod
+    def build_struct_sizes(cls, structs: list):
+        """ """
+        result = []
+        for struct in structs:
+            v_type = 'ssize_t %s_size' % struct.name.lower()
+            field_name = '(struct %s *ci)' % cls.ctrl_info_name
+            entry = fields.CStructEntry(field_name, var_type=v_type, l_space='')
+            result.append(entry)
+        return result
 
 
     @staticmethod

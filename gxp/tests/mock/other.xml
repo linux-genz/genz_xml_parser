@@ -1,0 +1,74 @@
+<genz generated="2019-06-27 12:58:33.705896" ctl="gen-z-spec-control-20190524-jmh.vsdx" pkt="gen-z-spec-protocol-20190524-jmh.vsdx" word="gen-z-core-specification-v1.0a-20190524-jmh.docx">
+    <structs>
+        <struct name="Component Destination Table Structure" type="0x12" vers="0x1" size="0x40">
+            <offset value="0x0" num_bits="64">
+                <field num_bits="12" min_bit="0" max_bit="11" value="0x12" mo="M" access="RO">
+                    <name>Type</name>
+                </field>
+                <field num_bits="4" min_bit="12" max_bit="15" value="0x1" mo="M" access="RO">
+                    <name>Vers</name>
+                </field>
+                <field num_bits="16" min_bit="16" max_bit="31" value="0x40" mo="M" access="RO">
+                    <name>Size</name>
+                </field>
+                <field num_bits="32" min_bit="32" max_bit="63" mo="M">
+                    <name>Destination Table CAP 1</name>
+                    <subfield min_bit="0" max_bit="0" num_bits="1" access="RO">
+                        <name>EI Support</name>
+                    </subfield>
+                    <subfield min_bit="1" max_bit="1" num_bits="1" access="RO">
+                        <name>Wildcard SSDT Support</name>
+                    </subfield>
+                    <subfield min_bit="2" max_bit="2" num_bits="1" access="RO">
+                        <name>Wildcard MSDT Support</name>
+                    </subfield>
+                    <subfield min_bit="3" max_bit="3" num_bits="1" access="RO">
+                        <name>RIT-SSDT Support</name>
+                    </subfield>
+                    <subfield min_bit="4" max_bit="31" num_bits="28" access="RsvdZ">
+                        <name>RsvdZ</name>
+                    </subfield>
+                </field>
+            </offset>
+        </struct>
+
+    <table name="TR Table" size="VARIABLE" min_size="0x0" ptr="TR Table PTR">
+      <array offset="0x0" elements="VARIABLE" bytes="VARIABLE">
+        <element offset="0x0" bytes="0x30">
+          <offset value="0x0" num_bits="64">
+            <field num_bits="32" min_bit="0" max_bit="31" mo="M" access="RO" base_bit="20" ptr_to="UNKNOWN">
+              <name>TR ZMMU<sub>0</sub> PTR [51:20]</name>
+            </field>
+            <field num_bits="32" min_bit="32" max_bit="63" mo="M" access="RO" base_bit="20" ptr_to="UNKNOWN">
+              <name>TR RTR<sub>0</sub> PTR [51:20]</name>
+            </field>
+          </offset>
+          <offset value="0x8" num_bits="64">
+            <field num_bits="32" min_bit="0" max_bit="31" mo="M" access="RO" ptr_to="Component Destination Table Structure">
+              <name>TR DT<sub>0</sub> PTR</name>
+            </field>
+          </offset>
+          <offset value="0x10" num_bits="64">
+            <field num_bits="32" min_bit="0" max_bit="31" mo="M" access="RO" ptr_to="OpCode Set Structure">
+              <name>TR OpCode Set<sub>0</sub> PTR</name>
+            </field>
+            <field num_bits="32" min_bit="32" max_bit="63" access="Reserved">
+              <name>R0</name>
+            </field>
+          </offset>
+          <offset value="0x18" num_bits="64">
+            <field num_bits="16" min_bit="0" max_bit="15" mo="M">
+              <name>TR CTL<sub>0</sub></name>
+              <subfield min_bit="0" max_bit="0" num_bits="1" access="RW">
+                <name>TR Relay Enable</name>
+              </subfield>
+            </field>
+            <field num_bits="48" min_bit="16" max_bit="63" access="Reserved">
+              <name>R1</name>
+            </field>
+          </offset>
+        </element>
+      </array>
+    </table>
+    </structs>
+</genz>

@@ -25,6 +25,7 @@ from gxp.generator.utils import trim_name
 
 from pdb import set_trace
 
+
 class CStruct(BaseXmler):
     """
         Object that holds all the StructEntry entries to be part of That struct in
@@ -86,14 +87,19 @@ class CStruct(BaseXmler):
             entry.var_space = ' ' * offset
             entries.append(str(entry))
 
-        msg = '{start_str}{datatype}{name}{op_bracket}\n{entries}\n{cl_bracket}{end_str}'
+        # open_close_brackets = '%s\n%s' % (self.open_bracket, self.close_bracket)
+        entries_str = '\n' + '\n'.join(entries) + '\n'
+        if (len(entries) == 0):
+            entries_str = ''
+
+        msg = '{start_str}{datatype}{name}{op_bracket}{entries}{cl_bracket}{end_str}'
         return msg.format(
                         start_str=self.str_start,
                         datatype=self.datatype_str,
                         op_bracket=self.open_bracket,
                         cl_bracket=self.close_bracket,
-                        name=' ' + self.name + ' ' if self.name else ' ',
-                        entries='\n'.join(entries),
+                        name=' ' + self.name if self.name else ' ',
+                        entries=entries_str,
                         end_str=self.str_end)
 
 
