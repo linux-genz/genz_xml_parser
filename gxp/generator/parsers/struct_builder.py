@@ -2,10 +2,12 @@ from abc import ABC, abstractmethod
 from gxp.generator import parsers
 import math
 import logging
+import re
 
 from gxp.generator import fields
 from gxp.generator.utils import get_name, trim_name, is_name_too_long
 
+uuid_re = re.compile(r'_[0-9]+_[0-9]+$')
 
 class StructBuilder(parsers.FieldBuilderBase):
     """
@@ -108,6 +110,10 @@ class StructBuilder(parsers.FieldBuilderBase):
         var_type = None
         bitfield = props['num_bits']
         if 'uuid' in field_name and not field_name.endswith('ptr'):
+            base_bit = props.get('base_bit', None)
+            if base_bit is not None:  # ignore second half of split uuid
+                return
+            field_name = uuid_re.sub('', field_name)
             var_type = 'uuid_t'
             bitfield = -1
 
@@ -164,12 +170,11 @@ class StructBuilder(parsers.FieldBuilderBase):
         min_bit = int(min_bit)
 
         result = []
-        bit_overflow = min_bit + entry.bitfield
-        if not (min_bit < splitbit and bit_overflow > splitbit):
+        if not (min_bit < splitbit and max_bit >= splitbit):
             return [entry]
 
         split_bits = []
-        split_bits.append(abs(splitbit - entry.bitfield))
+        split_bits.append(splitbit - min_bit)
         split_bits.append(entry.bitfield - split_bits[0])
         for index in range(len(split_bits)):
             bitfield = split_bits[index]
