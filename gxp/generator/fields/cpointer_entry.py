@@ -29,13 +29,16 @@ from gxp.generator.models import DataTypesModel
 class CPointerEntry(BaseXmler):
     """
         Creates an array entry for a "pointers" array, e.g.:
-        { GENZ_CONTROL_POINTER_GENERIC, GENZ_4_BYTE_POINTER, 0x48 },
+        { GENZ_CONTROL_POINTER_STRUCTURE, GENZ_4_BYTE_POINTER, 0x48,
+          GENZ_GENERIC_STRUCTURE },
 
         of
 
-        struct control_structure_pointers core_structure_pointers[] = {
-            { GENZ_CONTROL_POINTER_GENERIC, GENZ_4_BYTE_POINTER, 0x48 },
-            { GENZ_CONTROL_POINTER_GENERIC, GENZ_4_BYTE_POINTER, 0x4C},
+        struct genz_control_structure_ptr core_structure_ptrs[] = {
+            { GENZ_CONTROL_POINTER_STRUCTURE, GENZ_4_BYTE_POINTER, 0x48,
+              GENZ_GENERIC_STRUCTURE },
+            { GENZ_CONTROL_POINTER_STRUCTURE, GENZ_4_BYTE_POINTER, 0x4c,
+              GENZ_GENERIC_STRUCTURE },
             ...
         };
     """
@@ -44,12 +47,11 @@ class CPointerEntry(BaseXmler):
         """
         @param name: name for the field to be used. Trimmed by parent class.
         @param p_size <str>: pointer size. Either '4' or '6'
-        @param p_value <str>: pointer hex value, e.g. 0.40.
+        @param p_value <str>: pointer hex value, e.g. 0x40.
         @param p_flag <str>: either generic, chained, array or link. Default is None,
                             which will make it figure out a type from name.
         @param p_type <str>: structure name that this pointer points to in the
                         "enum genz_control_structure_type" entry.
-
         @param tbl_size <str>: the last (optional) entry of the "genz_control_structure_ptr",
                                 and is set for none CTRL_PTR_CHAINED or CTRL_PTR_STRUCT.
         """
@@ -61,6 +63,7 @@ class CPointerEntry(BaseXmler):
         self.p_type = p_type
         self._p_size = str(p_size)
         self.p_value = str(p_value)
+        self.p_name = '"' + name.split('_ptr')[0].split('_structure')[0] + '"'
         self.ptr_to = ptr_to
         self.tbl_size = kwargs.get('tbl_size', None)
 
@@ -114,11 +117,12 @@ class CPointerEntry(BaseXmler):
             self.str_end = '%s //FIXME: %s' % (self.str_end, msg)
 
         tbl_size = '' if not self.tbl_size else ', %s' % self.tbl_size
-        entry = '{{ {p_flag}, {p_size}, {p_value}, {p_type}{tbl_size} }}'.format(
+        entry = '{{ {p_flag}, {p_size}, {p_value}, {p_type}, {p_name}{tbl_size} }}'.format(
                     p_flag=self.p_flag,
                     p_size=self.p_size.name,
                     p_value=self.p_value,
                     p_type=self.p_type,
+                    p_name=self.p_name,
                     tbl_size=tbl_size
         )
         msg = '{start}{left_space}{entry}{var_close_symbol}{end}'

@@ -62,10 +62,12 @@ class DataTypesModel:
     def build_ctrl_struct_ptr_struct(cls):
         """
         struct genz_control_structure_ptr {
-            enum genz_control_ptr_flags ptr_type;
-            enum genz_pointer_size ptr_size;
-            uint32_t pointer_offset;
-            enum genz_control_structure_type struct_type;
+            const enum genz_control_ptr_flags ptr_type;
+            const enum genz_pointer_size ptr_size;
+            const uint32_t pointer_offset;
+            const enum genz_control_structure_type struct_type;
+            const char *ptr_name;
+            ssize_t (*size_fn)(struct genz_control_info *ci);
         };
         """
         struct = fields.CStruct(cls.ctrl_ptr_struct_name)
@@ -75,6 +77,7 @@ class DataTypesModel:
             fields.CStructEntry('ptr_size', var_type='const enum %s' % cls.ptr_size_enum_name),
             fields.CStructEntry('pointer_offset', var_type='const uint32_t'),
             fields.CStructEntry('struct_type', var_type='const enum %s' % cls.ctrl_struct_type_enum_name),
+            fields.CStructEntry('*ptr_name', var_type='const char'),
             fields.CStructEntry('(*size_fn)(struct %s *ci)' % cls.ctrl_info_name, var_type='ssize_t'),
         ]
 

@@ -168,6 +168,7 @@ class CGenerator:
                 if pointer.ptr_to.lower() == 'generic structure':
                     pointer.p_type = struct_ptr_enum.entries[0].name
                     pointer.p_flag = ptr_types['generic'].name
+                    pointer.p_name = 'NULL'
                 else:
                     #Handle none generic flag
                     is_chained = self._handle_ptr_chain(pointer)
