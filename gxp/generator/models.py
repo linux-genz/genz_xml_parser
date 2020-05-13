@@ -165,6 +165,7 @@ class DataTypesModel:
         return {
             'none' : fields.EStateEntry('GENZ_CONTROL_POINTER_NONE', 0),
             'generic' : fields.EStateEntry('GENZ_CONTROL_POINTER_STRUCTURE', 1),
+            'struct' : fields.EStateEntry('GENZ_CONTROL_POINTER_STRUCTURE', 1),
             'chained' : fields.EStateEntry('GENZ_CONTROL_POINTER_CHAINED', 2),
             'array' : fields.EStateEntry('GENZ_CONTROL_POINTER_ARRAY', 3),
             'table' : fields.EStateEntry('GENZ_CONTROL_POINTER_TABLE', 4),

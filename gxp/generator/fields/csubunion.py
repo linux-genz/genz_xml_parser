@@ -103,7 +103,7 @@ union {name} {{
         #     'offset_bits' : 64,
         #     }
         result = CStructEntry('padding',
-                            num_type=64,
+                            num_type=self.bit_scalar(self.uint_bits),
                             bitfield=bits_left)
         result.l_space = padding
         result.str_end = comments

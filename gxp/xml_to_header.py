@@ -276,7 +276,7 @@ def main(cmd_args: dict):
     # of all the structs rendered to the header file.
     rendered_structs = []
     for s_entry in entries:
-        if isinstance(s_entry, fields.CStruct) and s_entry.name != 'genz_control_info':
+        if isinstance(s_entry, fields.CStruct) and s_entry.index != -1:
             rendered_structs.append(s_entry)
 
     template_props['all_structs'] = rendered_structs

@@ -112,15 +112,18 @@ class CStructEntry(BaseXmler):
         # if 'uuid' in self.name and self.definition is None:
         #     return '%s%s %s;' % (self.l_space, self.var_type, self.name)
 
-        semicolon_with_bits = '{var_space} : {bits_val}'\
-                                .format(var_space=self.var_space,
-                                            bits_val=self.bitfield)
+        colon_with_bits = '{var_space} : {bits_val}'\
+            .format(var_space=self.var_space,
+                    bits_val=self.bitfield)
         # when no num_bits are set, then entry will look like:
         # "var_type Name;"
-        if self.bitfield is None or int(self.bitfield) < 0:
-            semicolon_with_bits = ''
+        if (self.bitfield is not None):
+            bits = int(self.bitfield)
+        if (self.bitfield is None or bits < 0 or
+            (self.num_type is not None and self.num_type == bits)):
+            colon_with_bits = ''
         if self._value is not None:
-            semicolon_with_bits = ' = %s' % self._value
+            colon_with_bits = ' = %s' % self._value
 
         end_str = self.str_end
         length_comment = is_name_too_long(self.name)
@@ -135,7 +138,7 @@ class CStructEntry(BaseXmler):
                  left_space=self.l_space,
                  var_type=var_type,
                  name=self.name,
-                 bits=semicolon_with_bits,
+                 bits=colon_with_bits,
                  var_close_symbol=self.str_close_symbol,
                  end=end_str) # could be a comment description of the entry
 

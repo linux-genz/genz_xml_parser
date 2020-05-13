@@ -17,6 +17,10 @@ from gxp.generator.models import DataTypesModel
 from gxp.generator.utils import get_name, is_name_too_long, trim_name
 
 
+def rm_prefix(name, prefix):
+    return name[name.startswith(prefix) and len(prefix):]
+
+
 class CGenerator:
     """
         Loops through the XML fields of a specific format:
@@ -93,8 +97,8 @@ class CGenerator:
                     for t_struct in cgen.structs:
                         table_entry_name = 'struct %s' % t_struct.name
                         struct_entry = fields.CStructEntry(
-                                            cgen.structs[0].name.lstrip('genz_') + '[]',
-                                            var_type=table_entry_name)
+                            rm_prefix(cgen.structs[0].name, 'genz_') + '[]',
+                            var_type=table_entry_name)
 
                         #Adding created Table entry to the current struct_parser
                         #entries list
@@ -233,7 +237,8 @@ class CGenerator:
         for struct_ptr in struct.child_pointers:
             ptr_to_name = 'genz_%s' % trim_name(struct_ptr.ptr_to)
             if struct.name == ptr_to_name:
-                p_flag_to_set = ptr_types['generic'].name
+                p_flag_to_set = ptr_types['struct' if struct.tag == 'struct'
+                                          else 'table'].name
             if struct_ptr == pointer:
                 p_flag_to_set = ptr_types['chained'].name
                 struct.is_chained = True
@@ -270,6 +275,10 @@ class CGenerator:
 
         ptr_flag_to_set = None
 
+        if struct.tag == 'struct':
+             pointer.p_flag = ptr_flags['struct'].name
+             return True
+
         arrays = struct.origin.findall('array')
         offsets = struct.origin.findall('offset')
         # probably a GENZ_CONTROL_POINTER_ARRAY, as long as the only element is
@@ -304,6 +313,22 @@ class CGenerator:
             if array.get('elements', '').lower() == 'variable':
                 return True
         return False
+
+
+    def find_struct_by_index(self, index, target_struct=None, tag='struct'):
+        if target_struct is None:
+            target_struct = self.structs
+        tblIndex = -1
+        for struct in target_struct:
+            if struct.tag not in tag:
+                continue
+            if struct.index == -1:
+                tblIndex += 1
+                if tblIndex == index:
+                    return struct
+            elif int(struct.index, 0) == index:
+                return struct
+        return None
 
 
     def find_struct_by_name(self, target_name, target_struct=None):
@@ -368,19 +393,43 @@ class CGenerator:
         pointers_count = len(self.pointers)
 
         #Need to know how big the pointers list is going to be, based of the
-        #struct's highest "type" attribut's value which indicates its position
+        #struct's highest "type" attribute's value which indicates its position
         #in the array that is built here.
         hIndex_struct = self.find_highest_struct_index()
         hIndex_tbl = self.find_highest_struct_index(tag='table')
-        for _ in range(hIndex_struct + 1):
-            null_entry = fields.NullEntry(close_bracket=',')
+        for idx in range(hIndex_struct + 1):
+            struct = self.find_struct_by_index(idx)
+            if struct is None:
+                null_entry = fields.NullEntry(close_bracket=',')
+            else:
+                name_no_genz = rm_prefix(struct.name, 'genz_').split('_structure')[0]
+                offset = 'sizeof(struct {name})'.format(name=struct.name)
+                name = 'NULL, 0, {offset}, {chained}, {vers}, "{stype}"'.format(
+                    offset=offset,
+                    vers=struct.vers if struct.vers is not None else '0x0',
+                    stype=name_no_genz,
+                    chained='true' if struct.is_chained else 'false'
+                )
+                null_entry = fields.CStructEntry(name,
+                                                 ignore_long_name_warning=True)
+                null_entry.l_space = '%s { ' % null_entry.l_space
+                null_entry.str_close_symbol = ' },'
             struct_array.append(null_entry)
 
-        struct_enum = self.structs_enum
-        for _ in range(hIndex_tbl + 1):
-            null_entry = fields.NullEntry(close_bracket=',')
+        for idx in range(hIndex_tbl + 1):
+            table = self.find_struct_by_index(idx, tag='table')
+            name_no_genz = rm_prefix(table.name, 'genz_')
+            name = 'NULL, 0, 0, {chained}, 0x0, "{stype}"'.format(
+                stype=name_no_genz,
+                chained='true' if table.is_chained else 'false'
+            )
+            null_entry = fields.CStructEntry(name,
+                                             ignore_long_name_warning=True)
+            null_entry.l_space = '%s { ' % null_entry.l_space
+            null_entry.str_close_symbol = ' },'
             table_array.append(null_entry)
 
+        struct_enum = self.structs_enum
         for index in range(pointers_count):
             ptr = self.pointers[index]
             struct = ptr.origin
@@ -402,7 +451,7 @@ class CGenerator:
                 continue
 
             name_no_ptr = ptr.name.split('_ptrs')[0]
-            name_no_genz = ptr.name.lstrip('genz_').split('_structure')[0]
+            name_no_genz = rm_prefix(name_no_ptr, 'genz_').split('_structure')[0]
 
             ptr_size = 'sizeof({name})/sizeof({name}[0])'.format(name=ptr.name)
             ptr_offset = 'sizeof(struct genz_{name})'.format(name=name_no_ptr)

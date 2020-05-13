@@ -35,9 +35,9 @@
  */
 
 /*
- * This file is machine generated based of XML GenZ Specs.
+ * This file is machine generated based on XML Gen-Z Specs.
  *
- * XML file meta based of which this file was generated:
+ * XML file meta from which this file was generated:
  *     Version   : {{ xml_meta.version }}
  *     Date      : {{ xml_meta.date }}
  *     ctl_file  : {{ xml_meta.ctl }}
@@ -55,26 +55,17 @@
  * Unions        -----------------------------------  {{ union_count }}
  * Enums         -----------------------------------  {{ enum_count }}
  */
+
 #ifndef __GENZH__
 #define __GENZH__
 
-
 #ifndef __KERNEL__
-
 #include <stdbool.h>
 #include <stdint.h>
 #include <inttypes.h>
 #include <uuid/uuid.h>
-
-#define UUID_SIZE 16
-typedef struct {
-    unsigned char b[UUID_SIZE];
-} uuid_t;
-
 #else
-
 #include <linux/uuid.h>
-
 #endif
 
 struct genz_control_structure_header {
@@ -85,15 +76,15 @@ struct genz_control_structure_header {
 
 struct genz_vcat_entry {
     uint32_t vcm : 32;
-    uint32_t th : 7;
-    uint32_t r0 : 25;
+    uint32_t th  : 7;
+    uint32_t r0  : 25;
 };
 
 {{ body }}
 
 union genz_control_structure {
 {%- for struct in all_structs %}
-    struct {{struct.name}} {{struct.name.lstrip('genz_')}}_ptr;
+    struct {{struct.name}} {{struct.name[5:]}};
 {%- endfor %}
 };
 #endif
