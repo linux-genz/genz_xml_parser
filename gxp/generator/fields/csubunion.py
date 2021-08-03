@@ -48,6 +48,7 @@ union genz_pg_zmmu_cap_1 {
         self.struct = CStruct(None)
         self.struct.close_bracket = '%s%s' % (' ' * 4, self.struct.close_bracket)
         self.uint_bits: int = bits
+        self.rv_count: int = 0
 
 
     @property
@@ -66,6 +67,13 @@ union {name} {{
             bits=self.bit_scalar(self.uint_bits),
             name=self.name,
             struct=self.struct.pprint())
+
+
+    @property
+    def next_rv_count(self):
+        rv_count = self.rv_count
+        self.rv_count += 1
+        return rv_count
 
 
     @property

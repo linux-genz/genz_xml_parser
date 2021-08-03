@@ -56,6 +56,13 @@ def trim_name(name, replaceable=' —-/[:](),=.\n', removable='|!<>@#$%^&*+–�
     if name[0].isdigit():
         name = '_%s' % name
 
+    see = name.find('_see_')
+    if see > 0:
+        name = name[0:see]
+
+    is_used = name.find('_is_used_')
+    if is_used > 0:
+        name = name[0:is_used]
     return name
 
 
